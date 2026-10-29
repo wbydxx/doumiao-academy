@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据、幻觉与 AI 安全 · AI 术语解码 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+/* 本课专用：事实 / 幻觉判断卡 */
+.judge-card{border:2.5px solid var(--rule);border-radius:var(--radius-sm);padding:14px 16px;background:var(--surface);transition:border-color .2s, background .2s}
+.judge-card.ok{border-color:var(--green);background:#F0FCF8}
+.judge-card.bad-try{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.judge-card p.stmt{margin:0 0 10px;line-height:1.7}
+.judge-actions{display:flex;gap:10px;flex-wrap:wrap}
+.judge-why{display:none;margin:10px 0 0;padding:10px 12px;border-radius:10px;background:var(--bg);font-size:14.5px;color:var(--muted)}
+.judge-card.ok .judge-why{display:block}
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="brain"></span>AI 术语解码</a>
+    <span class="sep">/</span>
+    <span>第 3 课 · 数据、幻觉与 AI 安全</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="brain"></span>进阶 · 第 3 课</span>
+    <h2>数据、幻觉与 AI 安全</h2>
+    <p style="color:var(--muted)">模型有多聪明，取决于喂给它什么数据。这一课解释为什么 AI 会"一本正经地胡说八道"，以及工程师如何把它拉回正轨。</p>
+  </section>
+
+  <section class="panel scene-panel scene-center">
+    <svg class="scene-svg" viewBox="0 0 640 300" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="同一个 AI，左侧回答有可靠数据支撑，右侧的回答冒出幻觉烟雾">
+      <text x="320" y="30" text-anchor="middle" font-size="17" font-weight="800" fill="#3A5FBF" stroke="none">数据决定回答的质量：Garbage In, Garbage Out</text>
+      <!-- 中央模型 -->
+      <rect x="260" y="110" width="120" height="86" rx="16" fill="#EAF4FD" stroke="#3A5FBF"/>
+      <text x="320" y="148" text-anchor="middle" font-size="15" font-weight="800" fill="#3A5FBF" stroke="none">AI 模型</text>
+      <text x="320" y="172" text-anchor="middle" font-size="12" fill="#5D7FA3" stroke="none">只会复述学到的模式</text>
+      <!-- 左：干净数据 -->
+      <g>
+        <rect x="40" y="120" width="150" height="66" rx="12" fill="#EAF4FD" stroke="#2E86DE"/>
+        <text x="115" y="148" text-anchor="middle" font-size="14" font-weight="700" fill="#2E86DE" stroke="none">教材 · 词典 · 论文</text>
+        <text x="115" y="170" text-anchor="middle" font-size="12" fill="#5D7FA3" stroke="none">有来源、经过审核</text>
+        <path d="M190 153h70" stroke="#2E86DE"/><path d="M252 145l12 8-12 8" stroke="#2E86DE"/>
+      </g>
+      <!-- 右：噪声数据 -->
+      <g>
+        <rect x="450" y="120" width="150" height="66" rx="12" fill="#FFF6EA" stroke="#FF9F43"/>
+        <text x="525" y="148" text-anchor="middle" font-size="14" font-weight="700" fill="#FF9F43" stroke="none">谣言 · 段子 · 错别字</text>
+        <text x="525" y="170" text-anchor="middle" font-size="12" fill="#5D7FA3" stroke="none">真假混在一起</text>
+        <path d="M450 153h-70" stroke="#FF9F43"/><path d="M388 145l-12 8 12 8" stroke="#FF9F43"/>
+      </g>
+      <!-- 左输出：可靠 -->
+      <g>
+        <path d="M250 196l-60 44" stroke="#2ECC9A"/>
+        <rect x="80" y="238" width="180" height="44" rx="12" fill="#F0FCF8" stroke="#2ECC9A"/>
+        <text x="170" y="266" text-anchor="middle" font-size="14" font-weight="700" fill="#2ECC9A" stroke="none">✓ 可靠回答 + 能给出来源</text>
+      </g>
+      <!-- 右输出：幻觉烟雾 -->
+      <g>
+        <path d="M390 196l60 44" stroke="#E74C3C"/>
+        <rect x="380" y="238" width="180" height="44" rx="12" fill="#FDF3F2" stroke="#E74C3C"/>
+        <text x="470" y="266" text-anchor="middle" font-size="14" font-weight="700" fill="#E74C3C" stroke="none">✗ 一本正经地编造细节</text>
+        <g stroke="#C9DFF2" opacity=".9">
+          <circle cx="575" cy="230" r="7"/><circle cx="588" cy="218" r="5"/><circle cx="600" cy="208" r="3.5"/>
+        </g>
+      </g>
+    </svg>
+  </section>
+
+  <section class="panel learn-text">
+    <p><b>训练数据（Training Data）</b>：模型学习的全部素材。数据里有错，模型就会把错误当成"规律"记住——计算机行业的老话：<b>Garbage In, Garbage Out</b>（垃圾进，垃圾出）。</p>
+    <p><b>数据偏差（Bias）</b>：如果数据本身不公平（比如某类照片太少），模型的判断就会系统性偏向多数情况。偏差不是模型"故意"的，而是数据留下的烙印。</p>
+    <p><b>幻觉（Hallucination）</b>：模型用概率"补全"了它其实不知道的内容，生成看似合理、实则编造的细节。它不是在撒谎——它根本没有"知道/不知道"的开关。</p>
+    <p><b>对齐（Alignment）与 RLHF</b>：让 AI 的行为符合人类意图的研究叫<b>对齐</b>。最常用的方法之一是 <b>RLHF（Reinforcement Learning from Human Feedback，人类反馈强化学习）</b>：人类给回答打分，模型根据分数不断修正自己。</p>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>动手实验 · 幻觉侦探</span>
+    <h2 style="font-size:22px">判断：事实还是幻觉？（还剩 <span id="jd-left">6</span> 条）</h2>
+    <p style="color:var(--muted);margin:6px 0 0">下面是同一位"AI 助手"的 6 条回答。凭你的知识判断：哪条有可靠依据，哪条是编造的细节？</p>
+    <div id="judge-list" style="display:flex;flex-direction:column;gap:12px;margin:12px 0"></div>
+    <p id="jd-say" style="min-height:32px;color:var(--muted)">提示：越具体、越"惊悚"的细节，越要警惕——幻觉最爱伪装成冷知识。</p>
+    <div style="text-align:center;margin-top:6px">
+      <button class="btn blue" type="button" id="jd-done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">6 条全部判断正确，通关按钮就会亮起来</p>
+  </section>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="spark"></span>术语速查 · 点卡片看详解</span>
+    <div class="term-grid" id="term-cards">
+      <div class="term-card flip"><div class="tc-front"><h3>偏差<span class="en">Bias</span></h3><p>点看详解 →</p></div><div class="tc-back"><h3>数据的不公平烙印</h3><p>训练照片里医生大多是男性，模型就把"护士"都判成女性。纠偏靠平衡数据集，而不是靠模型自觉。</p></div></div>
+      <div class="term-card flip"><div class="tc-front"><h3>幻觉<span class="en">Hallucination</span></h3><p>点看详解 →</p></div><div class="tc-back"><h3>概率补出来的假话</h3><p>问一个语料里没有的事，模型仍会挑"概率最高"的词接下去——于是编出 plausibly（貌似合理）的假细节。</p></div></div>
+      <div class="term-card flip"><div class="tc-front"><h3>对齐<span class="en">Alignment</span></h3><p>点看详解 →</p></div><div class="tc-back"><h3>让 AI 听懂人类意图</h3><p>不仅回答"正确"，还要无害、诚实、服从指令。对齐失败的最坏情况不是答错，而是"聪明地帮倒忙"。</p></div></div>
+      <div class="term-card flip"><div class="tc-front"><h3>人类反馈强化学习<span class="en">RLHF</span></h3><p>点看详解 →</p></div><div class="tc-back"><h3>用打分教模型做人</h3><p>人对多个回答排序 → 训练一个"打分模型" → 再用强化学习让 AI 朝着高分回答的方向优化。</p></div></div>
+    </div>
+  </section>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-02.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一课 · 大语言模型</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="game-match.html" onclick="DM.sfx('click')">下一关 · 术语挑战赛<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "terms" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  /* 幻觉侦探：6 条回答，isFact=true 表示有可靠依据 */
+  var ITEMS = [
+    { t: "南京长江大桥于 1968 年建成通车，是长江上第一座由中国人自行设计建造的双层式铁路、公路两用桥梁。", fact: true,
+      why: "正确。这是可查证的历史事实，属于模型能「背」得比较牢的高频知识。" },
+    { t: "李白在《静夜思》中描写的是南京玄武湖的夜景。", fact: false,
+      why: "幻觉！《静夜思》的写作地点并无玄武湖的可靠依据——模型把「李白」和「南京」两个高频搭配硬接在了一起。" },
+    { t: "在标准大气压下，水的沸点是 100℃。", fact: true,
+      why: "正确。教科书级知识，语料中反复出现，模型对它的「把握」很大。" },
+    { t: "紫金山天文台发现了一颗小行星，并把它命名为「豆苗星」。", fact: false,
+      why: "幻觉！细节越具体越可疑。这颗「豆苗星」并不存在，是模型顺着你的提问风格编出来的。" },
+    { t: "河海大学的校训是「艰苦朴素、实事求是、严格要求、勇于探索」。", fact: true,
+      why: "正确。官方发布、被大量引用的信息，可靠性高。" },
+    { t: "南京鸭血粉丝汤已有一千年历史，朱元璋每天早朝前都要吃一碗。", fact: false,
+      why: "幻觉！「一千年前」和「朱元璋每天都吃」都是编造的时间与细节——把真实食物嫁接了虚构故事，这是最难识别的幻觉类型。" }
+  ];
+
+  var list = document.getElementById("judge-list");
+  var say = document.getElementById("jd-say");
+  var leftEl = document.getElementById("jd-left");
+  var done = document.getElementById("jd-done");
+  var left = ITEMS.length;
+
+  ITEMS.forEach(function (item, i) {
+    var card = document.createElement("div");
+    card.className = "judge-card";
+    card.innerHTML = '<p class="stmt"><b>' + (i + 1) + '.</b> ' + item.t + "</p>" +
+      '<div class="judge-actions">' +
+      '<button class="btn sm" type="button" data-v="fact"><span data-ic="check"></span>事实</button>' +
+      '<button class="btn ghost sm" type="button" data-v="fake"><span data-ic="alert"></span>幻觉</button>' +
+      "</div>" +
+      '<p class="judge-why"></p>';
+    var why = card.querySelector(".judge-why");
+    card.querySelectorAll("[data-v]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var pickedFact = btn.getAttribute("data-v") === "fact";
+        if (pickedFact === item.fact) {
+          DM.sfx("right");
+          card.classList.add("ok");
+          why.textContent = item.why;
+          card.querySelectorAll("button").forEach(function (b) { b.disabled = true; });
+          left--;
+          leftEl.textContent = left;
+          if (left === 0) {
+            say.textContent = "侦探结案：你已识破全部 " + ITEMS.length + " 条中的幻觉。记住——对 AI 的输出，永远保持核实的习惯。";
+            done.disabled = false;
+          }
+        } else {
+          DM.sfx("retry");
+          card.classList.remove("bad-try");
+          void card.offsetWidth; /* 重启动画 */
+          card.classList.add("bad-try");
+          say.textContent = item.fact
+            ? "这条其实有可靠依据。别把「冷知识」都当幻觉，判断要看是否可查证。"
+            : "再想想：这条里的具体细节（时间、人名、数字）有任何可靠来源吗？";
+          say.style.color = "var(--accent-2)";
+        }
+      });
+    });
+    list.appendChild(card);
+  });
+
+  done.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("terms", 2, 3);
+    done.innerHTML = DM.icon("check") + "太棒了，第 3 课通关！";
+    done.disabled = true;
+  });
+
+  /* 术语翻转卡 */
+  document.querySelectorAll("#term-cards .term-card.flip").forEach(function (card) {
+    card.addEventListener("click", function () {
+      card.classList.toggle("on");
+      DM.sfx("toggle");
+    });
+  });
+})();
+</script>
+</body>
+</html>

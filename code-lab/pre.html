@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 0 课 · 写代码之前 · 代码实验室 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="code"></span>代码实验室</a>
+    <span class="sep">/</span>
+    <span>第 0 课 · 写代码之前</span>
+  </nav>
+
+  <!-- ① 课程头卡 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="code"></span>进阶 · 第 0 课</span>
+    <h2>写代码之前</h2>
+    <p style="color:var(--muted)">从没碰过代码？就从这一页开始。不记笔记、不用背，看懂比喻、敢点「运行」，你就已经入门了。</p>
+    <div class="learn-caps">
+      <span><span data-ic="book"></span>编程是什么</span>
+      <span><span data-ic="globe"></span>Python 是什么</span>
+      <span><span data-ic="terminal"></span>认识运行器</span>
+      <span><span data-ic="shieldCheck"></span>报错不可怕</span>
+    </div>
+  </section>
+
+  <!-- ② 课前导读：左总览图 + 右开场白 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>课前导读</span>
+    <div class="intro-split" style="margin-top:12px">
+      <img class="intro-img" src="../assets/img/pre-lab.jpg" alt="少年在书桌前学写第一行代码，旁边摊开一张写着步骤的菜谱纸" loading="lazy">
+      <div class="intro-txt">
+        <h3>编程，就是给计算机写菜谱</h3>
+        <p>计算机跑得飞快、超级听话，但它<b>只看得懂写清楚的步骤</b>。把步骤一条条写下来，就是「程序」；写程序的过程，就叫「编程」——像给一位认真过头的小厨师写菜谱：写「放点盐」它会懵，写「放 3 克盐」它立刻照办。</p>
+        <p>我们用的语言叫 <b>Python</b>（读作「派森」），全世界入门人数最多，读起来最像人话。学它你只需要：认识几个英文单词、会打字、<b>敢点「运行」按钮</b>。学完这页，去第 1 课写下你人生第一行真代码！</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 先懂 4 件事 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>先懂 4 件事</span>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3><span data-ic="terminal"></span>代码写在哪儿</h3>
+        <p>下面那个<b>黑色小窗</b>就是「运行器」：上半是代码区（像记事本，可以直接打字改），下半是输出屏（程序说话的地方）。</p>
+        <pre>代码区 → 输出屏</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="play"></span>怎么让它跑</h3>
+        <p>点「<b>运行代码</b>」按钮，计算机就从头到尾一行行执行，把 print() 的话打到屏幕上。改完随时再点，跑多少次都行。</p>
+        <pre>print("你好")</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="box"></span>看到 TODO 就动手</h3>
+        <p>课堂任务里标着 <b>TODO</b> 的行，就是留给你的空位：照着任务提示把那一点改掉，其余行别动。改坏了点「还原」一键复原。</p>
+        <pre>x = "?"   # TODO：改成 5</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="shieldCheck"></span>报错不可怕</h3>
+        <p>红字报错不是批评你，是 Python 在<b>给你指路</b>：三步读懂——①看第一行白话提示 ②找「第几行」③回去改好再跑。真正的程序员每天都在报错。</p>
+        <pre>第 2 行：少了个冒号 :</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 体验运行器：不设目标，跑通就好 -->
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="terminal"></span>动手实验 · 体验运行器</span>
+    <h2 style="font-size:22px">第 0 个任务 · 打个招唿（不会失败）</h2>
+    <p style="color:var(--muted);margin:6px 0 2px">先什么都不改，直接点「运行代码」看结果；然后把引号里的字改成你的名字，再跑一次。这就是编程的全部手感。</p>
+
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：终端窗口输出「你好，南京」，旁边是运行按钮">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 终端窗 -->
+          <rect x="22" y="28" width="118" height="64" rx="5"/>
+          <path d="M22 42h118" stroke-width="1" opacity=".6"/>
+          <circle cx="31" cy="35" r="2.2"/><circle cx="39" cy="35" r="2.2"/><circle cx="47" cy="35" r="2.2"/>
+          <!-- 代码行占位（虚线） -->
+          <path d="M30 52h56M30 60h40" stroke="#7FA6C9" stroke-width="1.2" stroke-dasharray="4 4" opacity=".7"/>
+          <!-- 输出行 + 光标 -->
+          <text x="30" y="79" font-size="11.5" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">&gt; 你好，南京</text>
+          <path d="M104 70v10" stroke="#43B58F" stroke-width="2"/>
+          <!-- RUN 按钮 -->
+          <circle cx="164" cy="56" r="20"/>
+          <circle cx="164" cy="56" r="14" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>
+          <path d="M159 48l14 8-14 8z"/>
+          <path d="M148 80l-7 8M180 78l6 9" stroke="#C9A86A" stroke-width="1.1"/>
+          <text x="164" y="102" text-anchor="middle" font-size="9" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="2">RUN</text>
+          <!-- 基准线 -->
+          <path d="M22 114h118" stroke="#7FA6C9" stroke-width="1" stroke-dasharray="8 4" opacity=".45"/>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>点一下，看它说话</h3>
+        <p class="task-guide">print() 是「打印到屏幕」。引号里的字会<b>原样</b>出现在下方输出屏——改一个字，它就听你的。</p>
+        <span class="task-goal"><span data-ic="check"></span>这一题没有目标，玩就是了</span>
+        <div class="code-run" id="run0">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>hello.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ 课程路线 -->
+  <section class="panel learn-text">
+    <p><b>接下来</b>：第 1 课 <a href="lesson-01.html" onclick="DM.sfx('click')">变量与数据类型</a> → 第 2 课 条件与分支 → 第 3 课 循环与函数 → 第 4 课 列表与遍历 → 第 5 课 字典与字符串 → 第 6 课 while 与猜数字 → 第 7 课 综合项目 → 挑战测验 + 代码谜题。每课都是「先看懂，再亲手改」，跟着走就行。</p>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot">我第一次跑代码时把 print 打成了 prnt，屏幕立刻红了——看懂提示改过来就好。报错是老师，不是扣分。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="../index.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>返回首页</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-01.html" onclick="DM.sfx('click')">下一课 · 变量与数据类型<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "lab" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  /* 体验运行器：不设目标校验，跑通、看到输出即为成功 */
+  var INITIAL = '# 这是你人生第一段 Python 程序！\n# 先直接点「运行代码」；再把引号里的字改成你的名字，再跑一次\nprint("你好，南京")';
+  var root = document.getElementById("run0");
+  var ta = root.querySelector("textarea");
+  var out = root.querySelector(".cr-out");
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  ta.value = INITIAL;
+  root.querySelector('[data-act="run"]').addEventListener("click", function () {
+    var res = DM.pyRun(ta.value);
+    if (!res.ok) {
+      out.innerHTML = '<div class="cr-err">' + esc(res.err) + "</div>";
+      DM.sfx("retry");
+      return;
+    }
+    if (res.out.length === 0) {
+      out.innerHTML = '<span style="color:#9FC2E2">（没有输出。检查一下是不是漏了 print()？）</span>';
+      return;
+    }
+    out.innerHTML = "";
+    res.out.forEach(function (l) { out.insertAdjacentHTML("beforeend", "<div>" + esc(l) + "</div>"); });
+    DM.sfx("right");
+  });
+  root.querySelector('[data-act="reset"]').addEventListener("click", function () {
+    ta.value = INITIAL;
+    out.textContent = "点「运行代码」查看输出";
+  });
+})();
+</script>
+</body>
+</html>

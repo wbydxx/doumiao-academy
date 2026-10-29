@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>身边的 AI · AI 小课堂 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="robot"></span>AI 小课堂</a>
+    <span class="sep">/</span>
+    <span>第 1 关 · 身边的 AI</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="robot"></span>第 1 关</span>
+    <h2>身边的 AI</h2>
+    <p style="color:var(--muted)">AI 不在很远的地方，它就藏在我们的生活里。</p>
+  </section>
+
+  <section class="panel scene-panel scene-center">
+    <img class="scene-svg" src="../assets/img/ai-1.jpg" alt="小朋友与 AI 机器人并肩走在红山动物园门口" loading="lazy">
+  </section>
+
+  <section class="panel learn-text">
+    <p>AI（人工智能）是一种<b>会学习的电脑程序</b>，它像一位特别勤快的小助手。</p>
+    <p>点一点下面的卡片，看看身边哪些地方藏着 AI：</p>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>动手试一试</span>
+    <h2 style="font-size:22px">把 4 张 AI 卡片都点开看看</h2>
+    <div class="module-grid" id="cards">
+      <button class="module-card" type="button" data-i="0" style="text-align:left">
+        <div class="mc-top"><span class="mc-ic" style="background:var(--accent)"><span data-ic="robot"></span></span><h2 style="font-size:20px">语音助手</h2></div>
+        <p style="color:var(--muted);font-size:16px;margin:0">"明天会下雨吗？"</p>
+      </button>
+      <button class="module-card" type="button" data-i="1" style="text-align:left">
+        <div class="mc-top"><span class="mc-ic" style="background:var(--green)"><span data-ic="leaf"></span></span><h2 style="font-size:20px">拍照识花</h2></div>
+        <p style="color:var(--muted);font-size:16px;margin:0">拍一拍，就知道花叫什么名字</p>
+      </button>
+      <button class="module-card" type="button" data-i="2" style="text-align:left">
+        <div class="mc-top"><span class="mc-ic" style="background:var(--pink)"><span data-ic="globe"></span></span><h2 style="font-size:20px">地图导航</h2></div>
+        <p style="color:var(--muted);font-size:16px;margin:0">帮爸爸妈妈找到不堵车的路</p>
+      </button>
+      <button class="module-card" type="button" data-i="3" style="text-align:left">
+        <div class="mc-top"><span class="mc-ic" style="background:var(--accent-2)"><span data-ic="book"></span></span><h2 style="font-size:20px">拍照翻译</h2></div>
+        <p style="color:var(--muted);font-size:16px;margin:0">看不懂的外语，拍一下变中文</p>
+      </button>
+    </div>
+    <div class="doudou-bubble" style="margin:14px auto 6px">
+      <span class="dd-ic" data-ic="doudou"></span>
+      <div>
+        <div class="dd-name">豆豆</div>
+        <p id="say">这些小助手都学过好多好多知识，才能这么聪明。点一点卡片，豆豆给你讲讲～</p>
+      </div>
+    </div>
+    <p class="hint" style="text-align:center">4 张卡片都点过，「我学会了」按钮就会亮起来</p>
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+  </section>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="../index.html" onclick="DM.sfx('click')"><span data-ic="home"></span>上一站 · 回首页</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-02.html" onclick="DM.sfx('click')">下一关 · 机器学习<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "ai" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  var SAY = [
+    "语音助手听过成千上万种说话的声音，所以它能听懂你的问题，再去查答案。",
+    "拍照识花的 AI 看过几十万张花朵照片，记住了每种花瓣的样子。",
+    "地图导航的 AI 知道全城的路，还能预测哪里会堵车，帮你抄近道。",
+    "拍照翻译的 AI 读过两种语言的超级多的句子，所以能当小小翻译官。"
+  ];
+  var seen = [false, false, false, false];
+  var say = document.getElementById("say");
+  var done = document.getElementById("done");
+
+  document.querySelectorAll("#cards .module-card").forEach(function (card) {
+    card.addEventListener("click", function () {
+      var i = +card.dataset.i;
+      seen[i] = true;
+      DM.sfx("click");
+      say.textContent = SAY[i];
+      if (seen.every(function (s) { return s; })) done.disabled = false;
+    });
+  });
+
+  done.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("ai", 0, 2);
+    done.innerHTML = DM.icon("check") + "太棒了，第 1 关通关！";
+    done.disabled = true;
+    say.textContent = "原来身边到处都有 AI 小助手，它们都是靠学习变聪明的！";
+    say.style.color = "var(--green)";
+  });
+})();
+</script>
+</body>
+</html>

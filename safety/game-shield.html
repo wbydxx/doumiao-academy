@@ -1,0 +1,185 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游戏 · 城墙小卫士 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+  [data-icon] { display: inline-flex; align-items: center; }
+  .quiz-done .e-ic { width: 80px; height: 80px; margin: 0 auto 8px; color: var(--accent); }
+  .quiz-done .e-ic svg { width: 100%; height: 100%; }
+  .stone-row .dim { opacity: .22; }
+  .stone-row span { display: inline-flex; }
+  .stage-foot { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-icon="home"></span>首页</a><span class="sep">/</span>
+    <span>城墙小卫士</span><span class="sep">/</span><b>守城游戏</b>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-icon="gamepad"></span>闯关游戏 · 5 个情境</span>
+    <h2>城墙小卫士</h2>
+    <p style="color:var(--muted)">守住每一道城门，把城墙修得结结实实</p>
+  </section>
+
+  <section class="game-stage" id="game">
+    <div class="game-top">
+      <span class="gt-label"><span data-icon="shieldCheck"></span>数字城墙</span>
+      <span class="gt-label">情境 <b class="big-num" id="g-num">1 / 5</b></span>
+    </div>
+    <div class="wall-strip" id="wall-strip" aria-hidden="true">
+      <span class="brick"></span><span class="brick"></span><span class="brick"></span><span class="brick"></span><span class="brick"></span>
+    </div>
+    <div class="situation" id="g-sit"></div>
+    <div id="g-opts"></div>
+    <div class="quiz-why" id="g-why"></div>
+  </section>
+
+  <section class="doudou-bubble">
+    <span class="dd-ic" data-icon="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆说</div>
+      <p>城门交给你守护啦！每守住一个情境，城墙就多一块结实的砖。拿不准就想想：爸妈会怎么说？</p>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="btn ghost sm" href="lesson-04.html"><span data-icon="arrowLeft"></span>上一关</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" data-speak><span data-icon="speaker"></span>朗读这一页</button>
+    <a class="btn blue sm" href="quiz.html">挑战测验<span data-icon="arrowRight"></span></a>
+  </nav>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+(function () {
+  var DM = window.DM;
+  DM.boot({ root: "..", module: "safety" });
+
+  document.querySelectorAll("[data-icon]").forEach(function (el) {
+    el.innerHTML = DM.icon(el.getAttribute("data-icon"));
+  });
+  document.querySelectorAll("[data-speak]").forEach(function (b) {
+    b.addEventListener("click", function () { DM.speakPage(b); });
+  });
+
+  /* 5 个守城情境 */
+  var QUIZ = [
+    { sit: "游戏里有人说：“告诉我你家住哪个小区，我送你限定皮肤。”",
+      opts: ["告诉他小区名，换取皮肤", "不告诉他，个人信息要保密", "只说小区名，不说门牌号"],
+      a: 1, why: "住址是重要的小秘密，说出去可能带来危险。" },
+    { sit: "有人说：“把你的账号密码告诉我，帮你抽稀有装备。”",
+      opts: ["只告诉他这一次", "告诉他一半，留一半", "密码绝不能给任何人"],
+      a: 2, why: "密码是你的城门钥匙，谁都不能给。" },
+    { sit: "认识一周的网友说：“我们周末单独见个面吧。”",
+      opts: ["不去，并且马上告诉爸妈", "带上小伙伴偷偷去", "视频里聊过，可以去"],
+      a: 0, why: "和网友见面一定要有家长陪同，单独赴约很危险。" },
+    { sit: "收到消息：“恭喜你中奖啦，点链接领取！”",
+      opts: ["先点开看看再说", "不点击，告诉爸妈", "转发给同学一起领"],
+      a: 1, why: "天上不会掉馅饼，陌生链接可能是陷阱。" },
+    { sit: "同学拍了别人的糗照，起哄让你发到群里。",
+      opts: ["发到群里，大家开心就好", "只私发给好朋友看", "不发，这是不尊重别人"],
+      a: 2, why: "随意传播别人的照片会伤害人，学会尊重和保护。" }
+  ];
+
+  var stage = document.getElementById("game");
+  var gnum = document.getElementById("g-num");
+  var gsit = document.getElementById("g-sit");
+  var gopts = document.getElementById("g-opts");
+  var why = document.getElementById("g-why");
+  var bricks = Array.prototype.slice.call(document.querySelectorAll("#wall-strip .brick"));
+  var qi = 0, first = [], finished = false;
+
+  function renderQ() {
+    var d = QUIZ[qi];
+    gnum.textContent = (qi + 1) + " / " + QUIZ.length;
+    gsit.textContent = "情境 " + (qi + 1) + "：" + d.sit;
+    why.classList.remove("show");
+    why.innerHTML = "";
+    gopts.innerHTML = "";
+    d.opts.forEach(function (t, i) {
+      var b = document.createElement("button");
+      b.className = "opt";
+      b.innerHTML = '<span class="opt-k">' + "ABC"[i] + "</span><span>" + t + "</span>";
+      b.addEventListener("click", function (ev) { pick(i, b, ev); });
+      gopts.appendChild(b);
+    });
+  }
+  function pick(i, btn, ev) {
+    if (finished) return;
+    var d = QUIZ[qi];
+    var brick = bricks[qi];
+    if (first[qi] === undefined) first[qi] = (i === d.a);
+    if (i === d.a) {
+      brick.classList.remove("warn");
+      brick.classList.add("ok");
+      btn.classList.add("right", "pop-ok");
+      DM.sfx("right");
+      DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+      gopts.querySelectorAll(".opt").forEach(function (b) { b.disabled = true; });
+      var last = qi === QUIZ.length - 1;
+      why.innerHTML = "<b>豆豆说：</b>" + d.why +
+        '<div style="margin-top:10px"><button class="btn blue sm" id="g-next">' +
+        DM.icon(last ? "trophy" : "arrowRight") + (last ? "查看守护结果" : "守住下一座城门") + "</button></div>";
+      why.classList.add("show");
+      document.getElementById("g-next").addEventListener("click", function () {
+        DM.sfx("click");
+        qi++;
+        if (qi < QUIZ.length) renderQ(); else finish();
+      });
+    } else {
+      brick.classList.add("warn");
+      btn.classList.add("retry", "shake");
+      DM.sfx("retry");
+      btn.disabled = true;
+      why.textContent = "再想想看，城墙需要你！坏心思最喜欢装成好心人。";
+      why.classList.add("show");
+      setTimeout(function () { btn.classList.remove("shake"); }, 450);
+    }
+  }
+  function finish() {
+    finished = true;
+    var wrong = first.filter(function (x) { return x === false; }).length;
+    var stones = wrong === 0 ? 3 : wrong <= 2 ? 2 : 1;
+    DM.store.completeGame("safety", stones);
+    var msg = wrong === 0
+      ? "一次都没被迷惑，城墙固若金汤！"
+      : wrong <= 2
+        ? "守得很稳！小闪失不碍事，城门守住了。"
+        : "城墙守住了！再玩一次，会守得更牢哦。";
+    var row = "";
+    for (var i = 0; i < 3; i++) row += '<span class="' + (i < stones ? "" : "dim") + '">' + DM.icon("stone") + "</span>";
+    stage.innerHTML =
+      '<div class="quiz-done">' +
+      '<div class="e-ic">' + DM.icon("doudou") + "</div>" +
+      '<div class="big">城墙守护成功！</div>' +
+      '<p style="color:var(--muted)">' + msg + "</p>" +
+      '<div class="stone-row">' + row + "</div>" +
+      '<p style="font-size:15.5px;color:var(--muted)">首次就守对 ' + (5 - wrong) + " / 5 个情境，收获 " + stones + " 颗雨花石</p>" +
+      '<div class="stage-foot">' +
+      '<button class="btn ghost sm" id="g-again">' + DM.icon("reset") + "再守一次</button>" +
+      '<a class="btn sm" href="lesson-04.html">' + DM.icon("arrowLeft") + "复习口诀</a>" +
+      '<a class="btn blue sm" href="quiz.html">' + DM.icon("quiz") + "去挑战测验</a>" +
+      "</div></div>";
+    DM.sfx("wow");
+    DM.petals(window.innerWidth / 2, window.innerHeight / 2);
+    document.getElementById("g-again").addEventListener("click", function () { location.reload(); });
+  }
+  renderQ();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>挑战测验 · AI 术语解码 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="brain"></span>AI 术语解码</a>
+    <span class="sep">/</span>
+    <span>挑战测验</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="quiz"></span>AI 术语解码 · 挑战测验</span>
+    <h2>进阶测验</h2>
+    <p style="color:var(--muted)">三课一赛之后，检验一下你的术语功底。答错也没关系，每题都有解析。</p>
+  </section>
+
+  <section class="panel scene-panel scene-center">
+    <img class="scene-svg" src="../assets/img/terms-1.jpg" alt="发光的数字大脑与漂浮的 AI 术语标签" loading="lazy">
+  </section>
+
+  <section class="panel learn-text">
+    <p>范围：机器学习三范式、神经网络、LLM 与 Token、提示词、幻觉。共 4 题，答对即可赢雨花石。</p>
+  </section>
+
+  <div id="quiz"></div>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot-text">遇到拿不准的题，想想每个术语的关键词：监督学习看「标签」，LLM 看「预测下一个词」。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="game-match.html" onclick="DM.sfx('click')"><span data-ic="gamepad"></span>上一关 · 术语挑战赛</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="../achievements/index.html" onclick="DM.sfx('click')">下一站 · 成就墙<span data-ic="trophy"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "terms" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  DM.quiz({
+    el: "#quiz",
+    module: "terms",
+    nextHref: "../achievements/index.html",
+    data: [
+      {
+        q: "训练一个「判断邮件是不是垃圾邮件」的模型，每封邮件都由人工标注过「垃圾 / 正常」。这属于哪种学习范式？",
+        opts: ["无监督学习", "监督学习", "强化学习"],
+        a: 1,
+        why: "带人工标注（标签）的数据 + 学习输入到输出的映射，正是监督学习的定义。无监督学习没有标签，强化学习靠奖励信号。",
+        hint: "数据里每个样本都附带了「标准答案」吗？"
+      },
+      {
+        q: "大语言模型（LLM）回答问题时，本质上在做什么？",
+        opts: ["在联网数据库里检索现成答案", "逐个预测下一个 Token，直到句子完成", "播放训练时背下来的标准原文"],
+        a: 1,
+        why: "LLM 的核心任务就是「预测下一个 Token」。它不是检索，也不只会背原文——所以它能生成新句子，也会因此产生幻觉。",
+        hint: "第 2 课你亲自当过一次 LLM，当时你在做什么？"
+      },
+      {
+        q: "AI 眉飞色舞地介绍了一颗「豆苗星」，可它根本不存在。这种现象的术语是？",
+        opts: ["过拟合（Overfitting）", "数据泄露（Data Leak）", "幻觉（Hallucination）"],
+        a: 2,
+        why: "貌似合理、实则编造的内容叫幻觉。根源是模型按概率补全文本，并没有「知道 / 不知道」的开关。",
+        hint: "第 3 课的侦探游戏，你抓的就是它。"
+      },
+      {
+        q: "想让 AI 写一段给初中生的科普短文，哪个提示词最可能得到高质量回答？",
+        opts: ["写点东西", "帮我写一篇作文", "你是科普作家：写一段 150 字、面向初中生的短文解释什么是 Token，用一个生活类比"],
+        a: 2,
+        why: "好提示 = 角色（科普作家）+ 任务（解释 Token）+ 要求（150 字、面向初中生）+ 方法（用类比）。约束越明确，「下一个词」的选择范围越精准。",
+        hint: "回想提示词公式：角色 + 任务 + 要求 + 示例。"
+      }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

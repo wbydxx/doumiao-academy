@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>while 与猜数字 · 代码实验室 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="code"></span>代码实验室</a>
+    <span class="sep">/</span>
+    <span>第 6 课 · while 与猜数字</span>
+  </nav>
+
+  <!-- ① 课程头卡 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="code"></span>进阶 · 第 6 课</span>
+    <h2>while 与猜数字</h2>
+    <p style="color:var(--muted)">for 循环知道跑几圈，<b>while</b> 循环只认条件：「条件成立就继续」。配上 <b>random</b> 随机数，你就能写出经典游戏——猜数字。</p>
+    <div class="learn-caps">
+      <span><span data-ic="loop"></span>while 条件循环</span>
+      <span><span data-ic="check"></span>循环三要素</span>
+      <span><span data-ic="spark"></span>random 随机数</span>
+      <span><span data-ic="bulb"></span>死循环与护栏</span>
+    </div>
+  </section>
+
+  <!-- ② 课前导读 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>课前导读</span>
+    <div class="intro-split" style="margin-top:12px">
+      <img class="intro-img" src="../assets/img/lab-6.jpg" alt="水闸控制室里表盘指针正在倒数，屏幕显示倒计时数字" loading="lazy">
+      <div class="intro-txt">
+        <h3>「满足条件就继续」的永动机</h3>
+        <p>泄洪前控制室要倒数：3、2、1、泄洪！这就是 <b>while</b> 的拿手戏——只要 <b>n &gt; 0</b> 成立就不停歇，每圈把 n 减 1，条件一破立即收工。for 像「跑 5 圈操场」，while 像「天黑前一直跑」。</p>
+        <p>但小心：<b>忘了改条件变量</b>，程序就永远停不下来，这叫死循环。这一课你还会认识 <b>random.randint</b>——它负责「掷骰子」，是猜数字游戏的心脏。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 概念卡片 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>先懂 4 个概念</span>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3><span data-ic="loop"></span>while 循环</h3>
+        <p>先判断条件，成立就执行循环体，再回头判断——直到条件为 False。它和 if 的区别：if 问一次，while 反复问。</p>
+        <pre>while n &gt; 0:
+    n = n - 1</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="check"></span>循环三要素</h3>
+        <p>①<b>初值</b>（n = 3）②<b>条件</b>（n &gt; 0）③<b>变化</b>（n = n - 1）。缺了第 3 件，条件永远成立，循环永远不停。</p>
+        <pre>n = 3      # ①
+while n &gt; 0:   # ②
+    n = n - 1  # ③</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="spark"></span>random 随机数</h3>
+        <p><b>random.randint(1, 6)</b> 掷出一个 1 到 6 的数（两头都算）。先 import random 借工具，再调用它。</p>
+        <pre>import random
+r = random.randint(1, 6)</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="bulb"></span>死循环与护栏</h3>
+        <p>条件永远 True 的循环叫死循环，浏览器会卡住。本站运行器装了<b>护栏</b>：超过 10 万圈强制喊停并提醒你——真实开发可没有这层保护。</p>
+        <pre># 忘写 n = n - 1 就是它</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 动手实验 -->
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="terminal"></span>动手实验 · 迷你运行器</span>
+    <h2 style="font-size:22px">改代码，命中目标输出（<span id="task-done">0</span> / 3）</h2>
+    <p style="color:var(--muted);margin:6px 0 2px">改 while 前先默念三要素：初值是几？条件是什么？每圈怎么变？</p>
+
+    <!-- 任务 1 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：泄洪倒数刻度盘，3 到 0">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 倒数竖排刻度 -->
+          <path d="M56 26v96" stroke-width="1.4" opacity=".8"/>
+          <path d="M48 34h16M48 58h16M48 82h16M48 106h16" stroke-width="1.2"/>
+          <g font-size="11" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="end">
+            <text x="42" y="38">3</text><text x="42" y="62">2</text><text x="42" y="86">1</text>
+          </g>
+          <text x="42" y="110" font-size="11" font-weight="700" fill="#E06C6A" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="end">0</text>
+          <path d="M32 106h-8" stroke="#E06C6A" stroke-width="1.2"/>
+          <text x="18" y="98" font-size="8" fill="#E06C6A" stroke="none" font-family="ui-monospace,Consolas,monospace">警戒</text>
+          <!-- 闸门示意 -->
+          <rect x="86" y="46" width="20" height="66" rx="2"/>
+          <path d="M96 46v66" stroke-width="1" stroke-dasharray="2 3" opacity=".5"/>
+          <path d="M96 39v7" stroke-width="1.3"/><circle cx="96" cy="36" r="3" stroke-width="1.3"/>
+          <!-- 金条件标注 -->
+          <path d="M120 60h24l6-8" stroke="#C9A86A" stroke-width="1"/>
+          <text x="158" y="46" text-anchor="middle" font-size="10" font-weight="700" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">n &gt; ?</text>
+          <!-- 泄流 -->
+          <path d="M106 118h30" stroke="#43B58F" stroke-width="1.4"/>
+          <path d="M130 112l8 6-8 6" stroke="#43B58F" stroke-width="1.4"/>
+          <text x="158" y="122" font-size="9" fill="#43B58F" stroke="none" font-family="ui-monospace,Consolas,monospace">泄洪!</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 1 · 倒数泄洪</h3>
+        <p class="task-guide">现在只报了个 <b>3</b> 就停住了。把 while 的条件 <b>n &gt; 2</b> 改成 <b>n &gt; 0</b>，让它一路数到 1 再喊「泄洪」。练：<b>while 条件</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>3、2、1、泄洪！</code>（4 行）</span>
+        <div class="code-run" id="run1">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-01.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 2 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：双闸相向升降示意">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 中央线 -->
+          <path d="M100 30v88" stroke-width="1" stroke-dasharray="8 3 2 3" opacity=".5"/>
+          <!-- 左闸 a -->
+          <rect x="46" y="76" width="18" height="42" rx="2"/>
+          <text x="55" y="70" text-anchor="middle" font-size="9" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">a=1</text>
+          <path d="M55 70v-12" stroke="#43B58F" stroke-width="1.3"/>
+          <path d="M50 62l5-9 5 9" stroke="#43B58F" stroke-width="1.3"/>
+          <!-- 右闸 b -->
+          <rect x="136" y="42" width="18" height="42" rx="2"/>
+          <text x="145" y="98" text-anchor="middle" font-size="9" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">b=5</text>
+          <path d="M145 98v12" stroke="#43B58F" stroke-width="1.3"/>
+          <path d="M140 106l5 9 5-9" stroke="#43B58F" stroke-width="1.3"/>
+          <!-- 相遇对 -->
+          <text x="100" y="66" text-anchor="middle" font-size="11" font-weight="700" fill="#E3CFA2" stroke="none" font-family="ui-monospace,Consolas,monospace">? 对 ?</text>
+          <!-- 金标注 -->
+          <path d="M64 34h26" stroke="#C9A86A" stroke-width="1"/>
+          <text x="108" y="30" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">a 每圈 +2</text>
+          <!-- 地面 -->
+          <path d="M34 122h132" stroke-width="1.3" opacity=".7"/>
+          <text x="100" y="134" text-anchor="middle" font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="2">a &lt; b 才继续</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 2 · 双闸齐开</h3>
+        <p class="task-guide">左右两扇闸门相向开合，只要 <b>a &lt; b</b> 就继续报数。现在左闸每圈只 +1——改成 <b>a = a + 2</b>，让它升得更快、早点相遇。练：<b>循环内变量变化</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>1 对 5</code> + <code>3 对 4</code>（2 行）</span>
+        <div class="code-run" id="run2">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-02.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 3 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：江水盲盒装置，骰子与问号">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 盲盒箱 -->
+          <rect x="66" y="46" width="68" height="52" rx="4"/>
+          <rect x="73" y="53" width="54" height="38" rx="2" stroke-width="1" opacity=".5"/>
+          <text x="100" y="80" text-anchor="middle" font-size="22" font-weight="700" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">?</text>
+          <!-- 摇柄 -->
+          <path d="M134 62h14" stroke-width="1.3"/><circle cx="152" cy="62" r="3.5" stroke-width="1.3"/>
+          <!-- 骰子 -->
+          <rect x="34" y="20" width="18" height="18" rx="3" stroke="#C9A86A" stroke-width="1.3"/>
+          <g fill="#C9A86A" stroke="none">
+            <circle cx="39" cy="25" r="1.4"/><circle cx="47" cy="25" r="1.4"/>
+            <circle cx="43" cy="29" r="1.4"/>
+            <circle cx="39" cy="33" r="1.4"/><circle cx="47" cy="33" r="1.4"/>
+          </g>
+          <path d="M52 30h12" stroke="#C9A86A" stroke-width="1"/>
+          <text x="80" y="26" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">randint(1, ?)</text>
+          <!-- 出水口 -->
+          <path d="M84 98v12h56v-12" stroke-width="1" opacity=".5"/>
+          <path d="M100 110v10" stroke="#43B58F" stroke-width="1.4"/>
+          <path d="M95 112l5 8 5-8" stroke="#43B58F" stroke-width="1.4"/>
+          <text x="112" y="126" font-size="8.5" fill="#43B58F" stroke="none" font-family="ui-monospace,Consolas,monospace">水位 = ?</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 3 · 江水盲盒</h3>
+        <p class="task-guide"><b>random.randint(a, b)</b> 是「掷骰子」的引擎，两端都算。把盲盒范围从 (1, 2) 扩到 <b>(1, 5)</b>，运行看看今天的水位落在哪一档。练：<b>random 随机数</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>今天水位：5 米</code> + <code>警戒水位：7 米</code>（2 行）</span>
+        <div class="code-run" id="run3">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-03.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">3 个任务全部命中目标，通关按钮就会亮起来</p>
+  </section>
+
+  <!-- ⑤ 自主练习 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="flask"></span>自主练习 · 不计进度，随便试</span>
+    <h2 style="font-size:22px">试一试，看你真的懂了吗</h2>
+
+    <div class="pq" data-pq>
+      <h3>练 1 · 这个 while 打印几行？</h3>
+      <div class="pq-code">n = 1
+while n &lt; 4:
+    print(n)
+    n = n + 1</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="1">3 行：1、2、3</button>
+        <button class="pq-opt" type="button" data-ok="0">4 行：1、2、3、4</button>
+        <button class="pq-opt" type="button" data-ok="0">2 行</button>
+        <button class="pq-opt" type="button" data-ok="0">无限行</button>
+      </div>
+      <p class="pq-exp">n 从 1 起，条件 n &lt; 4 成立时打印：1、2、3。n 变成 4 时条件不成立，循环停——注意 4 本身不打印。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 2 · 忘写 n = n - 1 会怎样？</h3>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">少打印一行</button>
+        <button class="pq-opt" type="button" data-ok="0">直接报错</button>
+        <button class="pq-opt" type="button" data-ok="1">死循环，条件永远成立</button>
+        <button class="pq-opt" type="button" data-ok="0">多打印一行</button>
+      </div>
+      <p class="pq-exp">条件变量不变，条件就永远 True——这就是死循环。本站运行器有 10 万圈护栏会强制喊停，但在真实电脑上它会让程序卡死。写 while 必念三要素！</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 3 · randint(1, 6) 能掷出几？</h3>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">1 到 5（不含 6）</button>
+        <button class="pq-opt" type="button" data-ok="0">0 到 6</button>
+        <button class="pq-opt" type="button" data-ok="1">1 到 6，两头都算</button>
+        <button class="pq-opt" type="button" data-ok="0">只能是 6</button>
+      </div>
+      <p class="pq-exp">randint 是「两端的都算」——randint(1, 6) 相当于一颗真骰子。对比 range(1, 6) 数头不数尾，两者刚好相反，别记混。</p>
+    </div>
+
+    <div class="pq">
+      <h3>练 4 · 自由编码：火箭倒数</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">从 <b>5</b> 倒数到 1（每行一个数），最后打印「发射！」。写之前默念三要素。</p>
+      <div class="code-run" id="free1">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-04.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+
+    <div class="pq">
+      <h3>练 5 · 自由编码：电子骰子</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">先 import random，掷出 <b>randint(1, 6)</b>，再用 f-string 打印「掷出：X 点」。</p>
+      <div class="code-run" id="free2">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-05.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot">while 三要素顺口溜：「先定起点，再画终点，每圈都要动一动」——三者缺一，循环就罢工或发疯。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-05.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一课 · 字典与字符串</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-07.html" onclick="DM.sfx('click')">下一课 · 综合项目<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "lab" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  /* 动手实验：公共任务运行器（改代码命中目标输出） */
+  var doneCount = 0;
+  var doneSet = {};
+  var doneEl = document.getElementById("task-done");
+  var doneBtn = document.getElementById("done");
+  function onPass(key) {
+    if (!doneSet[key]) { doneSet[key] = true; doneCount++; }
+    doneEl.textContent = doneCount;
+    if (doneCount >= 3) doneBtn.disabled = false;
+  }
+
+  DM.taskRunner("run1", {
+    name: "t1",
+    goal: ["3", "2", "1", "泄洪！"],
+    onPass: onPass,
+    initial: '# 任务 1：倒数泄洪\nn = 3\nwhile n > 2:      # TODO：改成 n > 0，一路倒数到 1\n    print(n)\n    n = n - 1\nprint("泄洪！")'
+  });
+
+  DM.taskRunner("run2", {
+    name: "t2",
+    goal: ["1 对 5", "3 对 4"],
+    onPass: onPass,
+    initial: '# 任务 2：双闸齐开（左闸升，右闸降）\na = 1\nb = 5\nwhile a < b:\n    print(f"{a} 对 {b}")\n    a = a + 1     # TODO：改成 a + 2（左闸升得更快）\n    b = b - 1'
+  });
+
+  DM.taskRunner("run3", {
+    name: "t3",
+    goal: ["今天水位：5 米", "警戒水位：7 米"],
+    onPass: onPass,
+    initial: '# 任务 3：江水盲盒（猜数字游戏的引擎）\nimport random\n\nwater = random.randint(1, 2)   # TODO：盲盒范围改成 1 到 5\n\nprint(f"今天水位：{water} 米")\nprint(f"警戒水位：{water + 2} 米")'
+  });
+
+  /* 自主练习：自由编码题（运行 / 还原 / 填入参考答案） */
+  DM.practiceRunner("free1", {
+    file: "practice-04.py",
+    initial: '# 从 5 倒数到 1（每行一个数），最后打印「发射！」\nn = 5\n\n# 在下面写 while 循环',
+    ref: 'n = 5\nwhile n > 0:\n    print(n)\n    n = n - 1\nprint("发射！")'
+  });
+
+  DM.practiceRunner("free2", {
+    file: "practice-05.py",
+    initial: '# 掷一个 1~6 的电子骰子，打印「掷出：X 点」\nimport random\n\n# 在下面动手',
+    ref: 'import random\n\ndice = random.randint(1, 6)\nprint(f"掷出：{dice} 点")'
+  });
+
+  doneBtn.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("lab", 5, 3);
+    doneBtn.innerHTML = DM.icon("check") + "太棒了，第 6 课通关！";
+    doneBtn.disabled = true;
+  });
+
+  /* 自主练习：选择题即时反馈（不计进度） */
+  document.querySelectorAll("[data-pq]").forEach(function (pq) {
+    var exp = pq.querySelector(".pq-exp");
+    var answered = false;
+    pq.querySelectorAll(".pq-opt").forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        if (answered) return;
+        if (opt.dataset.ok === "1") {
+          opt.classList.add("ok");
+          exp.classList.add("show");
+          DM.sfx("right");
+          answered = true;
+        } else {
+          opt.classList.add("bad");
+          DM.sfx("retry");
+          setTimeout(function () { opt.classList.remove("bad"); }, 700);
+        }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

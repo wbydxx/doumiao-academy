@@ -1,0 +1,224 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的小秘密 · 城墙小卫士 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+  [data-icon] { display: inline-flex; align-items: center; }
+  /* 信息分一分 */
+  .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 12px 0; }
+  @media (max-width: 720px) { .info-grid { grid-template-columns: repeat(2, 1fr); } }
+  .info-card { border: 2px solid var(--rule); border-radius: var(--radius-sm); background: var(--bg); padding: 14px 12px; text-align: center; transition: border-color .2s, background .2s; }
+  .info-card .ic-t { color: var(--accent); }
+  .info-card .ic-t svg { width: 34px; height: 34px; margin: 0 auto 6px; }
+  .info-card .t { font-weight: 800; margin-bottom: 10px; font-size: 17px; }
+  .info-card .btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .info-card .btn.sm { min-height: 40px; padding: 4px 12px; font-size: 15px; }
+  .info-card.ok { border-color: var(--green); background: rgba(46,204,154,.10); }
+  .info-card.ok .btns .btn { opacity: .45; cursor: default; }
+  .info-card.warn { border-color: var(--accent-2); background: rgba(255,159,67,.12); }
+  .remind { min-height: 26px; text-align: center; font-size: 16px; color: #c96f0f; }
+  .done-msg { margin-top: 12px; padding: 12px 16px; border: 2px solid var(--green); border-radius: var(--radius-sm); background: rgba(46,204,154,.12); font-size: 17px; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-icon="home"></span>首页</a><span class="sep">/</span>
+    <span>城墙小卫士</span><span class="sep">/</span><b>第 2 关 · 我的小秘密</b>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-icon="wall"></span>城墙小卫士 · 第 2 关</span>
+    <h2>我的小秘密</h2>
+    <p style="color:var(--muted)">守住城门，不把钥匙交给陌生人</p>
+  </section>
+
+  <section class="panel scene-panel scene-center" aria-hidden="true">
+    <svg class="scene-svg" viewBox="0 0 640 300" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- 天上飘着的"秘密卡片" -->
+      <g transform="translate(150,86) rotate(-8)">
+        <rect x="-44" y="-27" width="88" height="54" rx="10" fill="#fff"/>
+        <text y="9" text-anchor="middle" font-size="24" font-weight="800" fill="#FF9F43" stroke="none" font-family="inherit">？</text>
+      </g>
+      <g transform="translate(232,54) rotate(5)">
+        <rect x="-40" y="-24" width="80" height="48" rx="10" fill="#fff"/>
+        <rect x="-14" y="-4" width="28" height="20" rx="5" fill="#EAF4FD"/>
+        <path d="M-8 -4v-5a8 8 0 0 1 16 0v5"/>
+      </g>
+      <g transform="translate(498,80) rotate(8)">
+        <rect x="-44" y="-27" width="88" height="54" rx="10" fill="#fff"/>
+        <circle cy="-6" r="8"/><path d="M0 2v8"/>
+        <path d="M-30 14h60"/>
+      </g>
+      <!-- 明城墙与城门 -->
+      <g>
+        <path d="M50 252v-20h26v-9h26v9h26v-9h26v9h26v-9h26v9h26v20"/>
+        <path d="M382 252v-20h26v-9h26v9h26v-9h26v9h26v-9h26v9h26v20"/>
+        <path d="M30 252h580"/>
+        <path d="M275 252v-38c0-20 20-32 45-32s45 12 45 32v38"/>
+        <path d="M320 252v-64"/>
+      </g>
+      <!-- 挂在城门上的大锁 -->
+      <g fill="#FFF6EA">
+        <path d="M300 168v-14a20 20 0 0 1 40 0v14"/>
+        <rect x="288" y="168" width="64" height="48" rx="10"/>
+        <circle cx="320" cy="188" r="6" fill="none"/>
+        <path d="M320 194v12"/>
+      </g>
+      <!-- 锁边的星光 -->
+      <g stroke="#FF9F43" stroke-width="2">
+        <path d="M270 176h10M275 171v10"/>
+        <path d="M362 196h10M367 191v10"/>
+      </g>
+    </svg>
+  </section>
+
+  <section class="panel">
+    <div class="learn-text">
+      <p>有些信息可以大声告诉大家，比如你喜欢的动画片、你喜欢的颜色——说出来，能交到<b>志同道合</b>的朋友。</p>
+      <p>但有些信息是<b>小秘密</b>：完整的姓名、家庭住址、账号密码、你的照片。它们就像城门的钥匙，被坏人拿到，就可能顺着网络找上门来。</p>
+      <p>记住：网上不比谁知道得多。分不清能不能说的时候，先问问<b>爸妈和老师</b>。</p>
+    </div>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-icon="spark"></span>试一试 · 分一分</span>
+    <p style="margin-top:6px">下面 6 张信息卡，哪些可以告诉大家，哪些是小秘密？点按钮分一分。</p>
+    <div class="info-grid" id="info-grid">
+      <div class="info-card" data-secret="1">
+        <div class="ic-t" data-icon="doudou"></div>
+        <div class="t">我的姓名</div>
+        <div class="btns">
+          <button class="btn ghost sm" data-ans="pub">可以公开</button>
+          <button class="btn ghost sm" data-ans="sec">是秘密</button>
+        </div>
+      </div>
+      <div class="info-card" data-secret="1">
+        <div class="ic-t" data-icon="home"></div>
+        <div class="t">家庭住址</div>
+        <div class="btns">
+          <button class="btn ghost sm" data-ans="pub">可以公开</button>
+          <button class="btn ghost sm" data-ans="sec">是秘密</button>
+        </div>
+      </div>
+      <div class="info-card" data-secret="1">
+        <div class="ic-t" data-icon="lock"></div>
+        <div class="t">账号密码</div>
+        <div class="btns">
+          <button class="btn ghost sm" data-ans="pub">可以公开</button>
+          <button class="btn ghost sm" data-ans="sec">是秘密</button>
+        </div>
+      </div>
+      <div class="info-card" data-secret="1">
+        <div class="ic-t" data-icon="eye"></div>
+        <div class="t">我的照片</div>
+        <div class="btns">
+          <button class="btn ghost sm" data-ans="pub">可以公开</button>
+          <button class="btn ghost sm" data-ans="sec">是秘密</button>
+        </div>
+      </div>
+      <div class="info-card" data-secret="0">
+        <div class="ic-t" data-icon="play"></div>
+        <div class="t">喜欢的动画片</div>
+        <div class="btns">
+          <button class="btn ghost sm" data-ans="pub">可以公开</button>
+          <button class="btn ghost sm" data-ans="sec">是秘密</button>
+        </div>
+      </div>
+      <div class="info-card" data-secret="0">
+        <div class="ic-t" data-icon="plum"></div>
+        <div class="t">喜欢的颜色</div>
+        <div class="btns">
+          <button class="btn ghost sm" data-ans="pub">可以公开</button>
+          <button class="btn ghost sm" data-ans="sec">是秘密</button>
+        </div>
+      </div>
+    </div>
+    <div class="remind" id="info-remind"></div>
+    <div class="hint" id="info-hint" style="text-align:center">已分对 0 / 6</div>
+    <div class="done-msg" id="info-done" style="display:none">
+      全部分对了！记住：姓名、住址、密码、照片是小秘密，网上不外传。想说又拿不准时，先问问爸妈。
+    </div>
+  </section>
+
+  <section class="doudou-bubble">
+    <span class="dd-ic" data-icon="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆说</div>
+      <p>小秘密就像城门的钥匙，守好了，城墙才安全。分不清的时候，先问问爸妈！</p>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="btn ghost sm" href="lesson-01.html"><span data-icon="arrowLeft"></span>上一关</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" data-speak><span data-icon="speaker"></span>朗读这一页</button>
+    <a class="btn blue sm" href="lesson-03.html">下一关<span data-icon="arrowRight"></span></a>
+  </nav>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+(function () {
+  var DM = window.DM;
+  DM.boot({ root: "..", module: "safety" });
+
+  document.querySelectorAll("[data-icon]").forEach(function (el) {
+    el.innerHTML = DM.icon(el.getAttribute("data-icon"));
+  });
+  document.querySelectorAll("[data-speak]").forEach(function (b) {
+    b.addEventListener("click", function () { DM.speakPage(b); });
+  });
+
+  /* 信息卡分一分 */
+  var cards = document.querySelectorAll("#info-grid .info-card");
+  var hint = document.getElementById("info-hint");
+  var remind = document.getElementById("info-remind");
+  var done = document.getElementById("info-done");
+  var okCount = 0, finished = false;
+
+  cards.forEach(function (card) {
+    var needSecret = card.dataset.secret === "1";
+    card.querySelectorAll("[data-ans]").forEach(function (btn) {
+      btn.addEventListener("click", function (ev) {
+        if (finished || card.classList.contains("ok")) return;
+        var pick = btn.dataset.ans;
+        var correct = (needSecret && pick === "sec") || (!needSecret && pick === "pub");
+        if (correct) {
+          card.classList.remove("warn");
+          card.classList.add("ok", "pop-ok");
+          DM.sfx("right");
+          DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+          okCount++;
+          hint.textContent = "已分对 " + okCount + " / 6";
+          remind.textContent = "";
+          if (okCount === cards.length) {
+            finished = true;
+            DM.sfx("wow");
+            DM.store.completeLesson("safety", 1, 3);
+            done.style.display = "block";
+          }
+        } else {
+          card.classList.add("warn", "shake");
+          DM.sfx("retry");
+          remind.textContent = "再想想看：这条信息能让网上不认识的人知道吗？";
+          setTimeout(function () { card.classList.remove("shake"); }, 450);
+          setTimeout(function () { card.classList.remove("warn"); }, 900);
+        }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

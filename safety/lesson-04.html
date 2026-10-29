@@ -1,0 +1,185 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遇到坏心思怎么办 · 城墙小卫士 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+  [data-icon] { display: inline-flex; align-items: center; }
+  /* 三步口诀卡 */
+  .steps { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 14px 0; }
+  .step-card { width: 180px; border: 2.5px solid var(--rule); border-radius: var(--radius); background: var(--bg); padding: 18px 12px; text-align: center; cursor: pointer; transition: border-color .2s, background .2s, box-shadow .2s; }
+  .step-card svg { width: 46px; height: 46px; margin: 0 auto 8px; color: var(--muted); transition: color .2s; }
+  .step-card .w { font-size: 30px; font-weight: 800; line-height: 1.2; }
+  .step-card .d { font-size: 15px; color: var(--muted); margin-top: 6px; }
+  .step-card:hover { border-color: var(--accent); }
+  .step-card.on { border-color: var(--green); background: rgba(46,204,154,.12); box-shadow: 0 0 0 4px rgba(46,204,154,.15); }
+  .step-card.on svg { color: var(--green); }
+  .step-hint { text-align: center; min-height: 26px; font-size: 16px; color: #c96f0f; }
+  .done-msg { margin-top: 12px; padding: 12px 16px; border: 2px solid var(--green); border-radius: var(--radius-sm); background: rgba(46,204,154,.12); font-size: 17px; text-align: center; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-icon="home"></span>首页</a><span class="sep">/</span>
+    <span>城墙小卫士</span><span class="sep">/</span><b>第 4 关 · 遇到坏心思怎么办</b>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-icon="wall"></span>城墙小卫士 · 第 4 关</span>
+    <h2>遇到坏心思怎么办</h2>
+    <p style="color:var(--muted)">三步口诀：停 · 说 · 找</p>
+  </section>
+
+  <section class="panel scene-panel scene-center" aria-hidden="true">
+    <svg class="scene-svg" viewBox="0 0 640 300" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- 云朵 -->
+      <g stroke="#5D7FA3" opacity=".8">
+        <path d="M96 58c0-10 8-17 17-15 3-8 13-10 19-4 8-3 16 2 16 10 0 7-6 12-13 12h-28c-6 0-11-3-11-3z"/>
+        <path d="M540 44c0-8 7-14 14-12 2-6 10-8 15-3 6-2 13 2 13 8 0 6-5 10-11 10h-23c-5 0-8-3-8-3z"/>
+      </g>
+      <!-- 小路 -->
+      <path d="M56 240c90-20 150-20 264 0 114 20 174 20 264-4"/>
+      <!-- 三块路牌 -->
+      <g>
+        <path d="M150 214v-62"/>
+        <circle cx="150" cy="126" r="26" fill="#fff"/>
+        <text x="150" y="134" text-anchor="middle" font-size="22" font-weight="800" fill="#E8890C" stroke="none" font-family="inherit">停</text>
+        <text x="150" y="84" text-anchor="middle" font-size="13" fill="#5D7FA3" stroke="none" font-family="inherit">不回复不点击</text>
+      </g>
+      <g>
+        <path d="M320 218v-82"/>
+        <circle cx="320" cy="110" r="26" fill="#fff"/>
+        <text x="320" y="118" text-anchor="middle" font-size="22" font-weight="800" fill="#2E86DE" stroke="none" font-family="inherit">说</text>
+        <text x="320" y="68" text-anchor="middle" font-size="13" fill="#5D7FA3" stroke="none" font-family="inherit">告诉爸妈老师</text>
+      </g>
+      <g>
+        <path d="M490 214v-62"/>
+        <circle cx="490" cy="126" r="26" fill="#fff"/>
+        <text x="490" y="134" text-anchor="middle" font-size="22" font-weight="800" fill="#2ECC9A" stroke="none" font-family="inherit">找</text>
+        <text x="490" y="84" text-anchor="middle" font-size="13" fill="#5D7FA3" stroke="none" font-family="inherit">一起处理</text>
+      </g>
+      <!-- 终点小旗 -->
+      <g>
+        <path d="M586 206v-58"/>
+        <path d="M586 148l26 9-26 9" fill="#FF6B9D"/>
+        <path d="M578 208h16"/>
+      </g>
+      <!-- 路边小花 -->
+      <g stroke="#FF6B9D" stroke-width="2">
+        <circle cx="96" cy="228" r="4"/><circle cx="104" cy="224" r="4"/><circle cx="112" cy="228" r="4"/>
+        <circle cx="560" cy="212" r="4"/><circle cx="568" cy="208" r="4"/><circle cx="576" cy="212" r="4"/>
+      </g>
+    </svg>
+  </section>
+
+  <section class="panel">
+    <div class="learn-text">
+      <p>如果网上有人吓唬你、说奇怪的话，或让你做不愿意的事，请念三步口诀：<b>停、说、找</b>。</p>
+      <p><b>停</b>——不回复，也不点击他发的东西；<b>说</b>——马上告诉爸妈和老师；<b>找</b>——和他们一起处理，把坏人挡在城门外。</p>
+      <p>遇到吓人的内容，<b>不是你的错</b>。勇敢说出来，你就是守城的小卫士。</p>
+    </div>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-icon="spark"></span>试一试 · 点亮口诀</span>
+    <p style="margin-top:6px">按顺序点击三块口诀牌，把它们全部点亮！</p>
+    <div class="steps" id="steps">
+      <div class="step-card" data-step="0" role="button" tabindex="0" aria-label="第一步 停">
+        <span data-icon="alert"></span>
+        <div class="w">停</div>
+        <div class="d">不回复，不点击</div>
+      </div>
+      <div class="step-card" data-step="1" role="button" tabindex="0" aria-label="第二步 说">
+        <span data-icon="speaker"></span>
+        <div class="w">说</div>
+        <div class="d">告诉爸妈和老师</div>
+      </div>
+      <div class="step-card" data-step="2" role="button" tabindex="0" aria-label="第三步 找">
+        <span data-icon="home"></span>
+        <div class="w">找</div>
+        <div class="d">一起处理</div>
+      </div>
+    </div>
+    <div class="step-hint" id="step-hint"></div>
+    <div class="done-msg" id="step-done" style="display:none">
+      口诀点亮：停、说、找！遇到坏心思就不怕了——爸妈和老师永远愿意帮你。
+    </div>
+  </section>
+
+  <section class="doudou-bubble">
+    <span class="dd-ic" data-icon="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆说</div>
+      <p>遇到吓人的事，深深吸一口气，念口诀——停、说、找。记住，这不是你的错！</p>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="btn ghost sm" href="lesson-03.html"><span data-icon="arrowLeft"></span>上一关</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" data-speak><span data-icon="speaker"></span>朗读这一页</button>
+    <a class="btn blue sm" href="game-shield.html">去玩守城游戏<span data-icon="arrowRight"></span></a>
+  </nav>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+(function () {
+  var DM = window.DM;
+  DM.boot({ root: "..", module: "safety" });
+
+  document.querySelectorAll("[data-icon]").forEach(function (el) {
+    el.innerHTML = DM.icon(el.getAttribute("data-icon"));
+  });
+  document.querySelectorAll("[data-speak]").forEach(function (b) {
+    b.addEventListener("click", function () { DM.speakPage(b); });
+  });
+
+  /* 按顺序点亮三步口诀 */
+  var cards = document.querySelectorAll("#steps .step-card");
+  var hintEl = document.getElementById("step-hint");
+  var doneEl = document.getElementById("step-done");
+  var next = 0, finished = false;
+
+  function light(card) {
+    card.classList.add("on", "pop-ok");
+    DM.sfx("toggle");
+    next++;
+    hintEl.textContent = "";
+    if (next === cards.length) {
+      finished = true;
+      var last = cards[cards.length - 1].getBoundingClientRect();
+      DM.petals(last.left + last.width / 2, last.top + last.height / 2);
+      DM.sfx("wow");
+      DM.store.completeLesson("safety", 3, 3);
+      doneEl.style.display = "block";
+    }
+  }
+  cards.forEach(function (card) {
+    function tap() {
+      if (finished || card.classList.contains("on")) return;
+      if (+card.dataset.step === next) { light(card); return; }
+      card.classList.add("shake");
+      DM.sfx("retry");
+      hintEl.textContent = "口诀是有顺序的哦——先" + ["停一停", "说出来", "一起找办法"][next] + "！";
+      setTimeout(function () { card.classList.remove("shake"); }, 450);
+    }
+    card.addEventListener("click", tap);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tap(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

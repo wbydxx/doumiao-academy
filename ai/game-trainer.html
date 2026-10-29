@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游戏 · 训练 AI 小助手 · AI 小课堂 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="robot"></span>AI 小课堂</a>
+    <span class="sep">/</span>
+    <span>游戏 · 训练 AI 小助手</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="gamepad"></span>红山动物园 · 游戏</span>
+    <h2>训练 AI 小助手</h2>
+    <p style="color:var(--muted)">先当老师教 AI，再当监工检查它！</p>
+  </section>
+
+  <section class="panel learn-text">
+    <p><b>第一步 · 训练（10 轮）</b>：判断箱子里是不是小猫，答对 AI 的把握度 +10，答错 -4。</p>
+    <p><b>第二步 · 测试（4 轮）</b>：AI 给出自己的猜测，你来检查它猜得对不对。注意，AI 也可能犯错哦！</p>
+    <p>测试判对得越多，雨花石越多（最多 3 颗），还能再来一局。</p>
+  </section>
+
+  <section class="game-stage">
+    <div class="game-top">
+      <span class="gt-label"><span data-ic="loop"></span><span id="round">训练 · 第 1 / 10 轮</span></span>
+      <span class="big-num" id="conf-num">5%</span>
+      <span class="gt-label"><span data-ic="spark"></span>AI 把握度</span>
+    </div>
+    <div class="animal-card" id="pic"></div>
+    <div class="confidence"><div class="fill" id="conf"></div></div>
+    <div id="train-btns" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+      <button class="btn blue" type="button" id="yes"><span data-ic="check"></span>是小猫</button>
+      <button class="btn ghost" type="button" id="no"><span data-ic="alert"></span>不是小猫</button>
+    </div>
+    <div id="test-btns" style="display:none;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+      <button class="btn blue" type="button" id="t-ok"><span data-ic="check"></span>AI 猜对啦</button>
+      <button class="btn ghost" type="button" id="t-bad"><span data-ic="alert"></span>AI 猜错啦</button>
+    </div>
+    <p style="text-align:center;min-height:56px;margin-top:10px" id="tip">记住第一步要领：只有<b>小猫</b>才算"是小猫"！</p>
+    <div id="end" style="display:none;text-align:center">
+      <div class="stone-row" id="end-stones" style="margin:8px 0"></div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn sm" type="button" id="again"><span data-ic="reset"></span>再玩一次</button>
+        <a class="btn blue sm" href="quiz.html" onclick="DM.sfx('click')">下一关 · 挑战测验<span data-ic="arrowRight"></span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot">你教得越认真，AI 学得越好。测试时睁大眼睛，帮它把错误挑出来！</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-04.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一关 · AI 能做与不能做</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.sfx('click');DM.speakPage(this)"><span data-ic="speaker"></span>朗读规则</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="quiz.html" onclick="DM.sfx('click')">下一关 · 挑战测验<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "ai" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  function svgHead(kind) {
+    var s = 'stroke="#1A3A5C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"';
+    if (kind === "cat") return '<svg viewBox="0 0 120 120" fill="none" ' + s + ' aria-hidden="true"><path d="M34 30 28 10l18 8M86 30l6-20-18 8"/><circle cx="60" cy="62" r="34" fill="#FFF6EA"/><circle cx="48" cy="56" r="3.5" fill="#1A3A5C" stroke="none"/><circle cx="72" cy="56" r="3.5" fill="#1A3A5C" stroke="none"/><path d="M54 68q6 5 12 0"/><path d="M26 60H8M26 68H10M94 60h18M94 68h16"/></svg>';
+    if (kind === "dog") return '<svg viewBox="0 0 120 120" fill="none" ' + s + ' aria-hidden="true"><path d="M32 34C24 26 22 14 30 10c6-3 12 2 14 10M88 34c8-8 10-20 2-24-6-3-12 2-14 10"/><circle cx="60" cy="60" r="32" fill="#EAF4FD"/><circle cx="49" cy="54" r="3.5" fill="#1A3A5C" stroke="none"/><circle cx="71" cy="54" r="3.5" fill="#1A3A5C" stroke="none"/><ellipse cx="60" cy="66" rx="5" ry="4" fill="#1A3A5C" stroke="none"/><path d="M52 76q8 6 16 0"/><path d="M60 76v6"/></svg>';
+    return '<svg viewBox="0 0 120 120" fill="none" ' + s + ' aria-hidden="true"><ellipse cx="46" cy="26" rx="9" ry="20" fill="#FDF0F5"/><ellipse cx="74" cy="26" rx="9" ry="20" fill="#FDF0F5"/><circle cx="60" cy="68" r="30" fill="#FDF0F5"/><circle cx="50" cy="62" r="3.5" fill="#1A3A5C" stroke="none"/><circle cx="70" cy="62" r="3.5" fill="#1A3A5C" stroke="none"/><path d="M56 74l4 4 4-4"/><path d="M50 76q10 8 20 0"/></svg>';
+  }
+  var NAMES = { cat: "小猫", dog: "小狗", rabbit: "小兔" };
+  var NAME2KEY = { "小猫": "cat", "小狗": "dog", "小兔": "rabbit" };
+
+  var pic = document.getElementById("pic");
+  var roundEl = document.getElementById("round");
+  var confEl = document.getElementById("conf");
+  var confNum = document.getElementById("conf-num");
+  var tip = document.getElementById("tip");
+  var mascot = document.getElementById("mascot");
+  var trainBtns = document.getElementById("train-btns");
+  var testBtns = document.getElementById("test-btns");
+  var endBox = document.getElementById("end");
+  var endStones = document.getElementById("end-stones");
+
+  var phase = "train", round = 0, conf = 5, cur = "cat", testScore = 0, tIdx = 0, tReal = "cat", tGuess = "cat";
+
+  function renderConf() {
+    confEl.style.width = conf + "%";
+    confNum.textContent = conf + "%";
+  }
+  function pick() {
+    var r = Math.random();
+    cur = r < 0.5 ? "cat" : (r < 0.75 ? "dog" : "rabbit");
+    pic.innerHTML = svgHead(cur);
+  }
+  function renderRound() {
+    if (phase === "train") roundEl.textContent = "训练 · 第 " + (round + 1) + " / 10 轮";
+    else roundEl.textContent = "测试 · 第 " + (tIdx + 1) + " / 4 轮";
+  }
+
+  function answerTrain(isCat) {
+    var real = cur === "cat";
+    if (isCat === real) {
+      conf = Math.min(99, conf + 10);
+      DM.sfx("right");
+      tip.innerHTML = real ? "对！它确实是小猫，AI 记住了这种样子（把握 +10）" : "对！这不是小猫，AI 也学会了排除（把握 +10）";
+      tip.style.color = "var(--green)";
+    } else {
+      conf = Math.max(5, conf - 4);
+      DM.sfx("retry");
+      tip.innerHTML = "答错啦，其实这是" + NAMES[cur] + "。没关系，再来（把握 -4）";
+      tip.style.color = "var(--accent-2)";
+    }
+    renderConf();
+    round++;
+    if (round >= 10) startTest();
+    else { renderRound(); pick(); }
+  }
+
+  function startTest() {
+    phase = "test";
+    tIdx = 0;
+    testScore = 0;
+    trainBtns.style.display = "none";
+    testBtns.style.display = "flex";
+    mascot.textContent = "训练结束！现在 AI 要露一手了，你来检查它猜得对不对。";
+    nextTest();
+  }
+  function nextTest() {
+    // 前 3 轮 AI 猜对，第 4 轮故意猜错（教育点：人要检查 AI）
+    var r = Math.random();
+    tReal = r < 0.5 ? "cat" : (r < 0.75 ? "dog" : "rabbit");
+    tGuess = tIdx === 3 ? wrongGuess(tReal) : tReal;
+    pic.innerHTML = svgHead(tReal);
+    renderRound();
+    tip.innerHTML = "AI 检查员：我觉得它是<b>" + NAMES[tGuess] + "</b>（把握 " + conf + "%）。你检查一下，它猜得对吗？";
+    tip.style.color = "";
+  }
+  function wrongGuess(real) {
+    var keys = Object.keys(NAMES).filter(function (k) { return k !== real; });
+    return keys[Math.floor(Math.random() * keys.length)];
+  }
+  function judgeTest(saidOk) {
+    var aiRight = tGuess === tReal;
+    if (saidOk === aiRight) {
+      testScore++;
+      DM.sfx("right");
+      tip.innerHTML = aiRight ? "对，AI 这题答对了！" : "火眼金睛！AI 把" + NAMES[tReal] + "认成了" + NAMES[tGuess] + "，被你纠正啦！";
+      tip.style.color = "var(--green)";
+    } else {
+      DM.sfx("retry");
+      tip.innerHTML = "再核对一下图形和 AI 的答案哦～";
+      tip.style.color = "var(--accent-2)";
+      return;
+    }
+    tIdx++;
+    if (tIdx >= 4) finishGame();
+    else nextTest();
+  }
+  function finishGame() {
+    var stones = testScore === 4 ? 3 : testScore === 3 ? 2 : 1;
+    DM.store.completeGame("ai", stones);
+    DM.sfx("wow");
+    var row = "";
+    for (var i = 0; i < 3; i++) row += DM.icon("stone");
+    endStones.innerHTML = row;
+    mascot.textContent = "测试判对 " + testScore + " / 4，赢得 " + stones + " 颗雨花石！AI 有你这样的小老师和小监工，进步飞快！";
+    trainBtns.style.display = "none";
+    testBtns.style.display = "none";
+    endBox.style.display = "block";
+  }
+  function restart() {
+    phase = "train"; round = 0; conf = 5; testScore = 0; tIdx = 0;
+    endBox.style.display = "none";
+    trainBtns.style.display = "flex";
+    testBtns.style.display = "none";
+    mascot.textContent = "再来一次！这次争取把 AI 的把握度练得更高～";
+    renderConf();
+    renderRound();
+    pick();
+    tip.innerHTML = "记住第一步要领：只有<b>小猫</b>才算「是小猫」！";
+    tip.style.color = "";
+  }
+
+  document.getElementById("yes").addEventListener("click", function () { answerTrain(true); });
+  document.getElementById("no").addEventListener("click", function () { answerTrain(false); });
+  document.getElementById("t-ok").addEventListener("click", function () { judgeTest(true); });
+  document.getElementById("t-bad").addEventListener("click", function () { judgeTest(false); });
+  document.getElementById("again").addEventListener("click", restart);
+
+  renderConf();
+  renderRound();
+  pick();
+})();
+</script>
+</body>
+</html>

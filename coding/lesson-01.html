@@ -1,0 +1,193 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>给画舫下指令 · 编程初体验 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+  [data-ic] { display: inline-flex; align-items: center; }
+  .h-ic { display: inline-flex; vertical-align: -4px; margin-right: 8px; color: var(--green); }
+  .h-ic svg { width: 26px; height: 26px; }
+  .try-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 14px 0 4px; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" id="crumbs"></nav>
+
+  <!-- 标题 -->
+  <section class="panel" style="text-align:center">
+    <span class="panel-tag" style="justify-content:center"><span data-ic="boat"></span>编程初体验 · 第 1 关</span>
+    <h2><span class="h-ic" data-ic="spark"></span>给画舫下指令</h2>
+    <p style="color:var(--muted)">秦淮河上的画舫波波，等你来当小船长</p>
+  </section>
+
+  <!-- 场景图 -->
+  <section class="panel scene-panel scene-center">
+    <svg class="scene-svg" viewBox="0 0 640 300" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <!-- 云与梅花 -->
+      <path d="M70 60c0-12 10-20 21-18 3-9 15-12 22-5 9-4 19 2 19 12 0 9-7 14-16 14H82c-7 0-12-3-12-3z" stroke="#5D7FA3"/>
+      <g stroke="#FF6B9D">
+        <circle cx="585" cy="66" r="7"/><circle cx="575" cy="73" r="7"/><circle cx="595" cy="73" r="7"/>
+        <circle cx="581" cy="81" r="7"/><circle cx="589" cy="81" r="7"/>
+      </g>
+      <!-- 三格水道 -->
+      <rect x="40" y="150" width="170" height="105" rx="14" stroke="#5D7FA3" stroke-dasharray="8 8" fill="rgba(46,134,222,.05)"/>
+      <rect x="235" y="150" width="170" height="105" rx="14" stroke="#5D7FA3" stroke-dasharray="8 8" fill="rgba(46,134,222,.05)"/>
+      <rect x="430" y="150" width="170" height="105" rx="14" stroke="#2ECC9A" stroke-dasharray="8 8" fill="rgba(46,204,154,.08)"/>
+      <g stroke="#2E86DE" opacity=".45">
+        <path d="M60 232q12-6 24 0t24 0"/><path d="M262 232q12-6 24 0t24 0"/><path d="M455 232q12-6 24 0t24 0"/>
+      </g>
+      <text x="125" y="280" text-anchor="middle" font-size="15" fill="#5D7FA3" stroke="none">起点</text>
+      <text x="320" y="280" text-anchor="middle" font-size="15" fill="#5D7FA3" stroke="none">向前 1 格</text>
+      <text x="515" y="280" text-anchor="middle" font-size="15" fill="#2ECC9A" stroke="none">码头 · 2 格</text>
+      <!-- 码头灯柱 -->
+      <path d="M598 148v-32"/><circle cx="598" cy="108" r="7" stroke="#FF9F43"/>
+      <path d="M610 118l20-9" stroke="#FF9F43"/>
+      <!-- 画舫（可移动） -->
+      <g id="boat1" style="transform:translate(125px,203px) scale(.85);transition:transform .9s ease">
+        <g id="boat1-inner">
+          <path d="M-95 0c22 0 190 0 190 0-14 26-52 40-95 40s-81-14-95-40z" fill="#FFF6EA"/>
+          <path d="M-80 0v-14h160v14"/>
+          <path d="M-65 -14v-16c0-8 6-14 14-14h102c8 0 14 6 14 14v16" fill="#FFF6EA"/>
+          <path d="M0 -44v-12"/><circle cx="0" cy="-62" r="6" stroke="#FF9F43"/>
+          <path d="M-22 -30h44" stroke="#FF9F43"/>
+          <g stroke-width="2">
+            <circle cx="-50" cy="-27" r="12" fill="#fff"/>
+            <path d="M-60 -35c-3-2-4-6-2-8s6-1 8 2M-40 -35c3-2 4-6 2-8s-6-1-8 2"/>
+            <circle cx="-54" cy="-28" r="1.4" fill="#1A3A5C" stroke="none"/>
+            <circle cx="-46" cy="-28" r="1.4" fill="#1A3A5C" stroke="none"/>
+            <path d="M-53 -24c2 1.6 4 1.6 6 0"/>
+          </g>
+          <g stroke="#2E86DE">
+            <path d="M50 -34c6 8 10 13 10 18a10 10 0 1 1-20 0c0-5 4-10 10-18z" fill="#EAF4FD"/>
+            <circle cx="47" cy="-17" r="1.2" fill="#1A3A5C" stroke="none"/>
+            <circle cx="53" cy="-17" r="1.2" fill="#1A3A5C" stroke="none"/>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </section>
+
+  <!-- 学一学 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>学一学</span>
+    <h2>计算机不会猜心思</h2>
+    <div class="learn-text">
+      <p>波波是条特别认真的画舫，可它只听得懂<b>清楚</b>的话。你说"开过去一点"，波波就犯迷糊了："一点"是多大？半格？一格？还是十格？它只好停在原地摇摇头。</p>
+      <p>计算机也一样，它<b>不会猜心思</b>。想让它做什么，就要说得明明白白："向前 2 格"，它就稳稳地向前 2 格，一格不多，一格不少。</p>
+      <p>这种把话说清楚、说准确的功夫，就叫<b>编程</b>。来，试试当一回小船长吧！</p>
+    </div>
+  </section>
+
+  <!-- 动手试试 -->
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>动手试试</span>
+    <h2>两种指令，都试试看</h2>
+    <p>画舫在起点，码头在右边 2 格远。你会怎么下指令？</p>
+    <div class="try-row">
+      <button class="btn ghost" id="btn-fuzzy" data-sfx><span data-ic="alert"></span>模糊指令：开过去一点</button>
+      <button class="btn blue" id="btn-exact" data-sfx><span data-ic="forward"></span>精确指令：向前 2 格</button>
+    </div>
+    <p class="hint" id="l1-hint">先猜一猜：哪句话波波能听懂？</p>
+    <div id="done-box" style="display:none;margin-top:14px">
+      <button class="btn" id="btn-done"><span data-ic="check"></span>我学会了</button>
+    </div>
+  </section>
+
+  <!-- 豆豆气泡 -->
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆说</div>
+      <p>对计算机说话，就像给波波画航线图，每个字都要写得清清楚楚，它才能稳稳地开到码头哦！</p>
+    </div>
+  </div>
+
+  <!-- 翻页 -->
+  <div class="pager">
+    <a class="btn ghost sm" href="../index.html" data-sfx><span data-ic="home"></span>回首页</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" id="read-btn"><span data-ic="speaker"></span>朗读这一页</button>
+    <a class="btn blue" href="lesson-02.html" data-sfx><span data-ic="arrowRight"></span>下一关：一步一步来</a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+(function () {
+  var DM = window.DM;
+  DM.boot({ root: "..", module: "coding" });
+
+  /* 图标填充 */
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.innerHTML = DM.icon(el.getAttribute("data-ic"));
+  });
+  /* 面包屑 */
+  document.getElementById("crumbs").innerHTML =
+    '<a href="../index.html">' + DM.icon("home") + "首页</a>" +
+    '<span class="sep">/</span>' +
+    '<a href="lesson-01.html">' + DM.icon("boat") + "编程初体验</a>" +
+    '<span class="sep">/</span><span>第 1 关 · 给画舫下指令</span>';
+  /* 按钮点击音 */
+  document.querySelectorAll("[data-sfx]").forEach(function (el) {
+    el.addEventListener("click", function () { DM.sfx("click"); });
+  });
+  /* 朗读 */
+  document.getElementById("read-btn").addEventListener("click", function () { DM.speakPage(this); });
+
+  /* ---------- 互动：模糊 vs 精确 ---------- */
+  var fuzzyTried = false, exactTried = false, claimed = false;
+  var boat = document.getElementById("boat1");
+  var boatInner = document.getElementById("boat1-inner");
+  var hint = document.getElementById("l1-hint");
+
+  document.getElementById("btn-fuzzy").addEventListener("click", function () {
+    fuzzyTried = true;
+    DM.sfx("retry");
+    boatInner.classList.remove("shake");
+    void boatInner.getBoundingClientRect();
+    boatInner.classList.add("shake");
+    setTimeout(function () { boatInner.classList.remove("shake"); }, 450);
+    hint.textContent = "波波歪着头：“‘一点’是多少呀？我听不懂，再想想看怎么说清楚。”";
+    checkBoth();
+  });
+
+  document.getElementById("btn-exact").addEventListener("click", function () {
+    exactTried = true;
+    boat.style.transform = "translate(515px,203px) scale(.85)";
+    DM.sfx("right");
+    hint.textContent = "哇！波波听懂了，稳稳地向前 2 格，正好停靠码头！";
+    checkBoth();
+  });
+
+  function checkBoth() {
+    if (fuzzyTried && exactTried) {
+      document.getElementById("done-box").style.display = "block";
+      hint.textContent = "两种都试过啦！清楚的话，波波才做得对。点「我学会了」领取雨花石～";
+    }
+  }
+
+  document.getElementById("btn-done").addEventListener("click", function (ev) {
+    if (claimed) return;
+    claimed = true;
+    DM.sfx("wow");
+    DM.petals(ev.clientX, ev.clientY);
+    DM.store.completeLesson("coding", 0, 2);
+    var b = this;
+    b.innerHTML = DM.icon("stone") + "已收获 2 颗雨花石";
+    b.disabled = true;
+    hint.textContent = "波波：小船长，下一关见！";
+  });
+})();
+</script>
+</body>
+</html>

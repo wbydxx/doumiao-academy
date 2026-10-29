@@ -1,0 +1,203 @@
+﻿﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用花灯数数 · 二进制的秘密 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="lantern"></span>二进制的秘密</a>
+    <span class="sep">/</span>
+    <span>第 2 关 · 用花灯数数</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="lantern"></span>第 2 关</span>
+    <h2>用花灯数数</h2>
+    <p style="color:var(--muted)">四盏花灯排一排，就是一台小小加法机。</p>
+  </section>
+
+  <section class="panel scene-panel scene-center">
+    <svg class="scene-svg" viewBox="0 0 640 300" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="四盏花灯分值8、4、2、1，灯语0101表示5">
+      <!-- 挂杆 -->
+      <line x1="50" y1="28" x2="590" y2="28"/>
+      <!-- 灯1：灭（8） -->
+      <g>
+        <line x1="110" y1="28" x2="110" y2="48"/>
+        <rect x="97" y="48" width="26" height="10" rx="4"/>
+        <ellipse cx="110" cy="106" rx="42" ry="48" fill="#EAF4FD"/>
+        <path d="M80 88q30 13 60 0M80 126q30 13 60 0" stroke="#5D7FA3"/>
+        <path d="M104 156l-6 18M116 156l6 18"/>
+      </g>
+      <!-- 灯2：亮（4） -->
+      <g>
+        <line x1="250" y1="28" x2="250" y2="48"/>
+        <rect x="237" y="48" width="26" height="10" rx="4" stroke="#FF9F43"/>
+        <ellipse cx="250" cy="106" rx="42" ry="48" fill="#FFF6EA" stroke="#FF9F43"/>
+        <path d="M220 88q30 13 60 0M220 126q30 13 60 0" stroke="#FF9F43"/>
+        <g stroke="#FF9F43">
+          <path d="M198 52l-12-9M302 52l12-9M192 106h-14M308 106h14M200 146l-12 9M300 146l12 9"/>
+        </g>
+        <path d="M244 156l-6 18M256 156l6 18" stroke="#FF9F43"/>
+      </g>
+      <!-- 灯3：灭（2） -->
+      <g>
+        <line x1="390" y1="28" x2="390" y2="48"/>
+        <rect x="377" y="48" width="26" height="10" rx="4"/>
+        <ellipse cx="390" cy="106" rx="42" ry="48" fill="#EAF4FD"/>
+        <path d="M360 88q30 13 60 0M360 126q30 13 60 0" stroke="#5D7FA3"/>
+        <path d="M384 156l-6 18M396 156l6 18"/>
+      </g>
+      <!-- 灯4：亮（1） -->
+      <g>
+        <line x1="530" y1="28" x2="530" y2="48"/>
+        <rect x="517" y="48" width="26" height="10" rx="4" stroke="#FF9F43"/>
+        <ellipse cx="530" cy="106" rx="42" ry="48" fill="#FFF6EA" stroke="#FF9F43"/>
+        <path d="M500 88q30 13 60 0M500 126q30 13 60 0" stroke="#FF9F43"/>
+        <g stroke="#FF9F43">
+          <path d="M478 52l-12-9M582 52l12-9M472 106h-14M588 106h14M480 146l-12 9M580 146l12 9"/>
+        </g>
+        <path d="M524 156l-6 18M536 156l6 18" stroke="#FF9F43"/>
+      </g>
+      <!-- 加号 -->
+      <g fill="#5D7FA3" stroke="none" font-size="26" font-weight="800">
+        <text x="180" y="114" text-anchor="middle">+</text>
+        <text x="320" y="114" text-anchor="middle">+</text>
+        <text x="460" y="114" text-anchor="middle">+</text>
+      </g>
+      <!-- 权重 -->
+      <g fill="#1A3A5C" stroke="none" font-size="24" font-weight="800" font-family="monospace">
+        <text x="110" y="196" text-anchor="middle">8</text>
+        <text x="250" y="196" text-anchor="middle">4</text>
+        <text x="390" y="196" text-anchor="middle">2</text>
+        <text x="530" y="196" text-anchor="middle">1</text>
+      </g>
+      <!-- 灯语 -->
+      <g fill="#2E86DE" stroke="none" font-size="24" font-weight="800" font-family="monospace">
+        <text x="110" y="230" text-anchor="middle">0</text>
+        <text x="250" y="230" text-anchor="middle">1</text>
+        <text x="390" y="230" text-anchor="middle">0</text>
+        <text x="530" y="230" text-anchor="middle">1</text>
+      </g>
+      <text x="320" y="272" text-anchor="middle" font-size="22" font-weight="800" fill="#2E86DE" stroke="none">0 + 4 + 0 + 1 = 5</text>
+      <text x="320" y="294" text-anchor="middle" font-size="14" fill="#5D7FA3" stroke="none">亮着的花灯加起来，就是它表示的数</text>
+    </svg>
+  </section>
+
+  <section class="panel learn-text">
+    <p>四盏花灯排成一排，从左到右的分值是 <b>8、4、2、1</b>。</p>
+    <p>亮着的花灯把分值<b>加起来</b>，灭的算 0，不用管它。</p>
+    <p>灯语 0 1 0 1，就是 4 + 1 = <b>5</b>，像做加法游戏！</p>
+  </section>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>为什么是 8、4、2、1</span>
+    <div class="learn-text">
+      <p>从<b>右边</b>数起，每一盏灯的分值都是它<b>右边那盏的 2 倍</b>：1 翻一倍是 2，2 翻一倍是 4，4 翻一倍是 8。</p>
+      <p>换成 2 的指数写，就是：1 = 2⁰，2 = 2¹，4 = 2²，8 = 2³——<b>每往左挪一格，就翻一倍</b>。</p>
+      <p>也因为每盏灯只有「亮、灭」两种状态，两盏灯能拼出 2×2 = 4 种组合，四盏灯就是 2×2×2×2 = 16 种，刚好从 0 数到 15，一个不落。</p>
+    </div>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>动手试一试</span>
+    <h2 style="font-size:22px">点亮花灯，拼出数字 <b class="big-num" style="font-size:26px">5</b></h2>
+    <div class="lantern-row" id="row">
+      <button class="lantern" type="button" data-i="0" aria-label="分值 8 的花灯"><span data-ic="lantern"></span><span class="lv">8</span></button>
+      <button class="lantern" type="button" data-i="1" aria-label="分值 4 的花灯"><span data-ic="lantern"></span><span class="lv">4</span></button>
+      <button class="lantern" type="button" data-i="2" aria-label="分值 2 的花灯"><span data-ic="lantern"></span><span class="lv">2</span></button>
+      <button class="lantern" type="button" data-i="3" aria-label="分值 1 的花灯"><span data-ic="lantern"></span><span class="lv">1</span></button>
+    </div>
+    <p style="text-align:center;margin:10px 0 2px;color:var(--muted)">现在的灯语</p>
+    <p class="binary-read" style="text-align:center;font-size:26px;font-weight:800;color:var(--accent)" id="bin">0 0 0 0</p>
+    <p style="text-align:center;margin:4px 0">合起来是 <b class="big-num" id="sum">0</b></p>
+    <p style="text-align:center;min-height:32px;color:var(--muted)" id="msg">点亮几盏花灯，试试拼出 5 吧！</p>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p>这排花灯是一台加法小机器！亮一盏加一份，计算机数数就是这么快～</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-01.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一关 · 开关魔法</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-03.html" onclick="DM.sfx('click')">下一关 · 字符变变变<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "binary" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  var W = [8, 4, 2, 1];
+  var on = [false, false, false, false];
+  var btns = Array.prototype.slice.call(document.querySelectorAll("#row .lantern"));
+  var binEl = document.getElementById("bin");
+  var sumEl = document.getElementById("sum");
+  var msgEl = document.getElementById("msg");
+
+  function calc() {
+    var s = 0;
+    on.forEach(function (o, i) { if (o) s += W[i]; });
+    return s;
+  }
+
+  function render() {
+    btns.forEach(function (b, i) { b.classList.toggle("on", on[i]); });
+    var s = calc();
+    binEl.textContent = on.map(function (o) { return o ? "1" : "0"; }).join(" ");
+    sumEl.textContent = s;
+    if (s === 5) {
+      msgEl.textContent = "拼到 5 啦！灯语 0 1 0 1，就是 4 + 1，你太棒了！";
+      msgEl.style.color = "var(--green)";
+    } else if (s === 0) {
+      msgEl.textContent = "点亮几盏花灯，试试拼出 5 吧！";
+      msgEl.style.color = "var(--muted)";
+    } else {
+      msgEl.textContent = "现在是 " + s + "，再拼拼看～";
+      msgEl.style.color = "var(--accent-2)";
+    }
+  }
+
+  btns.forEach(function (b, i) {
+    b.addEventListener("click", function (ev) {
+      on[i] = !on[i];
+      DM.sfx("toggle");
+      render();
+      if (calc() === 5) {
+        DM.sfx("wow");
+        DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+        DM.store.completeLesson("binary", 1, 3);
+      }
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

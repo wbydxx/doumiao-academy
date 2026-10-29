@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>条件与分支 · 代码实验室 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="code"></span>代码实验室</a>
+    <span class="sep">/</span>
+    <span>第 2 课 · 条件与分支</span>
+  </nav>
+
+  <!-- ① 课程头卡 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="code"></span>进阶 · 第 2 课</span>
+    <h2>条件与分支</h2>
+    <p style="color:var(--muted)">程序不是一条道走到黑——<b>if / else</b> 让代码学会「看情况办事」。这是所有程序逻辑的骨架。</p>
+    <div class="learn-caps">
+      <span><span data-ic="turnR"></span>if / elif / else</span>
+      <span><span data-ic="check"></span>比较运算符</span>
+      <span><span data-ic="spark"></span>and / or / not</span>
+      <span><span data-ic="bulb"></span>真值与假值</span>
+    </div>
+  </section>
+
+  <!-- ② 课前导读 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>课前导读</span>
+    <div class="intro-split" style="margin-top:12px">
+      <img class="intro-img" src="../assets/img/lab-2.jpg" alt="长江船闸的岔口水道各设一座信号灯，船只按水位选择航道" loading="lazy">
+      <div class="intro-txt">
+        <h3>程序每天都在「看情况办事」</h3>
+        <p>汛期的水闸怎么决定开不开？先<b>看水位</b>：超过警戒线就泄洪，没超过就继续等。程序里的「条件与分支」就是这套思路——<b>if 读作"如果"，else 读作"否则"</b>，代码在岔路口自己选路。</p>
+        <p>这一课你将学会写岔路（if / elif / else）、给条件做比较（&gt;、==）、把多个条件拼起来（and、or），最后亲手指挥一次"数字水闸"。Python 靠<b>冒号和缩进</b>分层，不用写大括号。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 概念卡片 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>先懂 4 个概念</span>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3><span data-ic="turnR"></span>if / elif / else 岔路</h3>
+        <p>条件是 True 走第一段，否则走 else 段；<b>elif</b>（"否则如果"）能串多个档位，自上而下命中一个就停。行尾<b>冒号</b>加<b>缩进 4 格</b>就是 Python 的层级。</p>
+        <pre>if a &gt; 10:
+    …
+else:
+    …</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="check"></span>比较运算符</h3>
+        <p>&gt;、&lt;、&gt;=、&lt;= 之外，<b>==</b> 判断相等、<b>!=</b> 判断不等。小心：<b>= 是赋值，== 才是比较</b>，少写一个等号意思全变。</p>
+        <pre>if score == 100:</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="spark"></span>逻辑运算符</h3>
+        <p><b>and</b> 与：两边都 True 才 True；<b>or</b> 或：一边 True 就 True；<b>not</b> 非：取反。它们把多个条件拼成一条，念出来就是人话。</p>
+        <pre>if a &gt; 0 and b &gt; 0:</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="bulb"></span>真值与假值</h3>
+        <p>Python 里 <b>0、""（空串）、None</b> 在条件里都当 False，其余大多为真。所以 if 0: 永远走 else——和生活的直觉一致。</p>
+        <pre>if 0:    # 永远不执行</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 动手实验 -->
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="terminal"></span>动手实验 · 迷你运行器</span>
+    <h2 style="font-size:22px">改代码，命中目标输出（<span id="task-done">0</span> / 3）</h2>
+    <p style="color:var(--muted);margin:6px 0 2px">看到红色报错不要慌——读报错信息是程序员的日常。改错了随时「还原」。</p>
+
+    <!-- 任务 1 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：水闸剖面工程图，水位 12 超过警戒线 10">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 地面与土层 -->
+          <path d="M16 110h168" stroke-width="1.6"/>
+          <g stroke="#7FA6C9" stroke-width="1" opacity=".45">
+            <path d="M30 110l-7 9M52 110l-7 9M74 110l-7 9M96 110l-7 9M118 110l-7 9M140 110l-7 9M162 110l-7 9"/>
+          </g>
+          <!-- 闸墩 + 启闭机 -->
+          <rect x="138" y="30" width="26" height="80" rx="2"/>
+          <path d="M151 30v80" stroke-width="1" stroke-dasharray="2 3" opacity=".5"/>
+          <path d="M151 23v7" stroke-width="1.3"/><circle cx="151" cy="20" r="3" stroke-width="1.3"/>
+          <!-- 警戒线（红） -->
+          <path d="M16 72h114" stroke="#E06C6A" stroke-width="1.3" stroke-dasharray="6 4"/>
+          <text x="18" y="66" font-size="9" fill="#E06C6A" stroke="none" font-family="ui-monospace,Consolas,monospace">警戒线 10</text>
+          <!-- 水位（青） -->
+          <path d="M16 90h114" stroke-width="1.6" stroke-dasharray="8 4"/>
+          <path d="M16 99h102" stroke-width="1" stroke-dasharray="3 4" opacity=".45"/>
+          <text x="18" y="86" font-size="9.5" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">水位 12 ↑</text>
+          <!-- 泄流 -->
+          <path d="M166 99h14" stroke="#43B58F" stroke-width="1.4"/>
+          <path d="M175 94l8 5-8 5" stroke="#43B58F" stroke-width="1.4"/>
+          <!-- 高差标注 -->
+          <path d="M178 72v22M174 72h8M174 94h8" stroke="#C9A86A" stroke-width="1"/>
+          <text x="178" y="66" text-anchor="middle" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">12&gt;10</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 1 · 汛期水闸</h3>
+        <p class="task-guide">昨夜一场大雨，长江水位涨到 <b>12</b>，超过了警戒线 10。把 <b>water_level</b> 改成 12，if 一眼就能看出「该泄洪了」。练：<b>if 条件判断</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>启动泄洪</code></span>
+        <div class="code-run" id="run1">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-01.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 2 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：成绩标尺工程图，指针停在 85 分良档">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 标尺 -->
+          <rect x="24" y="64" width="152" height="20" rx="2"/>
+          <!-- 主刻度 60-100 -->
+          <path d="M24 64v-6M62 64v-6M100 64v-6M138 64v-6M176 64v-6" stroke-width="1" opacity=".7"/>
+          <g font-size="8" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">
+            <text x="24" y="52">60</text><text x="62" y="52">70</text><text x="100" y="52">80</text><text x="138" y="52">90</text><text x="176" y="52">100</text>
+          </g>
+          <!-- 分档分隔 + 良档高亮 -->
+          <path d="M100 64v20M138 64v20" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>
+          <rect x="100" y="64" width="38" height="20" fill="rgba(63,182,216,.14)" stroke="none"/>
+          <!-- 档位名 -->
+          <g font-size="9.5" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">
+            <text x="62" y="102" fill="#7FA6C9">加油</text>
+            <text x="119" y="102" font-weight="700" fill="#BFE9FA">良 80+</text>
+            <text x="157" y="102" fill="#7FA6C9">优 90+</text>
+          </g>
+          <!-- 指针 85 -->
+          <path d="M119 34v12" stroke="#C9A86A" stroke-width="1.2"/>
+          <path d="M119 46l-5 12h10z" fill="#C9A86A" stroke="none"/>
+          <text x="119" y="30" text-anchor="middle" font-size="10" font-weight="700" fill="#E3CFA2" stroke="none" font-family="ui-monospace,Consolas,monospace">85</text>
+          <!-- 底注 -->
+          <text x="100" y="124" text-anchor="middle" font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="2">SCORE → GRADE</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 2 · 成绩分档</h3>
+        <p class="task-guide">85 分掉在「良」这一档，可成绩单卡住了——<b>____</b> 处少了个关键字。把它换成读作「否则如果」的那个词，三档就能从上往下顺利接通。练：<b>elif 多档分支</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>良</code></span>
+        <div class="code-run" id="run2">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-02.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 3 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：逻辑门工程图，两路输入经判断输出">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 输入线 1 -->
+          <path d="M22 56h48"/>
+          <text x="22" y="48" font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace">is_weekend = <tspan fill="#43B58F" font-weight="700">True</tspan></text>
+          <!-- 输入线 2 -->
+          <path d="M22 84h48"/>
+          <text x="22" y="76" font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace">has_umbrella = <tspan fill="#E06C6A" font-weight="700">False</tspan></text>
+          <!-- 判断门 -->
+          <path d="M84 44c26 0 42 14 48 26-6 12-22 26-48 26 10-17 10-35 0-52z"/>
+          <text x="102" y="76" text-anchor="middle" font-size="15" font-weight="700" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">?</text>
+          <!-- 输出 -->
+          <path d="M132 70h28"/>
+          <path d="M155 65l9 5-9 5"/>
+          <text x="166" y="60" font-size="8.5" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">出发?</text>
+          <!-- 底注 -->
+          <text x="100" y="124" text-anchor="middle" font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace">满足其一即可 → True</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 3 · 周末出行</h3>
+        <p class="task-guide">今天<b>是周末</b>，偏偏又<b>没带伞</b>。只满足一个就出发，所以该用 <b>or</b>（满足一个即可），不是 and（两个都要）。把 <b>____</b> 换对。练：<b>and 与 or</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>出发去玄武湖</code></span>
+        <div class="code-run" id="run3">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-03.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">3 个任务全部命中目标，通关按钮就会亮起来</p>
+  </section>
+
+  <!-- ⑤ 自主练习 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="flask"></span>自主练习 · 不计进度，随便试</span>
+    <h2 style="font-size:22px">试一试，看你真的懂了吗</h2>
+
+    <div class="pq" data-pq>
+      <h3>练 1 · 这段代码输出什么？</h3>
+      <div class="pq-code">if 0:
+    print("A")
+else:
+    print("B")</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">A</button>
+        <button class="pq-opt" type="button" data-ok="1">B</button>
+        <button class="pq-opt" type="button" data-ok="0">报错</button>
+        <button class="pq-opt" type="button" data-ok="0">什么都不输出</button>
+      </div>
+      <p class="pq-exp">0 在 Python 的条件里是「假值」，所以 if 0: 不成立，走 else 输出 B。空字符串 ""、None 也是假值——这一点 Python 和很多语言想法一致。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 2 · = 和 == 的区别是？</h3>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">完全一样，可以互换</button>
+        <button class="pq-opt" type="button" data-ok="1">= 是赋值，== 是比较是否相等</button>
+        <button class="pq-opt" type="button" data-ok="0">= 是比较，== 是赋值</button>
+        <button class="pq-opt" type="button" data-ok="0">== 只能比较数字</button>
+      </div>
+      <p class="pq-exp">x = 5 是「把 5 装进 x 箱子」；x == 5 是「问 x 箱子里装的是不是 5」。在 if 条件里把 == 误写成 =，Python 会直接报错帮你拦住。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 3 · 这段代码输出什么？</h3>
+      <div class="pq-code">x = 8
+if x &gt; 10:
+    print("甲")
+elif x &gt; 5:
+    print("乙")
+else:
+    print("丙")</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">甲</button>
+        <button class="pq-opt" type="button" data-ok="1">乙</button>
+        <button class="pq-opt" type="button" data-ok="0">丙</button>
+        <button class="pq-opt" type="button" data-ok="0">乙和丙都输出</button>
+      </div>
+      <p class="pq-exp">if / elif / else 像三道闸门，从上往下挨个问，<b>第一个成立的执行，后面的直接跳过</b>——哪怕条件也成立。x = 8：大于 10？不。大于 5？是 → 乙，收工。</p>
+    </div>
+
+    <div class="pq">
+      <h3>练 4 · 自由编码：天气预报员</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">声明变量 <b>temp</b> 装气温，大于 30 打印「开空调」，否则打印「开窗通风」。下面的起点只会报数字——给它装上 if / else，让它学会「看情况办事」。</p>
+      <div class="code-run" id="free1">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-04.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+
+    <div class="pq">
+      <h3>练 5 · 自由编码：是不是小学生</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">声明 <b>age</b>，用 <b>and</b> 把两个条件连起来：7 到 12 岁（两边都算上）打印「是小学生」，否则打印「不是」。</p>
+      <div class="code-run" id="free2">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-05.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot">把 if 读成「如果」、else 读成「否则」，念一遍代码，分支一目了然。冒号 + 缩进就是 Python 的大括号。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-01.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一课 · 变量与数据类型</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-03.html" onclick="DM.sfx('click')">下一课 · 循环与函数<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "lab" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  /* 动手实验：公共任务运行器（改代码命中目标输出） */
+  var doneCount = 0;
+  var doneSet = {};
+  var doneEl = document.getElementById("task-done");
+  var doneBtn = document.getElementById("done");
+  function onPass(key) {
+    if (!doneSet[key]) { doneSet[key] = true; doneCount++; }
+    doneEl.textContent = doneCount;
+    if (doneCount >= 3) doneBtn.disabled = false;
+  }
+
+  DM.taskRunner("run1", {
+    name: "t1",
+    goal: ["启动泄洪"],
+    onPass: onPass,
+    initial: '# 任务 1：昨夜暴雨，水位涨到 12\nwater_level = 8    # TODO：把 8 改成 12\n\nif water_level > 10:\n    print("启动泄洪")\nelse:\n    print("水位正常")'
+  });
+
+  DM.taskRunner("run2", {
+    name: "t2",
+    goal: ["良"],
+    onPass: onPass,
+    initial: '# 任务 2：把 ____ 换成正确的关键字，让 85 分评出「良」\nscore = 85\n\nif score >= 90:\n    print("优")\n____ score >= 80:\n    print("良")\nelse:\n    print("继续加油")'
+  });
+
+  DM.taskRunner("run3", {
+    name: "t3",
+    goal: ["出发去玄武湖"],
+    onPass: onPass,
+    initial: '# 任务 3：周末想出门，却没带伞——满足一个就出发\nis_weekend = True\nhas_umbrella = False\n\nif is_weekend ____ has_umbrella:    # TODO：换成 or（满足其一即可）\n    print("出发去玄武湖")\nelse:\n    print("改天再去")'
+  });
+
+  /* 自主练习：自由编码题（运行 / 还原 / 填入参考答案） */
+  DM.practiceRunner("free1", {
+    file: "practice-04.py",
+    initial: '# 给下面装上 if / else：temp > 30 时开空调，否则开窗通风\ntemp = 33\n\nprint(temp)',
+    ref: 'temp = 33\nif temp > 30:\n    print("开空调")\nelse:\n    print("开窗通风")'
+  });
+
+  DM.practiceRunner("free2", {
+    file: "practice-05.py",
+    initial: '# 用 and 连接两个条件：7 <= age <= 12 算小学生\nage = 9\n\nprint(age)',
+    ref: 'age = 9\nif age >= 7 and age <= 12:\n    print("是小学生")\nelse:\n    print("不是")'
+  });
+
+  doneBtn.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("lab", 1, 3);
+    doneBtn.innerHTML = DM.icon("check") + "太棒了，第 2 课通关！";
+    doneBtn.disabled = true;
+  });
+
+  /* 自主练习：选择题即时反馈（不计进度） */
+  document.querySelectorAll("[data-pq]").forEach(function (pq) {
+    var exp = pq.querySelector(".pq-exp");
+    var answered = false;
+    pq.querySelectorAll(".pq-opt").forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        if (answered) return;
+        if (opt.dataset.ok === "1") {
+          opt.classList.add("ok");
+          exp.classList.add("show");
+          DM.sfx("right");
+          answered = true;
+        } else {
+          opt.classList.add("bad");
+          DM.sfx("retry");
+          setTimeout(function () { opt.classList.remove("bad"); }, 700);
+        }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

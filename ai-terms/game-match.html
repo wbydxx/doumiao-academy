@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游戏 · 术语挑战赛 · AI 术语解码 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+/* 本页专用：术语选项网格 */
+.mc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.mc-grid .btn{justify-content:flex-start;text-align:left;min-height:52px}
+.mc-grid .btn b{font-weight:800}
+.mc-grid .btn small{color:inherit;opacity:.65;font-weight:600;margin-left:6px}
+@media(max-width:640px){.mc-grid{grid-template-columns:1fr}}
+.term-def{background:#142438;color:#EAF4FD;font-family:var(--font);font-size:16.5px;line-height:1.8;padding:16px 18px;border-radius:var(--radius-sm)}
+.term-def::before{content:"定义";display:inline-block;font-size:12px;font-weight:800;color:#3A5FBF;border:1.5px solid #3A5FBF;border-radius:6px;padding:1px 8px;margin-right:10px;vertical-align:2px}
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="brain"></span>AI 术语解码</a>
+    <span class="sep">/</span>
+    <span>游戏 · 术语挑战赛</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="gamepad"></span>金陵图书馆 · 游戏</span>
+    <h2>术语挑战赛</h2>
+    <p style="color:var(--muted)">10 条定义，10 个术语。读定义、辨术语，看你能答对几题。</p>
+  </section>
+
+  <section class="panel learn-text">
+    <p><b>规则</b>：每轮给出一条术语定义，从 4 个候选中选出正确术语，共 10 轮。</p>
+    <p><b>奖励</b>：答对 9 题以上得 3 颗雨花石，答对 6-8 题得 2 颗，其余也有 1 颗参与奖。答错会公布正确答案并附一句解释，答完就当复习。</p>
+  </section>
+
+  <section class="game-stage">
+    <div class="game-top">
+      <span class="gt-label"><span data-ic="loop"></span><span id="round">第 1 / 10 轮</span></span>
+      <span class="big-num" id="score-num">0</span>
+      <span class="gt-label"><span data-ic="spark"></span>答对题数</span>
+    </div>
+    <div class="term-def" id="def">—</div>
+    <div class="mc-grid" id="opts"></div>
+    <p style="text-align:center;min-height:56px;margin-top:10px;color:var(--muted)" id="tip">读定义，找关键词，再选术语。</p>
+    <div id="end" style="display:none;text-align:center">
+      <div class="stone-row" id="end-stones" style="margin:8px 0"></div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn sm" type="button" id="again"><span data-ic="reset"></span>再玩一次</button>
+        <a class="btn blue sm" href="quiz.html" onclick="DM.sfx('click')">下一关 · 挑战测验<span data-ic="arrowRight"></span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot">术语是看懂 AI 新闻的钥匙。判断不准时，先找定义里的关键词——比如「预测下一个词」指向谁？</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-03.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一关 · 数据、幻觉与 AI 安全</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.sfx('click');DM.speakPage(this)"><span data-ic="speaker"></span>朗读规则</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="quiz.html" onclick="DM.sfx('click')">下一关 · 挑战测验<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "terms" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  /* 术语池：name 中文名 / en 英文 / def 定义 / why 答对后的强化解释 */
+  var POOL = [
+    { name: "机器学习", en: "Machine Learning",
+      def: "让计算机从数据中自动总结规律、完成任务的一类方法，而不是靠人把每条规则都写死。",
+      why: "关键词是「从数据中总结规律」——规则由数据学出来，不是人写出来的。" },
+    { name: "神经网络", en: "Neural Network",
+      def: "受人脑神经元启发的计算结构：一层层节点相连，连接上有可学习的权重。",
+      why: "关键词是「层层节点 + 权重连接」，第 1 课里你亲手点亮过它。" },
+    { name: "深度学习", en: "Deep Learning",
+      def: "机器学习的分支，特点是使用层数很多（很「深」）的神经网络，擅长图像、语音等复杂任务。",
+      why: "「深」指网络层数多。AI 术语解码这个模块本身，就建在深度学习之上。" },
+    { name: "大语言模型", en: "LLM",
+      def: "在海量文本上训练的超大规模神经网络，能理解并生成自然语言，核心任务是预测下一个词块。",
+      why: "关键词是「海量文本 + 预测下一个词块」，ChatGPT 的「GPT」全称里就有它。" },
+    { name: "Token（词块）", en: "Token",
+      def: "模型处理文本的最小单位，可能是一个字、一个词或一段词块，模型的眼中只有它。",
+      why: "模型不直接「看」汉字，而是先把你打的字切成 Token 再计算。" },
+    { name: "提示词", en: "Prompt",
+      def: "用户发给 AI 的指令文本：你是谁、做什么、有什么要求，写得越清楚回答越好。",
+      why: "好提示 = 角色 + 任务 + 要求 + 示例，这就是提示词工程的基本公式。" },
+    { name: "训练", en: "Training",
+      def: "用大量数据不断调整模型内部参数（权重），让它的预测越来越准的过程。",
+      why: "训练是「学习阶段」，代价高、耗时长；你在第 1 课点灯时就扮演过它。" },
+    { name: "推理", en: "Inference",
+      def: "训练完成后，模型用学到的参数对新输入逐个给出输出的过程，也就是你平时「问 AI」的时刻。",
+      why: "训练在机房，推理在你手机上。AI 快，指的是推理快。" },
+    { name: "幻觉", en: "Hallucination",
+      def: "AI 生成貌似合理、实则编造内容的现象，根源是它只会按概率补全，并不真正「知道」事实。",
+      why: "第 3 课的侦探游戏里，你已经抓过 3 条幻觉了。" },
+    { name: "开源", en: "Open Source",
+      def: "公开源代码（或模型权重），允许任何人查看、使用、修改和分发的发布方式。",
+      why: "关键词是「公开 + 允许修改」。开源大模型让研究者不用从零开始。" }
+  ];
+
+  /* 固定干扰项组合（每题 4 选项：正确 + 3 个干扰） */
+  var DISTRACT = [
+    [1, 3, 8], [0, 2, 7], [1, 0, 5], [4, 2, 6], [3, 8, 6],
+    [4, 9, 0], [7, 2, 4], [6, 1, 9], [5, 3, 2], [6, 0, 3]
+  ];
+
+  var defEl = document.getElementById("def");
+  var optsEl = document.getElementById("opts");
+  var tip = document.getElementById("tip");
+  var roundEl = document.getElementById("round");
+  var scoreNum = document.getElementById("score-num");
+  var endBox = document.getElementById("end");
+  var endStones = document.getElementById("end-stones");
+  var mascot = document.getElementById("mascot");
+
+  var idx = 0, score = 0, locked = false;
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function render() {
+    locked = false;
+    var item = POOL[idx];
+    roundEl.textContent = "第 " + (idx + 1) + " / 10 轮";
+    defEl.textContent = item.def;
+    tip.textContent = "读定义，找关键词，再选术语。";
+    tip.style.color = "";
+    var cand = shuffle([idx].concat(DISTRACT[idx]));
+    optsEl.innerHTML = "";
+    cand.forEach(function (pi) {
+      var b = document.createElement("button");
+      b.className = "btn" + (pi === idx ? "" : " ghost");
+      b.type = "button";
+      b.innerHTML = "<b>" + POOL[pi].name + "</b><small>" + POOL[pi].en + "</small>";
+      b.addEventListener("click", function () { pick(pi, b); });
+      optsEl.appendChild(b);
+    });
+  }
+
+  function pick(pi, btn) {
+    if (locked) return;
+    locked = true;
+    var item = POOL[idx];
+    if (pi === idx) {
+      score++;
+      scoreNum.textContent = score;
+      DM.sfx("right");
+      tip.textContent = "答对了！" + item.why;
+      tip.style.color = "var(--green)";
+      btn.classList.remove("ghost");
+    } else {
+      DM.sfx("retry");
+      tip.textContent = "正确答案是「" + item.name + "（" + item.en + "）」。" + item.why;
+      tip.style.color = "var(--accent-2)";
+    }
+    idx++;
+    if (idx >= POOL.length) {
+      setTimeout(finish, 1400);
+    } else {
+      setTimeout(render, 1400);
+    }
+  }
+
+  function finish() {
+    var stones = score >= 9 ? 3 : score >= 6 ? 2 : 1;
+    DM.store.completeGame("terms", stones);
+    DM.sfx("wow");
+    optsEl.innerHTML = "";
+    defEl.textContent = "挑战结束：答对 " + score + " / 10 题，赢得 " + stones + " 颗雨花石。";
+    var row = "";
+    for (var i = 0; i < 3; i++) {
+      row += '<span style="display:inline-flex;' + (i < stones ? "" : "opacity:.22") + '">' + DM.icon("stone") + "</span>";
+    }
+    endStones.innerHTML = row;
+    mascot.textContent = score >= 9
+      ? "10 题答对 " + score + " 题，术语词典已经装进你脑子里了！"
+      : "答对 " + score + " 题。没关系，术语本来就要见几次面才认得熟——再战一局？";
+    endBox.style.display = "block";
+  }
+
+  function restart() {
+    idx = 0; score = 0;
+    scoreNum.textContent = "0";
+    endBox.style.display = "none";
+    render();
+  }
+
+  document.getElementById("again").addEventListener("click", restart);
+  render();
+})();
+</script>
+</body>
+</html>

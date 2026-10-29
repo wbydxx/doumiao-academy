@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游戏 · 代码谜题闯关 · 代码实验室 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+/* 本页专用：谜题选项 */
+.pz-opts{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.pz-opts .btn{justify-content:flex-start;text-align:left;min-height:50px;font-family:ui-monospace,Consolas,monospace;font-weight:700}
+.pz-code{margin:0}
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="code"></span>代码实验室</a>
+    <span class="sep">/</span>
+    <span>游戏 · 代码谜题闯关</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="gamepad"></span>紫峰实验室 · 游戏</span>
+    <h2>代码谜题闯关</h2>
+    <p style="color:var(--muted)">8 关代码，猜输出。不动手运行，全靠脑子「预执行」——程序员的看家本领。</p>
+  </section>
+
+  <section class="panel learn-text">
+    <p><b>规则</b>：每关给一段真实 Python，从 3 个候选里选出正确输出，共 8 关。题目覆盖第 1~7 课全部知识点。答错会直接公布答案与解析。</p>
+    <p><b>奖励</b>：答对 8 题得 3 颗雨花石，答对 5-7 题得 2 颗，其余 1 颗参与奖。</p>
+  </section>
+
+  <section class="game-stage">
+    <div class="game-top">
+      <span class="gt-label"><span data-ic="loop"></span><span id="round">第 1 / 8 关</span></span>
+      <span class="big-num" id="score-num">0</span>
+      <span class="gt-label"><span data-ic="spark"></span>答对关数</span>
+    </div>
+    <pre class="code-box pz-code" id="code">—</pre>
+    <div class="pz-opts" id="opts"></div>
+    <p style="text-align:center;min-height:56px;margin-top:10px;color:var(--muted)" id="tip">逐行读代码，盯住每个变量现在的值。</p>
+    <div id="end" style="display:none;text-align:center">
+      <div class="stone-row" id="end-stones" style="margin:8px 0"></div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn sm" type="button" id="again"><span data-ic="reset"></span>再玩一次</button>
+        <a class="btn blue sm" href="quiz.html" onclick="DM.sfx('click')">下一关 · 挑战测验<span data-ic="arrowRight"></span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot">拿不准时，在草稿纸上给每个变量画一个盒子，一行一行更新它——这就叫「人工执行」。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-07.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一关 · 综合项目</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.sfx('click');DM.speakPage(this)"><span data-ic="speaker"></span>朗读规则</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="quiz.html" onclick="DM.sfx('click')">下一关 · 挑战测验<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "lab" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  var LEVELS = [
+    {
+      code: 'x = 5\nx = x + 2\nprint(x)',
+      opts: ["5", "7", '"52"'], a: 1,
+      why: "x 先是 5，第二行把 x + 2 的结果 7 重新存回 x。变量 = 盒子，赋值就是换内容。"
+    },
+    {
+      code: 'print("1" + "1")',
+      opts: ["2", "11", "报错"], a: 1,
+      why: "两个文字相加是拼接：\"1\" + \"1\" 得 \"11\"；数字 1 + 1 才是 2。要是写成 \"1\" + 1，Python 会直接报错——它不悄悄帮忙转换。"
+    },
+    {
+      code: 'if 0:\n    print("甲")\nelse:\n    print("乙")',
+      opts: ["甲", "乙", "报错"], a: 1,
+      why: "Python 里 0 是「假值」，条件为假走 else。假值还有：空字符串、None。"
+    },
+    {
+      code: 'for i in range(3):\n    print(i)',
+      opts: ["0、1、2（三行）", "1、2、3（三行）", "0、1、2、3（四行）"], a: 0,
+      why: "range(3) 数头不数尾：从 0 数到 2 就停。共 3 圈，从 0 数起。"
+    },
+    {
+      code: 'def f(a):\n    return a * a\n\nprint(f(3) + f(4))',
+      opts: ["12", "25", "49"], a: 1,
+      why: "f(3) 返回 9，f(4) 返回 16，相加得 25。别算成 (3+4)² = 49——先各自进机器，再拿输出相加。"
+    },
+    {
+      code: 'line = ["下关", "玄武门"]\nprint(line[1] + "站")',
+      opts: ["下关站", "玄武门站", "报错"], a: 1,
+      why: "列表索引从 0 数：line[0] 是下关，line[1] 才是玄武门。「第几个」和「索引几」永远差 1。"
+    },
+    {
+      code: 'spots = {"中山陵": 0, "夫子庙": 30}\nprint(spots["夫子庙"])',
+      opts: ["0", "30", "报错"], a: 1,
+      why: "字典按键取值：方括号里放键「夫子庙」，取出对应值 30。若键打错（比如写成「夫孒庙」）才会 KeyError 报错。"
+    },
+    {
+      code: 'n = 2\nwhile n > 0:\n    print(n)\n    n = n - 1\nprint("发射")',
+      opts: ["2、1、发射（三行）", "1、2、发射（三行）", "无限循环"], a: 0,
+      why: "n 从 2 起，条件 n > 0 成立时打印并减 1：先打印 2，再打印 1；n 变 0 条件不成立，跳出循环打印「发射」。"
+    }
+  ];
+
+  var TOTAL = LEVELS.length;
+
+  var codeEl = document.getElementById("code");
+  var optsEl = document.getElementById("opts");
+  var tip = document.getElementById("tip");
+  var roundEl = document.getElementById("round");
+  var scoreNum = document.getElementById("score-num");
+  var endBox = document.getElementById("end");
+  var endStones = document.getElementById("end-stones");
+  var mascot = document.getElementById("mascot");
+
+  var idx = 0, score = 0, locked = false;
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function render() {
+    locked = false;
+    var lv = LEVELS[idx];
+    roundEl.textContent = "第 " + (idx + 1) + " / " + TOTAL + " 关";
+    codeEl.textContent = lv.code;
+    tip.textContent = "这段代码会输出什么？";
+    tip.style.color = "";
+    optsEl.innerHTML = "";
+    lv.opts.forEach(function (o, i) {
+      var b = document.createElement("button");
+      b.className = "btn" + (i === lv.a ? "" : " ghost");
+      b.type = "button";
+      b.textContent = o;
+      b.addEventListener("click", function () { pick(i, b); });
+      optsEl.appendChild(b);
+    });
+  }
+
+  function pick(i, btn) {
+    if (locked) return;
+    locked = true;
+    var lv = LEVELS[idx];
+    if (i === lv.a) {
+      score++;
+      scoreNum.textContent = score;
+      DM.sfx("right");
+      tip.textContent = "答对了！" + lv.why;
+      tip.style.color = "var(--green)";
+      btn.classList.remove("ghost");
+    } else {
+      DM.sfx("retry");
+      tip.textContent = "正确答案是「" + lv.opts[lv.a] + "」。" + lv.why;
+      tip.style.color = "var(--accent-2)";
+    }
+    idx++;
+    if (idx >= LEVELS.length) setTimeout(finish, 1500);
+    else setTimeout(render, 1500);
+  }
+
+  function finish() {
+    var stones = score >= TOTAL ? 3 : score >= Math.ceil(TOTAL * 0.6) ? 2 : 1;
+    DM.store.completeGame("lab", stones);
+    DM.sfx("wow");
+    optsEl.innerHTML = "";
+    codeEl.textContent = "# 挑战结束：答对 " + score + " / " + TOTAL + " 关";
+    var row = "";
+    for (var i = 0; i < 3; i++) {
+      row += '<span style="display:inline-flex;' + (i < stones ? "" : "opacity:.22") + '">' + DM.icon("stone") + "</span>";
+    }
+    endStones.innerHTML = row;
+    mascot.textContent = score >= TOTAL
+      ? "满分通过！变量、循环、函数、列表、字典全难不倒你。"
+      : "答对 " + score + " 关。回去翻翻错题对应的那一课，再回来挑战一次？";
+    endBox.style.display = "block";
+  }
+
+  function restart() {
+    idx = 0; score = 0;
+    scoreNum.textContent = "0";
+    endBox.style.display = "none";
+    render();
+  }
+
+  document.getElementById("again").addEventListener("click", restart);
+  render();
+})();
+</script>
+</body>
+</html>

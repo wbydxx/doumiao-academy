@@ -1,0 +1,230 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一步一步来：顺序执行 · 编程初体验 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+  [data-ic] { display: inline-flex; align-items: center; }
+  .h-ic { display: inline-flex; vertical-align: -4px; margin-right: 8px; color: var(--green); }
+  .h-ic svg { width: 26px; height: 26px; }
+  .step-cards { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin: 14px 0 6px; }
+  .step-card {
+    min-width: 150px; min-height: 118px; border-radius: var(--radius);
+    border: 2.5px solid var(--rule); background: var(--bg); color: var(--ink);
+    display: grid; place-items: center; gap: 4px;
+    font-size: 19px; font-weight: 800; position: relative;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .step-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .step-card.lit { border-color: var(--green); background: rgba(46,204,154,.12); color: var(--green); }
+  .step-card:disabled { cursor: default; transform: none; }
+  .step-card .sc-ic svg { width: 36px; height: 36px; }
+  .step-card .sc-badge { position: absolute; top: 8px; right: 12px; font-size: 13px; color: var(--green); }
+  .step-dots { display: flex; gap: 12px; justify-content: center; margin: 8px 0 4px; }
+  .step-dot {
+    width: 40px; height: 40px; border-radius: 50%; border: 2.5px solid var(--rule);
+    display: grid; place-items: center; font-weight: 800; color: var(--muted); background: var(--surface);
+    transition: all .2s ease;
+  }
+  .step-dot.on { background: var(--green); border-color: var(--green); color: #fff; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" id="crumbs"></nav>
+
+  <!-- 标题 -->
+  <section class="panel" style="text-align:center">
+    <span class="panel-tag" style="justify-content:center"><span data-ic="boat"></span>编程初体验 · 第 2 关</span>
+    <h2><span class="h-ic" data-ic="spark"></span>一步一步来：顺序执行</h2>
+    <p style="color:var(--muted)">指令要排队，先后很重要</p>
+  </section>
+
+  <!-- 场景图：画舫航线小图 -->
+  <section class="panel scene-panel scene-center">
+    <svg class="scene-svg" viewBox="0 0 640 270" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <!-- 云 -->
+      <path d="M480 40c0-10 8-16 17-15 2-7 12-10 18-4 7-3 15 2 15 10 0 7-6 11-13 11h-28c-5 0-9-2-9-2z" stroke="#5D7FA3"/>
+      <!-- 河岸（两条弯弯的岸线） -->
+      <path d="M25 108C150 78 245 88 325 78S505 38 622 44" stroke="#5D7FA3"/>
+      <path d="M25 252C160 238 255 228 335 218S525 186 622 186" stroke="#5D7FA3"/>
+      <!-- 航线（虚线）与步点 -->
+      <path d="M90 185C180 185 222 150 300 150S442 115 510 115" stroke="#2E86DE" stroke-dasharray="7 9" opacity=".7"/>
+      <circle cx="90" cy="185" r="5" fill="#FF9F43" stroke="none"/>
+      <circle cx="300" cy="150" r="5" fill="#FF9F43" stroke="none"/>
+      <circle cx="510" cy="115" r="5" fill="#FF9F43" stroke="none"/>
+      <!-- 步骤气泡 1 2 3 -->
+      <g stroke="#FF9F43">
+        <circle cx="90" cy="140" r="12"/><circle cx="300" cy="106" r="12"/><circle cx="510" cy="72" r="12"/>
+      </g>
+      <g fill="#FF9F43" stroke="none" font-size="14" font-weight="bold" text-anchor="middle">
+        <text x="90" y="145">1</text><text x="300" y="111">2</text><text x="510" y="77">3</text>
+      </g>
+      <text x="78" y="222" text-anchor="middle" font-size="15" fill="#5D7FA3" stroke="none">起点</text>
+      <!-- 码头灯柱 -->
+      <path d="M585 160v-30"/><circle cx="585" cy="122" r="6" stroke="#FF9F43"/>
+      <text x="585" y="185" text-anchor="middle" font-size="15" fill="#2ECC9A" stroke="none">码头</text>
+      <!-- 画舫（沿航线移动） -->
+      <g id="boat2" style="transform:translate(90px,185px) scale(.72);transition:transform .7s ease">
+        <g id="boat2-inner">
+          <path d="M-95 0c22 0 190 0 190 0-14 26-52 40-95 40s-81-14-95-40z" fill="#FFF6EA"/>
+          <path d="M-80 0v-14h160v14"/>
+          <path d="M-65 -14v-16c0-8 6-14 14-14h102c8 0 14 6 14 14v16" fill="#FFF6EA"/>
+          <path d="M0 -44v-12"/><circle cx="0" cy="-62" r="6" stroke="#FF9F43"/>
+          <path d="M-22 -30h44" stroke="#FF9F43"/>
+          <g stroke-width="2">
+            <circle cx="-50" cy="-27" r="12" fill="#fff"/>
+            <path d="M-60 -35c-3-2-4-6-2-8s6-1 8 2M-40 -35c3-2 4-6 2-8s-6-1-8 2"/>
+            <circle cx="-54" cy="-28" r="1.4" fill="#1A3A5C" stroke="none"/>
+            <circle cx="-46" cy="-28" r="1.4" fill="#1A3A5C" stroke="none"/>
+            <path d="M-53 -24c2 1.6 4 1.6 6 0"/>
+          </g>
+          <g stroke="#2E86DE">
+            <path d="M50 -34c6 8 10 13 10 18a10 10 0 1 1-20 0c0-5 4-10 10-18z" fill="#EAF4FD"/>
+            <circle cx="47" cy="-17" r="1.2" fill="#1A3A5C" stroke="none"/>
+            <circle cx="53" cy="-17" r="1.2" fill="#1A3A5C" stroke="none"/>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </section>
+
+  <!-- 学一学 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>学一学</span>
+    <h2>指令要排队</h2>
+    <div class="learn-text">
+      <p>画舫不会一口气做完所有事。它一条一条听指令，做完一条，再做下一条——这叫<b>顺序执行</b>。</p>
+      <p>就像上船要<b>排队</b>，先来后到不能乱。指令的先后顺序一变，结果可能完全不同：先靠岸再前进，画舫就只能停在河中央干着急啦。</p>
+      <p>所以写程序之前，先在心里把步骤<b>排好队</b>：第一步做什么，第二步做什么，最后做什么。</p>
+    </div>
+  </section>
+
+  <!-- 动手试试 -->
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>动手试试</span>
+    <h2>按正确顺序点亮指令卡</h2>
+    <p>任务：让画舫沿河道从起点开到码头。想想每一步该点哪张卡？</p>
+    <div class="step-cards" id="step-cards">
+      <button class="step-card" data-k="L"><span class="sc-ic" data-ic="turnL"></span><span>左转</span></button>
+      <button class="step-card" data-k="F"><span class="sc-ic" data-ic="forward"></span><span>前进</span><span class="sc-badge" id="f-badge"></span></button>
+      <button class="step-card" data-k="D"><span class="sc-ic" data-ic="boat"></span><span>靠岸停</span></button>
+    </div>
+    <div class="step-dots">
+      <span class="step-dot" id="sd-0">1</span>
+      <span class="step-dot" id="sd-1">2</span>
+      <span class="step-dot" id="sd-2">3</span>
+    </div>
+    <p class="hint" id="l2-msg">第 1 步该点哪张卡？点对了，画舫就会开动哦。</p>
+    <div style="margin-top:12px">
+      <button class="btn ghost sm" id="l2-reset" data-sfx><span data-ic="reset"></span>重新玩</button>
+    </div>
+  </section>
+
+  <!-- 豆豆气泡 -->
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆说</div>
+      <p>程序就像一张步骤清单，计算机从上往下一行一行做。清单的顺序排对了，事情才能办得妥妥帖帖！</p>
+    </div>
+  </div>
+
+  <!-- 翻页 -->
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-01.html" data-sfx><span data-ic="arrowLeft"></span>上一关</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" id="read-btn"><span data-ic="speaker"></span>朗读这一页</button>
+    <a class="btn blue" href="lesson-03.html" data-sfx><span data-ic="arrowRight"></span>下一关：循环的威力</a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+(function () {
+  var DM = window.DM;
+  DM.boot({ root: "..", module: "coding" });
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.innerHTML = DM.icon(el.getAttribute("data-ic"));
+  });
+  document.getElementById("crumbs").innerHTML =
+    '<a href="../index.html">' + DM.icon("home") + "首页</a>" +
+    '<span class="sep">/</span>' +
+    '<a href="lesson-01.html">' + DM.icon("boat") + "编程初体验</a>" +
+    '<span class="sep">/</span><span>第 2 关 · 一步一步来</span>';
+  document.querySelectorAll("[data-sfx]").forEach(function (el) {
+    el.addEventListener("click", function () { DM.sfx("click"); });
+  });
+  document.getElementById("read-btn").addEventListener("click", function () { DM.speakPage(this); });
+
+  /* ---------- 互动：顺序点亮 ---------- */
+  var EXPECT = ["F", "F", "D"];
+  var POS = ["translate(90px,185px) scale(.72)", "translate(300px,150px) scale(.72)", "translate(510px,115px) scale(.72)"];
+  var step = 0, fCount = 0, finished = false;
+  var boat = document.getElementById("boat2");
+  var boatInner = document.getElementById("boat2-inner");
+  var msg = document.getElementById("l2-msg");
+  var cards = document.querySelectorAll("#step-cards .step-card");
+
+  cards.forEach(function (btn) {
+    btn.addEventListener("click", function (ev) {
+      if (finished) return;
+      var k = btn.dataset.k;
+      if (k === EXPECT[step]) {
+        if (k === "F") { fCount++; document.getElementById("f-badge").textContent = "×" + fCount; }
+        btn.classList.add("lit");
+        document.getElementById("sd-" + step).classList.add("on");
+        boat.style.transform = POS[step];
+        step++;
+        if (step === 3) {
+          finished = true;
+          DM.sfx("wow");
+          DM.petals(ev.clientX, ev.clientY);
+          boatInner.classList.add("pop-ok");
+          DM.store.completeLesson("coding", 1, 3);
+          msg.textContent = "太棒了！画舫按「前进 → 前进 → 靠岸」的顺序稳稳靠岸，你收获了 3 颗雨花石！";
+          cards.forEach(function (b) { b.disabled = true; });
+        } else {
+          DM.sfx("toggle");
+          msg.textContent = "第 " + step + " 步点亮啦！接下来呢？";
+        }
+      } else {
+        DM.sfx("retry");
+        btn.classList.remove("shake");
+        void btn.getBoundingClientRect();
+        btn.classList.add("shake");
+        setTimeout(function () { btn.classList.remove("shake"); }, 450);
+        msg.textContent = wrongHint(k, step);
+      }
+    });
+  });
+
+  function wrongHint(k, s) {
+    if (k === "L") return "河道直直的，现在左转会绕远路哦，再想想看。";
+    if (s < 2) return "画舫还在河中央呢，这一步该让它往前开还是停下？再想想看。";
+    return "码头就在眼前啦，该选哪张卡让画舫停下来靠岸呢？";
+  }
+
+  document.getElementById("l2-reset").addEventListener("click", function () {
+    step = 0; fCount = 0; finished = false;
+    document.getElementById("f-badge").textContent = "";
+    boat.style.transform = POS[0];
+    boatInner.classList.remove("pop-ok");
+    for (var i = 0; i < 3; i++) document.getElementById("sd-" + i).classList.remove("on");
+    cards.forEach(function (b) { b.disabled = false; b.classList.remove("lit"); });
+    msg.textContent = "重新开始！第 1 步该点哪张卡？";
+  });
+})();
+</script>
+</body>
+</html>

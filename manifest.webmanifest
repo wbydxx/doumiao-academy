@@ -1,0 +1,15 @@
+{
+  "name": "豆苗学堂 · 少儿 AI 与计算机科普",
+  "short_name": "豆苗学堂",
+  "description": "河海大学计算机与软件学院公益科普：用南京城的花灯、画舫、城墙、动物园等场景，带 6-12 岁孩子入门二进制、AI、编程与网络安全。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F8FCFF",
+  "theme_color": "#0F2A44",
+  "lang": "zh-CN",
+  "orientation": "any",
+  "icons": [
+    { "src": "assets/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

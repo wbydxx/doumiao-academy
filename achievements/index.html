@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>成就墙 · 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <span>我的成就</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="trophy"></span>成就墙</span>
+    <h2>我的成就</h2>
+    <p style="color:var(--muted)">集齐雨花石，点亮徽章，领取属于你的结业证书！</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+      <button class="btn ghost sm" type="button" id="demo"><span data-ic="spark"></span>灌入演示进度</button>
+      <button class="btn ghost sm" type="button" id="reset"><span data-ic="reset"></span>重新开始</button>
+      <button class="btn ghost sm" type="button" id="export"><span data-ic="book"></span>导出进度</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="award"></span>模块徽章 · <span id="badge-count">0</span> / <span id="badge-total">6</span></span>
+    <div class="badge-grid" id="badges"></div>
+    <p style="color:var(--muted);font-size:15px">提示：每完成一个模块的全部课程 + 游戏 + 测验，就能点亮对应徽章。</p>
+  </section>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="stone"></span>我的雨花石收藏墙 · <b id="stone-num">0</b> 颗</span>
+    <div class="stone-wall" id="wall"></div>
+  </section>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="award"></span>结业证书</span>
+    <h2 style="font-size:22px">领取「科技小苗」电子证书</h2>
+    <p style="color:var(--muted)">写上你的名字，证书上就会印出你的大名，还能保存成图片哦。</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:12px 0">
+      <input id="kid-name" type="text" maxlength="12" placeholder="写下你的名字"
+             style="min-height:44px;padding:6px 14px;border:2px solid var(--rule);border-radius:12px;font-size:18px;font-family:inherit;width:220px">
+      <button class="btn blue" type="button" id="gen"><span data-ic="award"></span>生成证书</button>
+      <button class="btn ghost" type="button" id="save"><span data-ic="check"></span>保存图片</button>
+    </div>
+    <div style="text-align:center">
+      <canvas id="cert" width="1200" height="850" style="max-width:100%;height:auto;border:2px solid var(--rule);border-radius:16px;box-shadow:var(--shadow)" aria-label="结业证书预览"></canvas>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p>每颗雨花石都是你努力的印记。继续加油，把全部徽章点亮吧！</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="../index.html" onclick="DM.sfx('click')"><span data-ic="home"></span>回首页</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <span></span>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "achv" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  var badgeBox = document.getElementById("badges");
+  var wall = document.getElementById("wall");
+  var stoneNum = document.getElementById("stone-num");
+  var badgeCount = document.getElementById("badge-count");
+  document.getElementById("badge-total").textContent = DM.MODULES.length;
+  var nameInput = document.getElementById("kid-name");
+  var cert = document.getElementById("cert");
+  var ctx = cert.getContext("2d");
+
+  /* ---------- 徽章与石墙 ---------- */
+  function renderBadges() {
+    var got = 0, html = "";
+    DM.MODULES.forEach(function (m) {
+      var meta = DM.MODULE_META[m], done = DM.store.moduleDone(m);
+      var pct = DM.store.modulePercent(m);
+      if (done) got++;
+      html += '<div class="badge-card' + (done ? " lit" : "") + '" style="' + (done ? "" : "opacity:.55") + '">' +
+        '<span class="b-ring">' + (done ? DM.ring(100, 72, 5, "gold no-num") : DM.ring(pct, 72, 5, "no-num")) +
+        '<span class="b-ic" style="background:' + meta.color + '">' + DM.icon(meta.ic) + "</span></span>" +
+        "<h3>" + meta.name + "</h3>" +
+        '<p style="color:var(--muted);font-size:14px;margin:4px 0 0">' + (done ? "已点亮" : pct + "% 进度") + "</p></div>";
+    });
+    badgeBox.innerHTML = html;
+    badgeCount.textContent = got;
+    var n = DM.store.get().stones;
+    stoneNum.textContent = n;
+    var w = "";
+    for (var i = 0; i < Math.min(n, 60); i++) w += DM.icon("stone");
+    wall.innerHTML = w || '<span style="color:var(--muted)">还没有雨花石，去闯第一关吧！</span>';
+  }
+
+  /* ---------- 电子证书 ---------- */
+  function wave(ctx, y, color) {
+    ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.beginPath();
+    for (var x = 60; x <= 1140; x += 8) {
+      var yy = y + Math.sin(x / 46) * 7;
+      x === 60 ? ctx.moveTo(x, yy) : ctx.lineTo(x, yy);
+    }
+    ctx.stroke();
+  }
+  function plum(ctx, x, y, r, color) {
+    ctx.fillStyle = color;
+    for (var i = 0; i < 5; i++) {
+      var a = -Math.PI / 2 + i * (2 * Math.PI / 5);
+      ctx.beginPath();
+      ctx.arc(x + Math.cos(a) * r, y + Math.sin(a) * r, r * 0.82, 0, 7);
+      ctx.fill();
+    }
+    ctx.fillStyle = "#fff";
+    ctx.beginPath(); ctx.arc(x, y, r * 0.34, 0, 7); ctx.fill();
+  }
+  function drawCert() {
+    var name = nameInput.value.trim() || "＿＿＿";
+    var p = DM.store.get();
+    ctx.clearRect(0, 0, 1200, 850);
+    // 底色与边框
+    ctx.fillStyle = "#FFFDF7"; ctx.fillRect(0, 0, 1200, 850);
+    ctx.strokeStyle = "#2372C8"; ctx.lineWidth = 6; ctx.strokeRect(30, 30, 1140, 790);
+    ctx.strokeStyle = "#C9A86A"; ctx.lineWidth = 2; ctx.strokeRect(48, 48, 1104, 754);
+    // 梅花角饰与波浪底纹
+    plum(ctx, 110, 120, 20, "rgba(201,168,106,.8)");
+    plum(ctx, 1090, 120, 20, "rgba(47,169,140,.75)");
+    plum(ctx, 110, 730, 20, "rgba(47,169,140,.75)");
+    plum(ctx, 1090, 730, 20, "rgba(201,168,106,.8)");
+    wave(ctx, 700, "rgba(35,114,200,.25)");
+    wave(ctx, 728, "rgba(35,114,200,.15)");
+    wave(ctx, 756, "rgba(35,114,200,.08)");
+    // 文字
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#16324F";
+    ctx.font = "800 72px 'Microsoft YaHei', sans-serif";
+    ctx.fillText("结 业 证 书", 600, 210);
+    ctx.font = "600 30px 'Microsoft YaHei', sans-serif";
+    ctx.fillStyle = "#5C7A99";
+    ctx.fillText("「豆苗逐智 · 童享科技」少儿科普课程", 600, 270);
+    ctx.fillStyle = "#16324F";
+    ctx.font = "400 34px 'Microsoft YaHei', sans-serif";
+    ctx.fillText("亲爱的", 600, 370);
+    ctx.fillStyle = "#2372C8";
+    ctx.font = "800 76px 'Microsoft YaHei', sans-serif";
+    ctx.fillText(name, 600, 470);
+    ctx.fillStyle = "#16324F";
+    ctx.font = "400 34px 'Microsoft YaHei', sans-serif";
+    ctx.fillText("恭喜你完成豆苗学堂全部课程学习，授予", 600, 580);
+    ctx.font = "800 44px 'Microsoft YaHei', sans-serif";
+    ctx.fillStyle = "#C9A86A";
+    ctx.fillText("「科技小苗」称号", 600, 645);
+    ctx.font = "400 28px 'Microsoft YaHei', sans-serif";
+    ctx.fillStyle = "#5C7A99";
+    ctx.fillText("雨花石 " + p.stones + " 颗 · 徽章 " + badgeCount.textContent + " / " + DM.MODULES.length + " 枚", 600, 800);
+    ctx.font = "400 28px 'Microsoft YaHei', sans-serif";
+    ctx.fillText("豆苗学堂 · 豆豆老师    2026 年", 600, 838);
+  }
+
+  /* ---------- 按钮 ---------- */
+  document.getElementById("gen").addEventListener("click", function () {
+    DM.sfx("click");
+    DMStorage.profile.save({ name: nameInput.value.trim() });
+    drawCert();
+  });
+  document.getElementById("save").addEventListener("click", function () {
+    DM.sfx("wow");
+    var a = document.createElement("a");
+    a.download = "豆苗学堂结业证书.png";
+    a.href = cert.toDataURL("image/png");
+    a.click();
+  });
+  document.getElementById("demo").addEventListener("click", function (ev) {
+    DMStorage.seedDemo();
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    renderBadges();
+    DM.rvAll(); // 重渲染后的新节点补扫入场动效
+    drawCert();
+  });
+  document.getElementById("reset").addEventListener("click", function () {
+    DMStorage.resetAll();
+    DM.sfx("click");
+    renderBadges();
+    DM.rvAll();
+    drawCert();
+  });
+  document.getElementById("export").addEventListener("click", function () {
+    DM.sfx("click");
+    var blob = new Blob([DMStorage.exportAll()], { type: "application/json" });
+    var a = document.createElement("a");
+    a.download = "doumiao-progress.json";
+    a.href = URL.createObjectURL(blob);
+    a.click();
+  });
+
+  var saved = DMStorage.profile.get();
+  if (saved && saved.name) nameInput.value = saved.name;
+  renderBadges();
+  drawCert();
+  DM.rvAll(); // 徽章卡/石墙动态渲染完成，补扫入场动效
+  nameInput.addEventListener("input", drawCert);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网络是什么 · 城墙小卫士 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+  [data-icon] { display: inline-flex; align-items: center; }
+  /* 连线小网络 */
+  .net-box svg { width: 100%; height: auto; }
+  .city { cursor: pointer; }
+  .city .c-body { fill: #fff; stroke: var(--ink); stroke-width: 2.5; transition: fill .15s, stroke .15s; }
+  .city text { font-family: var(--font); font-size: 16px; font-weight: 800; fill: var(--ink); stroke: none; pointer-events: none; }
+  .city:hover .c-body { stroke: var(--accent); }
+  .city.sel .c-body { fill: rgba(46,134,222,.16); stroke: var(--accent); }
+  #net-lines line { stroke: var(--accent); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+  .try-foot { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
+  .done-msg { margin-top: 12px; padding: 12px 16px; border: 2px solid var(--green); border-radius: var(--radius-sm); background: rgba(46,204,154,.12); font-size: 17px; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-icon="home"></span>首页</a><span class="sep">/</span>
+    <span>城墙小卫士</span><span class="sep">/</span><b>第 1 关 · 网络是什么</b>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-icon="wall"></span>城墙小卫士 · 第 1 关</span>
+    <h2>网络是什么</h2>
+    <p style="color:var(--muted)">一张把全世界连起来的大网</p>
+  </section>
+
+  <section class="panel scene-panel scene-center" aria-hidden="true">
+    <img class="scene-svg" src="../assets/img/safety-1.jpg" alt="明城墙与发光的数字网络相连，数据光点在网路上穿行" loading="lazy">
+  </section>
+
+  <section class="panel">
+    <div class="learn-text">
+      <p>网络把全世界的电脑、手机连在一起，就像一张又大又密的网。我们的城市，就是网上的<b>一座城池</b>，通过一条条"网路"，和北京、上海，甚至更远的地方说话、寄信、看动画。</p>
+      <p>路修得多，来往就方便；可路多了，也可能有陌生人顺着路走来。所以网络<b>既好用，也要小心守护</b>。</p>
+      <p>上网课、看动画、给小伙伴留言时，我们都在这张大网上行走。下一步，就去看看城门口要守住的"小秘密"吧。</p>
+    </div>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-icon="spark"></span>试一试 · 连出我们的网络</span>
+    <p style="margin-top:6px">先点一座城，再点另一座城，帮它们修一条"网路"，把四座城连成一张小网络！</p>
+    <div class="net-box">
+      <svg id="net-svg" viewBox="0 0 640 340" fill="none" stroke-linecap="round" stroke-linejoin="round" role="application" aria-label="点击两个城池进行连线">
+        <g id="net-lines"></g>
+        <g class="city" data-i="0" transform="translate(140,92)" role="button" tabindex="0" aria-label="北京">
+          <circle class="c-body" r="30"/><text y="6">北京</text>
+        </g>
+        <g class="city" data-i="1" transform="translate(500,120)" role="button" tabindex="0" aria-label="上海">
+          <circle class="c-body" r="30"/><text y="6">上海</text>
+        </g>
+        <g class="city" data-i="2" transform="translate(240,250)" role="button" tabindex="0" aria-label="南京">
+          <circle class="c-body" r="30"/><text y="6">南京</text>
+        </g>
+        <g class="city" data-i="3" transform="translate(462,272)" role="button" tabindex="0" aria-label="广州">
+          <circle class="c-body" r="30"/><text y="6">广州</text>
+        </g>
+      </svg>
+    </div>
+    <div class="try-foot">
+      <span class="hint" id="net-hint" style="margin-top:0">已连线 0 / 6 条</span>
+      <button class="btn blue sm" id="net-done" style="display:none"><span data-icon="check"></span>我学会了</button>
+    </div>
+    <div class="done-msg" id="net-result" style="display:none">
+      太棒了！四座城连成了一张小网络。网络很方便，也要像守城门一样留心安全——下一关，去看看要守住的"小秘密"。
+    </div>
+  </section>
+
+  <section class="doudou-bubble">
+    <span class="dd-ic" data-icon="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆说</div>
+      <p>网络就像一张看不见的大网，把城门连向四面八方。路越多越方便，也要记得随手关门哦！</p>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="btn ghost sm" href="../index.html"><span data-icon="arrowLeft"></span>回首页</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" data-speak><span data-icon="speaker"></span>朗读这一页</button>
+    <a class="btn blue sm" href="lesson-02.html">下一关<span data-icon="arrowRight"></span></a>
+  </nav>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+(function () {
+  var DM = window.DM;
+  DM.boot({ root: "..", module: "safety" });
+
+  document.querySelectorAll("[data-icon]").forEach(function (el) {
+    el.innerHTML = DM.icon(el.getAttribute("data-icon"));
+  });
+  document.querySelectorAll("[data-speak]").forEach(function (b) {
+    b.addEventListener("click", function () { DM.speakPage(b); });
+  });
+
+  /* 连线小网络 */
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var linesG = document.getElementById("net-lines");
+  var cities = Array.prototype.slice.call(document.querySelectorAll("#net-svg .city"));
+  var hint = document.getElementById("net-hint");
+  var doneBtn = document.getElementById("net-done");
+  var result = document.getElementById("net-result");
+  var selected = null, linked = {}, count = 0, finished = false;
+
+  function pos(g) {
+    var t = g.getAttribute("transform").match(/([\d.]+)[,\s]+([\d.]+)/);
+    return { x: +t[1], y: +t[2] };
+  }
+  function drawLine(a, b) {
+    var pa = pos(a), pb = pos(b);
+    var l = document.createElementNS(SVGNS, "line");
+    l.setAttribute("x1", pa.x); l.setAttribute("y1", pa.y);
+    l.setAttribute("x2", pb.x); l.setAttribute("y2", pb.y);
+    var len = Math.hypot(pb.x - pa.x, pb.y - pa.y);
+    l.style.strokeDasharray = len;
+    l.style.strokeDashoffset = len;
+    linesG.appendChild(l);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { l.style.strokeDashoffset = 0; });
+    });
+  }
+  function pickCity(g) {
+    if (finished) return;
+    if (selected === g) { g.classList.remove("sel"); selected = null; return; }
+    if (!selected) { selected = g; g.classList.add("sel"); DM.sfx("click"); return; }
+    var i = +selected.dataset.i, j = +g.dataset.i;
+    var key = Math.min(i, j) + "-" + Math.max(i, j);
+    selected.classList.remove("sel");
+    var from = selected;
+    selected = null;
+    if (linked[key]) { g.classList.add("shake"); setTimeout(function () { g.classList.remove("shake"); }, 450); return; }
+    linked[key] = true; count++;
+    drawLine(from, g);
+    DM.sfx("toggle");
+    hint.textContent = count >= 4
+      ? "小网络连成了！点击“我学会了”"
+      : "已连线 " + count + " / 6 条";
+    if (count >= 4) doneBtn.style.display = "";
+  }
+  cities.forEach(function (g) {
+    g.addEventListener("click", function () { pickCity(g); });
+    g.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickCity(g); }
+    });
+  });
+
+  doneBtn.addEventListener("click", function (ev) {
+    if (finished) return;
+    finished = true;
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("safety", 0, 2);
+    doneBtn.style.display = "none";
+    result.style.display = "block";
+    cities.forEach(function (g) { g.classList.remove("sel"); });
+  });
+})();
+</script>
+</body>
+</html>

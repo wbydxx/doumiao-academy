@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 能做与不能做 · AI 小课堂 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="robot"></span>AI 小课堂</a>
+    <span class="sep">/</span>
+    <span>第 4 关 · AI 能做与不能做</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="robot"></span>第 4 关</span>
+    <h2>AI 能做与不能做</h2>
+    <p style="color:var(--muted)">AI 很厉害，但它不是什么都能做。会分辨，才算真正懂 AI。</p>
+  </section>
+
+  <section class="panel learn-text">
+    <p>AI 擅长做<b>重复的、要记很多知识的事</b>；但是<b>交朋友、保守秘密、做大决定</b>，还得靠人。</p>
+    <p>点一张卡片，再把它放进对的篮子里：</p>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>分一分</span>
+    <h2 style="font-size:22px">已分类 <span id="cnt">0</span> / 6</h2>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0" id="pool"></div>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+      <button class="btn blue" type="button" id="b-ok" disabled><span data-ic="robot"></span>AI 能做</button>
+      <button class="btn ghost" type="button" id="b-no" disabled><span data-ic="alert"></span>AI 不能做</button>
+    </div>
+    <div class="doudou-bubble" style="margin:14px auto 6px">
+      <span class="dd-ic" data-ic="doudou"></span>
+      <div>
+        <div class="dd-name">豆豆</div>
+        <p id="say">先点上面的一张卡片，再选篮子。分对了，豆豆告诉你为什么～</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">6 张卡片全部分对，通关按钮就会亮起来</p>
+  </section>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-03.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一关 · AI 也会犯错</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="game-trainer.html" onclick="DM.sfx('click')">下一关 · 训练 AI 小助手<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "ai" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  var ITEMS = [
+    { t: "帮医生看 X 光片", ok: true,  why: "AI 看过的片子特别多，能提醒医生注意可疑的地方，最后还是医生来诊断。" },
+    { t: "替你交好朋友",     ok: false, why: "真正的友谊要用心换，AI 代替不了拥抱和一起玩的快乐。" },
+    { t: "帮导航找最快路线", ok: true,  why: "AI 记得全城的路，还会预测哪里堵车，是认路小能手。" },
+    { t: "猜出你所有小秘密", ok: false, why: "AI 只会瞎猜，而且小秘密要保护好，不能全告诉它。" },
+    { t: "翻译外语查资料",   ok: true,  why: "AI 读过海量的文字，当小翻译、查资料都很在行。" },
+    { t: "替你决定上不上学", ok: false, why: "重要的事要自己想、和爸爸妈妈商量，AI 只能给建议，不能替你做主。" }
+  ];
+  var left = ITEMS.map(function (_, i) { return i; });
+  var selected = -1, doneCnt = 0, finished = false;
+  var pool = document.getElementById("pool");
+  var cnt = document.getElementById("cnt");
+  var say = document.getElementById("say");
+  var bOk = document.getElementById("b-ok");
+  var bNo = document.getElementById("b-no");
+  var done = document.getElementById("done");
+
+  function render() {
+    pool.innerHTML = "";
+    left.forEach(function (i) {
+      var s = document.createElement("button");
+      s.className = "cmd-chip" + (selected === i ? " on" : "");
+      s.type = "button";
+      s.textContent = ITEMS[i].t;
+      s.addEventListener("click", function () {
+        selected = i;
+        DM.sfx("toggle");
+        bOk.disabled = false; bNo.disabled = false;
+        render();
+      });
+      pool.appendChild(s);
+    });
+    cnt.textContent = doneCnt;
+  }
+  function classify(isOk) {
+    if (selected < 0 || finished) return;
+    var item = ITEMS[selected];
+    if (item.ok === isOk) {
+      DM.sfx("right");
+      doneCnt++;
+      say.textContent = item.t + "：" + item.why;
+      say.style.color = "";
+      selected = -1;
+      left = left.filter(function (i) { return i !== ITEMS.indexOf(item); });
+      bOk.disabled = true; bNo.disabled = true;
+      render();
+      if (doneCnt >= ITEMS.length) {
+        finished = true;
+        done.disabled = false;
+        say.textContent = "全部分对啦！记住：AI 是好帮手，但重要的检查和大决定，要靠人！";
+        say.style.color = "var(--green)";
+      }
+    } else {
+      DM.sfx("retry");
+      say.textContent = "再想想看：这件事是要记很多知识，还是要真心和主见呢？";
+      say.style.color = "var(--accent-2)";
+    }
+  }
+  bOk.addEventListener("click", function () { classify(true); });
+  bNo.addEventListener("click", function () { classify(false); });
+
+  done.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("ai", 3, 2);
+    done.innerHTML = DM.icon("check") + "太棒了，第 4 关通关！";
+    done.disabled = true;
+  });
+  render();
+})();
+</script>
+</body>
+</html>

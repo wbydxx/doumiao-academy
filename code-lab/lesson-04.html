@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>列表与遍历 · 代码实验室 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="code"></span>代码实验室</a>
+    <span class="sep">/</span>
+    <span>第 4 课 · 列表与遍历</span>
+  </nav>
+
+  <!-- ① 课程头卡 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="code"></span>进阶 · 第 4 课</span>
+    <h2>列表与遍历</h2>
+    <p style="color:var(--muted)">一个变量只能装一个值？太慢了。<b>列表</b>是一列贴好序号的箱子，一次装下整条地铁线；<b>遍历</b>让程序挨个箱子查一遍。</p>
+    <div class="learn-caps">
+      <span><span data-ic="box"></span>列表 [ ]</span>
+      <span><span data-ic="spark"></span>索引从 0 数</span>
+      <span><span data-ic="loop"></span>for-in 遍历</span>
+      <span><span data-ic="terminal"></span>append / len</span>
+    </div>
+  </section>
+
+  <!-- ② 课前导读 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>课前导读</span>
+    <div class="intro-split" style="margin-top:12px">
+      <img class="intro-img" src="../assets/img/lab-4.jpg" alt="地铁站台上的报站屏正在播报下一站站名" loading="lazy">
+      <div class="intro-txt">
+        <h3>一整条地铁线，装进一个变量</h3>
+        <p>报站屏上的「下一站：玄武门」，背后其实是一张<b>站名列表</b>：["下关", "玄武门", "鸡鸣寺"]。列表就像一排寄存柜，<b>每个柜子有编号</b>——程序员的编号从 <b>0</b> 开始数，所以第二站是 stations[1]。</p>
+        <p>这一课你将学会：建列表、按编号取站名、用 <b>for</b> 把整条线挨个报一遍，还能用 <b>append</b> 装新货、用 <b>len</b> 数件数。学完你就能指挥一段真正的地铁报站系统。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 概念卡片 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>先懂 4 个概念</span>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3><span data-ic="box"></span>列表 List</h3>
+        <p>方括号一装，多个值排队入住，逗号隔开。字符串、数字可以混装，顺序就是摆放顺序。</p>
+        <pre>line = ["下关", "玄武门"]</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="spark"></span>索引：从 0 数</h3>
+        <p>line[0] 是第 1 个，line[1] 是第 2 个。<b>程序员从 0 开始数数</b>——最后一个永远是「长度减 1」。</p>
+        <pre>line[0]   # "下关"</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="loop"></span>for-in 遍历</h3>
+        <p><b>for s in line:</b> 让 s 依次变成列表里的每一项，循环体跟着跑——一列箱子挨个开一遍。</p>
+        <pre>for s in line:
+    print(s)</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="terminal"></span>append 与 len</h3>
+        <p><b>append(x)</b> 在队尾加一件货；<b>len(line)</b> 数出共几件。一个负责「装」，一个负责「数」。</p>
+        <pre>line.append("云锦")
+len(line)   # 3</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 动手实验 -->
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="terminal"></span>动手实验 · 迷你运行器</span>
+    <h2 style="font-size:22px">改代码，命中目标输出（<span id="task-done">0</span> / 3）</h2>
+    <p style="color:var(--muted);margin:6px 0 2px">记不住第几个？先把列表抄在纸上、标上 0 1 2，再回来改代码。</p>
+
+    <!-- 任务 1 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：地铁报站屏与三站索引示意图">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 报站屏双线框 -->
+          <rect x="30" y="26" width="140" height="46" rx="4"/>
+          <rect x="35" y="31" width="130" height="36" rx="2" stroke-width="1" opacity=".5"/>
+          <circle cx="43" cy="38" r="2.2" fill="#43B58F" stroke="none"/>
+          <text x="100" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">下一站：?</text>
+          <!-- 支架 -->
+          <path d="M84 72l-8 18M116 72l8 18" stroke-width="1.3"/>
+          <!-- 三站节点 -->
+          <path d="M30 108h140" stroke-width="1.4" opacity=".7"/>
+          <circle cx="56" cy="108" r="5"/>
+          <circle cx="100" cy="108" r="5" stroke="#C9A86A" stroke-width="2"/>
+          <circle cx="144" cy="108" r="5"/>
+          <g font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">
+            <text x="56" y="126">[0]</text><text x="100" y="126" fill="#E3CFA2">[1]</text><text x="144" y="126">[2]</text>
+          </g>
+          <!-- 金引线：屏显 ← 站点1 -->
+          <path d="M100 96V76l-14-10" stroke="#C9A86A" stroke-width="1"/>
+          <text x="118" y="92" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">stations[?]</text>
+          <!-- 站名 -->
+          <g font-size="8" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">
+            <text x="56" y="97">下关</text><text x="144" y="97">鸡鸣寺</text>
+          </g>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 1 · 地铁报站</h3>
+        <p class="task-guide">报站屏要说「下一站：玄武门」，现在却还停在第一站「下关」。玄武门是<b>第 2 个</b>，程序员从 <b>0</b> 数起，所以把 <b>stations[0]</b> 的索引改成 1。练：<b>列表索引</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>下一站：玄武门</code></span>
+        <div class="code-run" id="run1">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-01.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 2 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：码头传送带装货示意图，待装第三箱">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 传送带 -->
+          <path d="M22 96h156" stroke-width="1.6"/>
+          <circle cx="42" cy="103" r="4.5" stroke-width="1.3"/>
+          <circle cx="158" cy="103" r="4.5" stroke-width="1.3"/>
+          <g stroke="#7FA6C9" stroke-width="1" opacity=".4">
+            <path d="M64 96l-4 7M86 96l-4 7M108 96l-4 7M130 96l-4 7"/>
+          </g>
+          <!-- 两箱已装货 -->
+          <rect x="34" y="72" width="26" height="22" rx="2"/>
+          <text x="47" y="87" text-anchor="middle" font-size="8" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">茶叶</text>
+          <rect x="74" y="72" width="26" height="22" rx="2"/>
+          <text x="87" y="87" text-anchor="middle" font-size="8" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">丝绸</text>
+          <!-- 待装货（虚线箱） -->
+          <rect x="120" y="72" width="26" height="22" rx="2" stroke-dasharray="5 4" stroke="#C9A86A" stroke-width="1.4"/>
+          <text x="133" y="87" text-anchor="middle" font-size="8" fill="#E3CFA2" stroke="none" font-family="ui-monospace,Consolas,monospace">?</text>
+          <!-- 吊装 -->
+          <path d="M133 40v26" stroke="#C9A86A" stroke-width="1.2"/>
+          <path d="M126 40h14M133 33v7" stroke="#C9A86A" stroke-width="1.2"/>
+          <!-- 金标注 -->
+          <path d="M152 66h16l6-8" stroke="#C9A86A" stroke-width="1"/>
+          <text x="172" y="50" text-anchor="middle" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">append( )</text>
+          <text x="100" y="126" text-anchor="middle" font-size="10" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">len = ?</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 2 · 码头装货</h3>
+        <p class="task-guide">船上已经堆了茶叶、丝绸两件货。在 TODO 处补一句 <b>cargo.append("云锦")</b>，把第三件货搬上船，len 才能数出 3 件。练：<b>append 与 len</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>3</code></span>
+        <div class="code-run" id="run2">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-02.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 3 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：三天水位柱状图与平均线">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 坐标轴 -->
+          <path d="M36 112h130M36 112V30" stroke-width="1.4" opacity=".8"/>
+          <!-- 三根柱 -->
+          <rect x="54" y="88" width="22" height="24" fill="rgba(63,182,216,.14)"/>
+          <rect x="90" y="64" width="22" height="48" fill="rgba(63,182,216,.14)"/>
+          <rect x="126" y="76" width="22" height="36" fill="rgba(63,182,216,.14)"/>
+          <g font-size="9" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">
+            <text x="65" y="83">3</text><text x="101" y="59">5</text><text x="137" y="71">4</text>
+          </g>
+          <!-- 最高虚线 -->
+          <path d="M36 64h130" stroke="#43B58F" stroke-width="1" stroke-dasharray="6 4"/>
+          <text x="38" y="59" font-size="8.5" fill="#43B58F" stroke="none" font-family="ui-monospace,Consolas,monospace">max = 5</text>
+          <!-- 平均待求线 -->
+          <path d="M36 82h130" stroke="#C9A86A" stroke-width="1" stroke-dasharray="3 4"/>
+          <path d="M158 78h18l6 8" stroke="#C9A86A" stroke-width="1"/>
+          <text x="172" y="98" text-anchor="middle" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">avg = ?</text>
+          <!-- 底注 -->
+          <g font-size="8" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">
+            <text x="65" y="126">D1</text><text x="101" y="126">D2</text><text x="137" y="126">D3</text>
+          </g>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 3 · 长江水位榜</h3>
+        <p class="task-guide">近三天水位 3、5、4 米，最高值已在第一行算好。照着它<b>再补一行</b>求平均：sum(levels) // 3（<b>//</b> 是整除，丢掉小数）。练：<b>max / sum 内置函数</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>最高水位 5 米</code> + <code>平均水位 4 米</code>（2 行）</span>
+        <div class="code-run" id="run3">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-03.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">3 个任务全部命中目标，通关按钮就会亮起来</p>
+  </section>
+
+  <!-- ⑤ 自主练习 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="flask"></span>自主练习 · 不计进度，随便试</span>
+    <h2 style="font-size:22px">试一试，看你真的懂了吗</h2>
+
+    <div class="pq" data-pq>
+      <h3>练 1 · 索引从几开始数？</h3>
+      <div class="pq-code">stations = ["下关", "玄武门"]
+print(stations[0])</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="1">下关</button>
+        <button class="pq-opt" type="button" data-ok="0">玄武门</button>
+        <button class="pq-opt" type="button" data-ok="0">鸡鸣寺</button>
+        <button class="pq-opt" type="button" data-ok="0">报错</button>
+      </div>
+      <p class="pq-exp">列表索引从 0 开始：stations[0] 是第 1 个「下关」，stations[1] 才是「玄武门」。整份练习里请把「第几个」和「索引几」分开——差 1 是新手最常见的 bug。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 2 · 装一件货，数一数</h3>
+      <div class="pq-code">cargo = ["茶叶"]
+cargo.append("云锦")
+print(len(cargo))</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">1</button>
+        <button class="pq-opt" type="button" data-ok="1">2</button>
+        <button class="pq-opt" type="button" data-ok="0">3</button>
+        <button class="pq-opt" type="button" data-ok="0">报错</button>
+      </div>
+      <p class="pq-exp">append 把「云锦」装到队尾，列表变成 ["茶叶", "云锦"]，len 数出 2。注意 append 是「加一件」，不是「替换」——原来的茶叶还在。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 3 · 这段循环打印几行？</h3>
+      <div class="pq-code">for x in ["A", "B"]:
+    print(x)</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">1 行</button>
+        <button class="pq-opt" type="button" data-ok="1">2 行</button>
+        <button class="pq-opt" type="button" data-ok="0">3 行</button>
+        <button class="pq-opt" type="button" data-ok="0">0 行</button>
+      </div>
+      <p class="pq-exp">for-in 遍历：列表里有 2 项，循环就跑 2 圈，每圈 x 依次是 "A"、"B"，各打印一行。列表有几个元素，遍历就跑几圈——不用自己数圈数。</p>
+    </div>
+
+    <div class="pq">
+      <h3>练 4 · 自由编码：停靠播报</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">用 <b>for-in</b> 遍历 stations，每行打印「停靠：站名」。列表里有几站，就播报几行。</p>
+      <div class="code-run" id="free1">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-04.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+
+    <div class="pq">
+      <h3>练 5 · 自由编码：小账本</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">把 nums 里的数<b>逐个加进 total</b>（for 循环 + 累加），最后打印 total——应该是 12。</p>
+      <div class="code-run" id="free2">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-05.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot">背口诀：「索引差一行，bug 跟一年」。写 stations[几] 之前，先默数一遍 0、1、2。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-03.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一课 · 循环与函数</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-05.html" onclick="DM.sfx('click')">下一课 · 字典与字符串<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "lab" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  /* 动手实验：公共任务运行器（改代码命中目标输出） */
+  var doneCount = 0;
+  var doneSet = {};
+  var doneEl = document.getElementById("task-done");
+  var doneBtn = document.getElementById("done");
+  function onPass(key) {
+    if (!doneSet[key]) { doneSet[key] = true; doneCount++; }
+    doneEl.textContent = doneCount;
+    if (doneCount >= 3) doneBtn.disabled = false;
+  }
+
+  DM.taskRunner("run1", {
+    name: "t1",
+    goal: ["下一站：玄武门"],
+    onPass: onPass,
+    initial: '# 任务 1：地铁报站\nstations = ["下关", "玄武门", "鸡鸣寺"]\n\nprint(f"下一站：{stations[0]}")    # TODO：下一站是第二站，索引该是几？'
+  });
+
+  DM.taskRunner("run2", {
+    name: "t2",
+    goal: ["3"],
+    onPass: onPass,
+    initial: '# 任务 2：码头装货\ncargo = ["茶叶", "丝绸"]   # 船上已有两件货\n\n# TODO：用 append 把「云锦」装上船\n\nprint(len(cargo))   # 装完数一数，应该输出 3'
+  });
+
+  DM.taskRunner("run3", {
+    name: "t3",
+    goal: ["最高水位 5 米", "平均水位 4 米"],
+    onPass: onPass,
+    initial: '# 任务 3：长江水位榜\nlevels = [3, 5, 4]   # 近三天水位（米）\n\nprint(f"最高水位 {max(levels)} 米")\n# TODO：再补一行「平均水位 4 米」\n# 提示：sum(levels) 求总和，整除 3 用 //'
+  });
+
+  /* 自主练习：自由编码题（运行 / 还原 / 填入参考答案） */
+  DM.practiceRunner("free1", {
+    file: "practice-04.py",
+    initial: '# 用 for 循环播报每一站：每行「停靠：站名」\nstations = ["下关", "中山码头", "浦口"]\n\n# 在下面写循环',
+    ref: 'stations = ["下关", "中山码头", "浦口"]\n\nfor s in stations:\n    print(f"停靠：{s}")'
+  });
+
+  DM.practiceRunner("free2", {
+    file: "practice-05.py",
+    initial: '# 把 nums 里的数逐个加进 total，最后打印 12\nnums = [2, 4, 6]\ntotal = 0\n\n# 在下面写循环（提示：total = total + n）\n\nprint(total)',
+    ref: 'nums = [2, 4, 6]\ntotal = 0\n\nfor n in nums:\n    total = total + n\n\nprint(total)'
+  });
+
+  doneBtn.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("lab", 3, 3);
+    doneBtn.innerHTML = DM.icon("check") + "太棒了，第 4 课通关！";
+    doneBtn.disabled = true;
+  });
+
+  /* 自主练习：选择题即时反馈（不计进度） */
+  document.querySelectorAll("[data-pq]").forEach(function (pq) {
+    var exp = pq.querySelector(".pq-exp");
+    var answered = false;
+    pq.querySelectorAll(".pq-opt").forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        if (answered) return;
+        if (opt.dataset.ok === "1") {
+          opt.classList.add("ok");
+          exp.classList.add("show");
+          DM.sfx("right");
+          answered = true;
+        } else {
+          opt.classList.add("bad");
+          DM.sfx("retry");
+          setTimeout(function () { opt.classList.remove("bad"); }, 700);
+        }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

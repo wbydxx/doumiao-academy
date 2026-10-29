@@ -1,0 +1,364 @@
+﻿﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游戏·画舫航线闯关 · 编程初体验 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+  [data-ic] { display: inline-flex; align-items: center; }
+  .h-ic { display: inline-flex; vertical-align: -4px; margin-right: 8px; color: var(--green); }
+  .h-ic svg { width: 26px; height: 26px; }
+  .maze { grid-template-columns: repeat(5, 62px); }
+  .goal-ic { width: 100%; height: 100%; display: grid; place-items: center; color: var(--green); }
+  .maze-wrap { position: relative; }
+  .boat-pos {
+    position: absolute; left: 0; top: 0; width: 54px; height: 56px;
+    transition: left .4s ease, top .4s ease, transform .4s ease;
+    z-index: 5; pointer-events: none;
+  }
+  .boat-pos svg { width: 100%; height: 100%; }
+  .cmd-chip b { font-size: 13px; color: var(--muted); font-weight: 800; }
+  .cmd-chip.loop.on { background: rgba(255,107,157,.12); }
+  .cmd-chip.loop .lp-tip { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+  @media (max-width: 860px) {
+    .maze { grid-template-columns: repeat(5, 48px); }
+    .boat-pos { width: 44px; height: 46px; }
+  }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" id="crumbs"></nav>
+
+  <!-- 标题与玩法 -->
+  <section class="panel" style="text-align:center">
+    <span class="panel-tag" style="justify-content:center"><span data-ic="gamepad"></span>编程初体验 · 游戏</span>
+    <h2><span class="h-ic" data-ic="boat"></span>画舫航线闯关</h2>
+    <div class="learn-text" style="text-align:left">
+      <p>秦淮河上起了雾，五段航道等着小船长来规划。从下面选指令排好航线，点<b>「运行画舫」</b>看它开动；撞到石墙或开出航道，波波会提醒你<b>再想想看</b>。</p>
+      <p>指令越少，收获的雨花石越多；重复的航线，别忘了用<b>「循环」</b>打包哦！点一下排好的指令，可以删掉它。</p>
+    </div>
+  </section>
+
+  <!-- 游戏舞台 -->
+  <section class="game-stage">
+    <div class="game-top">
+      <span class="gt-label" style="gap:6px">
+        <button class="btn ghost sm" id="prev-lv" title="上一关"><span data-ic="arrowLeft"></span></button>
+        <span data-ic="boat"></span><span id="lv-label">第 1 关</span>
+        <button class="btn ghost sm" id="next-lv" title="下一关"><span data-ic="arrowRight"></span></button>
+      </span>
+      <span class="gt-label"><span data-ic="bulb"></span>目标：≤ <b id="lv-par">4</b> 条指令</span>
+      <span class="gt-label"><span data-ic="check"></span>已加指令：<b class="big-num" id="cmd-count" style="font-size:24px">0</b> 条</span>
+    </div>
+
+    <div class="maze-wrap" id="maze-wrap">
+      <div class="maze" id="maze"></div>
+      <div class="boat-pos" id="boat">
+        <svg id="boat-svg" viewBox="0 0 64 64" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 36c7 11 16 16 24 16s17-5 24-16H8z" fill="#FFF6EA"/>
+          <path d="M14 36v-7h36v7"/>
+          <path d="M20 29v-8c0-4 3-7 7-7h10c4 0 7 3 7 7v8" fill="#FFF6EA"/>
+          <path d="M40 14v-5"/><circle cx="40" cy="6" r="3" stroke="#FF9F43"/>
+          <path d="M24 25h16" stroke="#FF9F43"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 指令面板 -->
+    <div class="palette" id="palette">
+      <button class="btn blue sm" id="add-f"><span data-ic="forward"></span>前进</button>
+      <button class="btn ghost sm" id="add-l"><span data-ic="turnL"></span>左转</button>
+      <button class="btn ghost sm" id="add-r"><span data-ic="turnR"></span>右转</button>
+      <button class="cmd-chip loop" id="loop-chip" title="点击切换：整条航线重复跑 1→2→3 遍"></button>
+    </div>
+
+    <div class="cmd-list" id="cmd-list"></div>
+
+    <div class="palette">
+      <button class="btn" id="run-btn"><span data-ic="play"></span>运行画舫</button>
+      <button class="btn ghost sm" id="reset-btn"><span data-ic="reset"></span>重置航线</button>
+    </div>
+
+    <!-- 过关横幅 -->
+    <div id="win-bar" style="display:none;margin-top:14px"></div>
+  </section>
+
+  <!-- 波波提示 -->
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="droplet"></span>
+    <div>
+      <div class="dd-name">波波</div>
+      <p id="game-msg">把指令排好队，点「运行画舫」，我就出发！</p>
+    </div>
+  </div>
+
+  <!-- 翻页 -->
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-03.html" data-sfx><span data-ic="arrowLeft"></span>上一关：循环的威力</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" id="read-btn"><span data-ic="speaker"></span>朗读这一页</button>
+    <a class="btn blue" href="quiz.html" data-sfx><span data-ic="quiz"></span>下一关：挑战测验</a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+(function () {
+  var DM = window.DM;
+  DM.boot({ root: "..", module: "coding" });
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.innerHTML = DM.icon(el.getAttribute("data-ic"));
+  });
+  document.getElementById("crumbs").innerHTML =
+    '<a href="../index.html">' + DM.icon("home") + "首页</a>" +
+    '<span class="sep">/</span>' +
+    '<a href="lesson-01.html">' + DM.icon("boat") + "编程初体验</a>" +
+    '<span class="sep">/</span><span>游戏 · 画舫航线闯关</span>';
+  document.querySelectorAll("[data-sfx]").forEach(function (el) {
+    el.addEventListener("click", function () { DM.sfx("click"); });
+  });
+  document.getElementById("read-btn").addEventListener("click", function () { DM.speakPage(this); });
+
+  /* ---------- 关卡数据（dir: 0右 / 1下 / 2左 / 3上） ---------- */
+  var LEVELS = [
+    { start: { r: 2, c: 0, d: 0 }, goal: { r: 2, c: 4 }, walls: [],                              par: 4  },
+    { start: { r: 4, c: 0, d: 0 }, goal: { r: 0, c: 4 }, walls: [{ r: 3, c: 1 }, { r: 2, c: 3 }], par: 8  },
+    { start: { r: 0, c: 0, d: 1 }, goal: { r: 4, c: 3 }, walls: [{ r: 1, c: 2 }, { r: 3, c: 0 }], par: 9  },
+    { start: { r: 4, c: 4, d: 3 }, goal: { r: 0, c: 0 }, walls: [{ r: 3, c: 2 }, { r: 1, c: 3 }, { r: 2, c: 1 }], par: 12 },
+    { start: { r: 0, c: 4, d: 1 }, goal: { r: 4, c: 0 }, walls: [{ r: 1, c: 0 }, { r: 2, c: 2 }, { r: 3, c: 4 }], par: 12 }
+  ];
+  var NAMES = { F: ["forward", "前进"], L: ["turnL", "左转"], R: ["turnR", "右转"] };
+
+  var lvIndex = 0, prog = [], loopN = 1, running = false, timer = null;
+  var cur = { r: 0, c: 0, d: 0 }, angle = 0, seq = [], stepIdx = 0;
+
+  function $(id) { return document.getElementById(id); }
+  function L() { return LEVELS[lvIndex]; }
+  function isWall(r, c) {
+    return L().walls.some(function (w) { return w.r === r && w.c === c; });
+  }
+  function setMsg(t) { $("game-msg").textContent = t; }
+
+  /* ---------- 答错提示：按码头相对画舫的方位，给出下一步建议 ---------- */
+  function relToGoal() {
+    var g = L().goal, dr = g.r - cur.r, dc = g.c - cur.c;
+    if (!dr && !dc) return "这里";
+    var diff = (Math.atan2(dr, dc) * 180 / Math.PI - cur.d * 90) % 360;
+    if (diff > 180) diff -= 360; else if (diff <= -180) diff += 360;
+    if (Math.abs(diff) <= 45) return "前方";
+    if (diff > 45 && diff <= 135) return "右方";
+    if (diff < -45 && diff >= -135) return "左方";
+    return "身后";
+  }
+  function relHint() {
+    var r = relToGoal();
+    if (r === "前方") return "码头就在正前方，继续按「前进」多走几步";
+    if (r === "右方") return "码头在你的右方，试试「右转」再「前进」";
+    if (r === "左方") return "码头在你的左方，试试「左转」再「前进」";
+    if (r === "身后") return "开过头啦，码头在身后，试试「右转」两次掉头再前进";
+    return "码头就在旁边，就差一步啦";
+  }
+  /* 撞墙时不能建议直接前进，单独给绕行提示 */
+  function crashHint() {
+    var r = relToGoal();
+    if (r === "前方") return "正前方被石墙或河岸挡住啦，先「左转」或「右转」绕一绕再前进";
+    if (r === "这里") return "码头就在旁边，就差一步啦";
+    return relHint();
+  }
+
+  /* ---------- 渲染 ---------- */
+  function loadLevel(i) {
+    stopRun();
+    lvIndex = i; prog = []; loopN = 1;
+    var d = L();
+    cur = { r: d.start.r, c: d.start.c, d: d.start.d };
+    angle = d.start.d * 90;
+    var html = "";
+    for (var r = 0; r < 5; r++) {
+      for (var c = 0; c < 5; c++) {
+        var cls = "cell", inner = "";
+        if (isWall(r, c)) cls += " wall";
+        if (r === d.goal.r && c === d.goal.c) { cls += " goal"; inner = "<span class=\"goal-ic\">" + DM.icon("award") + "</span>"; }
+        html += '<div class="' + cls + '">' + inner + "</div>";
+      }
+    }
+    $("maze").innerHTML = html;
+    $("lv-label").textContent = "第 " + (i + 1) + " 关";
+    $("lv-par").textContent = d.par;
+    $("win-bar").style.display = "none";
+    $("prev-lv").disabled = i === 0;
+    $("next-lv").disabled = i === LEVELS.length - 1;
+    updateLoopChip(); renderCmds(); placeBoat();
+    setMsg("第 " + (i + 1) + " 关出发！把指令排好队，点「运行画舫」，我就开船。");
+  }
+
+  function placeBoat() {
+    var cell = $("maze").children[cur.r * 5 + cur.c];
+    if (!cell) return;
+    var boat = $("boat");
+    boat.style.left = (cell.offsetLeft + cell.offsetWidth / 2 - boat.offsetWidth / 2) + "px";
+    boat.style.top = (cell.offsetTop + cell.offsetHeight / 2 - boat.offsetHeight / 2) + "px";
+    boat.style.transform = "rotate(" + angle + "deg)";
+  }
+
+  function renderCmds() {
+    var list = $("cmd-list");
+    if (!prog.length) {
+      list.innerHTML = '<span style="align-self:center;color:var(--muted);font-size:15px">还没有指令，从下面选一块「指令牌」吧</span>';
+    } else {
+      list.innerHTML = prog.map(function (k, i) {
+        return '<button class="cmd-chip" data-i="' + i + '" title="点我删除这条"><b>' + (i + 1) + "</b>" +
+          DM.icon(NAMES[k][0]) + NAMES[k][1] + "</button>";
+      }).join("");
+    }
+    $("cmd-count").textContent = prog.length;
+    list.querySelectorAll(".cmd-chip").forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (running) return;
+        prog.splice(+b.dataset.i, 1);
+        renderCmds(); DM.sfx("toggle");
+      });
+    });
+  }
+
+  function updateLoopChip() {
+    var chip = $("loop-chip");
+    chip.innerHTML = DM.icon("loop") + " 整条航线循环 ×" + loopN +
+      (loopN > 1 ? "" : ' <span class="lp-tip">（点我 ×2）</span>');
+    chip.classList.toggle("on", loopN > 1);
+  }
+
+  /* ---------- 运行 ---------- */
+  function resetBoatPos() {
+    var d = L().start;
+    cur = { r: d.r, c: d.c, d: d.d };
+    angle = d.d * 90;
+    placeBoat();
+  }
+  function stopRun() {
+    if (timer) { clearTimeout(timer); timer = null; }
+    running = false; setRunUI(false);
+  }
+  function setRunUI(on) {
+    ["add-f", "add-l", "add-r", "loop-chip", "run-btn", "prev-lv", "next-lv"].forEach(function (id) {
+      $(id).disabled = on;
+    });
+  }
+
+  function stepExec() {
+    if (!running) return;
+    if (stepIdx >= seq.length) {
+      stopRun(); DM.sfx("retry");
+      setMsg("波波：航线跑完了，还没到码头～提示：" + relHint() + "。");
+      return;
+    }
+    var cmd = seq[stepIdx]; stepIdx++;
+    if (cmd === "F") {
+      var nr = cur.r + (cur.d === 1 ? 1 : cur.d === 3 ? -1 : 0);
+      var nc = cur.c + (cur.d === 0 ? 1 : cur.d === 2 ? -1 : 0);
+      if (nr < 0 || nr > 4 || nc < 0 || nc > 4 || isWall(nr, nc)) { crash(); return; }
+      cur.r = nr; cur.c = nc; placeBoat();
+    } else if (cmd === "L") {
+      cur.d = (cur.d + 3) % 4; angle -= 90; placeBoat();
+    } else {
+      cur.d = (cur.d + 1) % 4; angle += 90; placeBoat();
+    }
+    if (cur.r === L().goal.r && cur.c === L().goal.c) { win(); return; }
+    timer = setTimeout(stepExec, 420);
+  }
+
+  function crash() {
+    stopRun(); DM.sfx("retry");
+    var svg = $("boat-svg");
+    svg.classList.remove("shake");
+    void svg.getBoundingClientRect();
+    svg.classList.add("shake");
+    setTimeout(function () { svg.classList.remove("shake"); }, 450);
+    setMsg("第 " + stepIdx + " 步撞到啦！提示：" + crashHint() + "。");
+  }
+
+  function win() {
+    stopRun(); DM.sfx("wow");
+    var rect = $("maze-wrap").getBoundingClientRect();
+    DM.petals(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    var n = prog.length, par = L().par;
+    var st = n <= par ? 3 : (n <= par + 3 ? 2 : 1);
+    DM.store.completeGame("coding", st);
+    setMsg("波波：到码头啦！你真棒！");
+    var isLast = lvIndex === LEVELS.length - 1;
+    $("win-bar").innerHTML =
+      '<div class="big-num" style="font-size:26px">过关！</div>' +
+      '<p style="color:var(--muted);margin:6px 0 12px">这一关用了 <b>' + n + '</b> 条指令（目标 ≤' + par +
+      '），收获 <b style="color:var(--accent-2)">' + st + '</b> 颗雨花石' +
+      (n <= par ? "，航线排得又短又准，太厉害啦！" : "，试试用更少的指令或循环再来一次？") + "</p>" +
+      '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
+      '<button class="btn ghost sm" id="again-btn">' + DM.icon("reset") + "再玩一次</button>" +
+      (isLast
+        ? '<a class="btn blue sm" href="quiz.html">' + DM.icon("quiz") + "挑战测验</a>"
+        : '<button class="btn blue sm" id="wl-next">' + DM.icon("arrowRight") + "下一关</button>") +
+      "</div>";
+    $("win-bar").style.display = "block";
+    $("again-btn").addEventListener("click", function () {
+      resetBoatPos();
+      $("win-bar").style.display = "none";
+      setMsg("再跑一次！也可以改改指令，看能不能更省。");
+    });
+    var nx = $("wl-next");
+    if (nx) nx.addEventListener("click", function () { loadLevel(lvIndex + 1); });
+  }
+
+  /* ---------- 事件绑定 ---------- */
+  function addCmd(k) {
+    if (running) return;
+    if (prog.length >= 20) { setMsg("航线有点长啦，先删掉几条再试试。"); return; }
+    prog.push(k); renderCmds(); DM.sfx("toggle");
+  }
+  $("add-f").addEventListener("click", function () { addCmd("F"); });
+  $("add-l").addEventListener("click", function () { addCmd("L"); });
+  $("add-r").addEventListener("click", function () { addCmd("R"); });
+
+  $("loop-chip").addEventListener("click", function () {
+    if (running) return;
+    loopN = loopN % 3 + 1;
+    updateLoopChip(); DM.sfx("toggle");
+    setMsg(loopN > 1 ? "整条航线会重复跑 " + loopN + " 遍，重复的事交给循环！" : "已取消循环，航线只跑 1 遍。");
+  });
+
+  $("run-btn").addEventListener("click", function () {
+    if (running) return;
+    if (!prog.length) { setMsg("波波：航线还是空的呀，先加几条指令吧！"); DM.sfx("retry"); return; }
+    resetBoatPos();
+    seq = [];
+    for (var i = 0; i < loopN; i++) seq = seq.concat(prog);
+    stepIdx = 0; running = true; setRunUI(true);
+    setMsg("波波：出发咯！看我一步一步按你的航线开。");
+    timer = setTimeout(stepExec, 350);
+  });
+
+  $("reset-btn").addEventListener("click", function () {
+    stopRun(); resetBoatPos();
+    prog = []; renderCmds();
+    $("win-bar").style.display = "none";
+    setMsg("已重置：画舫回到起点，指令清单也清空了，重新排航线吧！");
+  });
+
+  $("prev-lv").addEventListener("click", function () { if (lvIndex > 0) loadLevel(lvIndex - 1); });
+  $("next-lv").addEventListener("click", function () { if (lvIndex < LEVELS.length - 1) loadLevel(lvIndex + 1); });
+
+  window.addEventListener("resize", placeBoat);
+
+  loadLevel(0);
+})();
+</script>
+</body>
+</html>

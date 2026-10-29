@@ -1,0 +1,110 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>挑战测验 · 编程初体验 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+  [data-ic] { display: inline-flex; align-items: center; }
+  .h-ic { display: inline-flex; vertical-align: -4px; margin-right: 8px; color: var(--green); }
+  .h-ic svg { width: 26px; height: 26px; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" id="crumbs"></nav>
+
+  <!-- 标题 -->
+  <section class="panel" style="text-align:center">
+    <span class="panel-tag" style="justify-content:center"><span data-ic="quiz"></span>编程初体验 · 挑战测验</span>
+    <h2><span class="h-ic" data-ic="trophy"></span>小船长资格考</h2>
+    <p style="color:var(--muted)">三道题全答对，就是合格的秦淮小船长啦</p>
+  </section>
+
+  <!-- 学一学回顾 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>考什么</span>
+    <div class="learn-text">
+      <p>这三关你学会了三样本事：<b>把指令说清楚</b>、<b>按顺序一步步执行</b>、<b>用循环搞定重复的事</b>。答错也没关系，豆豆会给你小提示，再想想看就好。</p>
+    </div>
+  </section>
+
+  <!-- 测验引擎挂载点 -->
+  <div id="quiz"></div>
+
+  <!-- 豆豆气泡 -->
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆说</div>
+      <p>别紧张，慢慢读题。想不起来的话，就回想一下波波开船的样子～</p>
+    </div>
+  </div>
+
+  <!-- 翻页 -->
+  <div class="pager">
+    <a class="btn ghost sm" href="game-maze.html" data-sfx><span data-ic="arrowLeft"></span>上一关：航线闯关</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" id="read-btn"><span data-ic="speaker"></span>朗读这一页</button>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+(function () {
+  var DM = window.DM;
+  DM.boot({ root: "..", module: "coding" });
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.innerHTML = DM.icon(el.getAttribute("data-ic"));
+  });
+  document.getElementById("crumbs").innerHTML =
+    '<a href="../index.html">' + DM.icon("home") + "首页</a>" +
+    '<span class="sep">/</span>' +
+    '<a href="lesson-01.html">' + DM.icon("boat") + "编程初体验</a>" +
+    '<span class="sep">/</span><span>挑战测验</span>';
+  document.querySelectorAll("[data-sfx]").forEach(function (el) {
+    el.addEventListener("click", function () { DM.sfx("click"); });
+  });
+  document.getElementById("read-btn").addEventListener("click", function () { DM.speakPage(this); });
+
+  DM.quiz({
+    el: "#quiz",
+    module: "coding",
+    nextHref: "../achievements/index.html",
+    data: [
+      {
+        q: "为什么计算机“一点都不会变通”？",
+        opts: ["因为它很懒", "因为它只按指令一步一步执行", "因为它听力不好"],
+        a: 1,
+        why: "计算机只认识清楚的指令，说清楚它才做得对。",
+        hint: "模糊的话它听得懂吗？"
+      },
+      {
+        q: "“先前进，再左转，最后靠岸”体现的是？",
+        opts: ["顺序执行", "循环", "休息"],
+        a: 0,
+        why: "一步一步按顺序来，就是顺序执行。",
+        hint: "这三句话有先后吗？"
+      },
+      {
+        q: "要让画舫前进 5 格，最聪明的写法是？",
+        opts: ["说 5 次“前进”", "用“循环 ×5”", "自己推船"],
+        a: 1,
+        why: "重复的事情交给循环，一句话就搞定。",
+        hint: "重复的事情用什么最省力？"
+      }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

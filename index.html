@@ -1,0 +1,368 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>豆苗学堂 — 少儿 AI 与计算机科普学习</title>
+<meta name="description" content="河海大学计算机与软件学院公益科普：用南京城的花灯、画舫、城墙、动物园等场景，带 6-12 岁孩子入门二进制、AI、编程与网络安全。无需注册，即开即学。">
+<meta name="theme-color" content="#0F2A44">
+<meta name="author" content="河海大学计算机与软件学院">
+<meta property="og:title" content="豆苗学堂 · 少儿 AI 与计算机科普">
+<meta property="og:description" content="两条航线，顺江而下：从像素火花驶向真实代码。跟着一滴水穿过南京城学计算机。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/css/tokens.css?v=6">
+<link rel="stylesheet" href="assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap">
+  <!-- 主视觉 -->
+  <section class="hero">
+    <span class="hero-kicker" data-rv style="--i:0"><span id="kicker-ic"></span>河海大学计算机与软件学院 · 公益科普</span>
+    <h1><span data-rv style="--i:1">两条航线，顺江而下</span><br><span data-rv style="--i:2">从像素火花驶向真实代码</span></h1>
+    <p class="hero-sub" data-rv style="--i:3">跟着一滴水穿过南京城：入门航线用游戏点亮直觉，进阶航道打开 AI 与编程的大门</p>
+    <div class="hero-meta" data-rv style="--i:4">SINCE 1915 · 融水明智 · 六镇连江</div>
+    <div class="hero-fig" data-rv style="--i:5">
+      <svg viewBox="0 0 1200 480" role="img" aria-label="一滴水的旅程：沿长江航线经过六座学习站点，可点击直达">
+        <defs>
+          <linearGradient id="hf-bg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#F8FCFF"/><stop offset="1" stop-color="#E6F1FA"/>
+          </linearGradient>
+        </defs>
+        <rect width="1200" height="480" fill="url(#hf-bg)"/>
+        <!-- 天际线线稿：远山 · 紫峰塔 · 城市块 · 长江大桥 · 明城墙 -->
+        <g class="g-sky" aria-hidden="true">
+          <path class="sky-line" d="M60 148q40-26 90 0M1005 148q46-30 100 0M1085 148q30-20 60 0" opacity=".55"/>
+          <path class="sky-line" d="M150 148L172 58l22 90M161 120h22M156 136h32M166 94h12M172 58V40"/>
+          <path class="sky-line" d="M240 148V96h54v52M256 148v-28h22v28M318 148v-38h38v38M378 148v-22h28v22M428 148v-30h34v30"/>
+          <path class="sky-line" d="M480 108h250M515 84v46M695 84v46"/>
+          <path class="sky-line" d="M515 88c56 22 124 22 180 0M555 99v9M595 102v6M635 102v6M675 99v9"/>
+          <path class="sky-line" d="M790 148v-26h20v10h20v-10h20v10h20v-10h20v10h20v-10h20v10h20v-10h20v26"/>
+          <path class="sky-line" d="M790 136h200"/>
+        </g>
+        <!-- 水纹 -->
+        <g class="g-water" aria-hidden="true">
+          <path class="water-line" d="M60 402q30-8 60 0t60 0t60 0t60 0"/>
+          <path class="water-line" d="M740 428q30-8 60 0t60 0t60 0"/>
+          <path class="water-line" d="M180 444q30-8 60 0t60 0"/>
+          <path class="water-line" d="M900 402q30-8 60 0t60 0"/>
+        </g>
+        <!-- 航线：底笔生长 + 流光 -->
+        <path id="route-path" class="route-base" pathLength="100" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" opacity=".92"
+              d="M-20 330C120 330 150 210 260 200C380 190 400 330 530 335C660 340 660 175 800 170C930 166 950 300 1080 300C1140 300 1160 270 1220 255"/>
+        <path class="route-flow" fill="none" stroke="var(--cyan)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"
+              d="M-20 330C120 330 150 210 260 200C380 190 400 330 530 335C660 340 660 175 800 170C930 166 950 300 1080 300C1140 300 1160 270 1220 255"/>
+        <g id="route-nodes"></g>
+        <!-- 水滴：SMIL 沿航线循环流动 -->
+        <g class="drop-g" aria-hidden="true">
+          <circle r="9" fill="rgba(63,182,216,.22)"/>
+          <circle r="4.5" fill="var(--cyan)"/>
+          <circle r="1.7" cx="-1.4" cy="-1.4" fill="#fff" opacity=".9"/>
+          <animateMotion dur="14s" repeatCount="indefinite"><mpath href="#route-path" xlink:href="#route-path"/></animateMotion>
+        </g>
+      </svg>
+      <div class="route-tip" id="route-tip" role="tooltip" aria-hidden="true"></div>
+      <span class="hero-cap">一滴水的旅程 · WHERE WATER MEETS CODE</span>
+    </div>
+    <div class="hero-cta" data-rv style="--i:6">
+      <a class="btn" href="binary/lesson-01.html" id="hero-go" data-sfx></a>
+      <a class="btn ghost" href="achievements/index.html" id="hero-trophy" data-sfx></a>
+    </div>
+  </section>
+
+  <!-- 继续旅程 -->
+  <section class="resume-banner" id="resume"></section>
+
+  <!-- 入门航线 01-04 -->
+  <section class="path-sec" id="modules">
+    <div class="path-head" data-rv>
+      <h2>入门航线</h2>
+      <span class="ph-en">Entry Route · 01–04</span>
+      <span class="ph-note">6–12 岁友好 · 故事与游戏中建立直觉</span>
+    </div>
+    <div class="path-grid" id="path-entry"></div>
+  </section>
+
+  <!-- 进阶航道 05-06 -->
+  <section class="path-sec" id="advanced">
+    <div class="path-head" data-rv>
+      <h2>进阶航道</h2>
+      <span class="ph-en">Advanced Route · 05–06</span>
+      <span class="ph-note">面向大孩子与家长 · 主流 AI 术语 + 真实 Python 编程</span>
+    </div>
+    <div class="path-grid path-grid-2" id="path-adv"></div>
+    <p class="adv-lock-note" id="adv-lock-note" style="display:none"></p>
+  </section>
+
+  <!-- 我的旅程 -->
+  <section class="panel" style="text-align:center">
+    <span class="panel-tag">My Journey</span>
+    <h2 style="display:flex;align-items:center;justify-content:center;gap:10px">
+      <span style="color:var(--gold);display:inline-flex" id="sum-ic"></span>我的旅程
+    </h2>
+    <p style="color:var(--muted)">收集雨花石，点亮六枚徽章，赢取「小小科学家」证书</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:14px 0">
+      <a class="btn sm ghost" href="achievements/index.html" id="sum-trophy" data-sfx></a>
+      <a class="btn sm" href="binary/lesson-01.html" id="sum-continue" data-sfx></a>
+    </div>
+  </section>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="assets/js/storage.js?v=6"></script><script src="assets/js/mock-data.js?v=6"></script>
+<script src="assets/js/pinyin-data.js?v=6"></script><script src="assets/data/catalog.js?v=1"></script><script src="assets/js/common.js?v=10"></script>
+<script>
+(function () {
+  var DM = window.DM;
+  DM.boot({ root: "." });
+
+  var LESSONS = { binary: 3, ai: 4, coding: 3, safety: 4, terms: 3, lab: 7 };
+  var GAME = { binary: "lightbulb", ai: "trainer", coding: "maze", safety: "shield", terms: "match", lab: "puzzle" };
+  // 模块 key → 真实目录（进阶目录与 key 不一致：terms→ai-terms, lab→code-lab）
+  var DIR = { binary: "binary", ai: "ai", coding: "coding", safety: "safety", terms: "ai-terms", lab: "code-lab" };
+  var NUM = { binary: "01", ai: "02", coding: "03", safety: "04", terms: "05", lab: "06" };
+  // 知识点标签
+  var TAGS = {
+    binary: ["0 和 1", "二进制", "灯语"],
+    ai: ["数据集", "训练", "会犯错"],
+    coding: ["指令", "顺序", "路径"],
+    safety: ["隐私", "密码", "求助"],
+    terms: ["机器学习", "大模型", "提示词"],
+    lab: ["变量", "列表", "字典", "项目实战"]
+  };
+  var ENTRY_DONE = DM.entryCleared();
+  var DESC = {
+    binary: "秦淮花灯的亮与灭，藏着计算机的语言。点亮花灯，学会 0 和 1 的魔法。",
+    ai: "去红山动物园，当一次饲养员老师，教机器人认识动物，也看看它为什么会犯错。",
+    coding: "给秦淮画舫下指令、规划航线。说得越清楚，画舫走得越准。",
+    safety: "登上明城墙，守好数字城门：不告诉陌生人小秘密，遇事先找爸妈老师。",
+    terms: "系统解码机器学习、神经网络、大语言模型、提示词等主流术语，看懂 AI 新闻背后的词。",
+    lab: "在浏览器里写真实可运行的 Python：从变量、循环到列表、字典，最终独立完成小项目，内置 IDE 级迷你运行器。"
+  };
+
+  /** 模块进度读取（旧数据缺键时兜底，防卡片渲染报错） */
+  function getMod(key) {
+    var p = DM.store.get().modules[key];
+    if (!p) p = { lessons: [], game: 0, quiz: 0 };
+    if (!Array.isArray(p.lessons)) p.lessons = [];
+    return p;
+  }
+  /** 智能续读：下一课 → 未完成的游戏 → 未完成的测验 → 回到第一课复习 */
+  function nextHref(key) {
+    var d = DIR[key] || key;
+    var p = getMod(key);
+    var done = p.lessons.filter(function (s) { return s > 0; }).length;
+    if (key === "lab" && done === 0 && !p.game && !p.quiz) return d + "/pre.html";
+    if (done < LESSONS[key]) return d + "/lesson-" + ("0" + (done + 1)).slice(-2) + ".html";
+    if (!p.game) return d + "/game-" + GAME[key] + ".html";
+    if (!p.quiz) return d + "/quiz.html";
+    return d + "/lesson-01.html";
+  }
+  function tagsHtml(key) {
+    var tags = TAGS[key] || [];
+    if (!tags.length) return "";
+    return '<span class="mc-tags">' + tags.map(function (t) { return '<span class="mc-tag">' + t + "</span>"; }).join("") + "</span>";
+  }
+  /** 路径节点卡：整卡可点，直達「下一站」；进阶卡在入门航线通关前锁定 */
+  function pathCard(key) {
+    var meta = DM.MODULE_META[key];
+    var percent = DM.store.modulePercent(key);
+    var adv = DM.LEVELS.advanced.indexOf(key) >= 0;
+    var locked = adv && !ENTRY_DONE;
+    var cls = "path-card" + (adv ? " p-adv" : "") + (locked ? " locked" : "");
+    var head = locked
+      ? '<a class="' + cls + '" href="javascript:void(0)" data-lock="' + key + '" aria-disabled="true">'
+      : '<a class="' + cls + '" href="' + nextHref(key) + '" data-sfx>';
+    return head +
+      '<span class="p-num">' + NUM[key] + "</span>" +
+      (locked ? '<span class="p-lock">' + DM.icon("lock") + "待解锁</span>" : "") +
+      '<span class="p-ring">' + DM.ring(percent, 46, 4.5) + "</span>" +
+      '<span class="p-ic" style="background:' + meta.color + '">' + DM.icon(meta.ic) + "</span>" +
+      '<span class="p-name">' + meta.name + "</span>" +
+      '<span class="p-scene">' + meta.scene + " · " + LESSONS[key] + " 关" + (adv ? " · 进阶" : "") + "</span>" +
+      '<span class="p-desc">' + DESC[key] + "</span>" + tagsHtml(key) +
+      '<span class="p-foot"><span class="p-bar"><i style="width:' + percent + '%"></i></span></span></a>';
+  }
+
+  /** 继续旅程横幅：优先「进行中」的模块，全 0 从头出发，全部完成则祝贺 */
+  function renderResume() {
+    var el = document.getElementById("resume");
+    var mods = DM.MODULES.filter(function (k) { return ENTRY_DONE || DM.LEVELS.advanced.indexOf(k) < 0; }), cur = null;
+    for (var i = 0; i < mods.length; i++) {
+      var pc = DM.store.modulePercent(mods[i]);
+      if (pc > 0 && pc < 100) { cur = { key: mods[i], pc: pc, started: true }; break; }
+    }
+    if (!cur) {
+      for (var j = 0; j < mods.length; j++) {
+        if (DM.store.modulePercent(mods[j]) === 0) { cur = { key: mods[j], pc: 0, started: false }; break; }
+      }
+    }
+    if (!cur) {
+      el.innerHTML = '<div class="rb-inner rb-done"><span class="rb-ic" style="background-color:var(--green)">' + DM.icon("trophy") + "</span>" +
+        '<div class="rb-txt"><b>全部小镇都点亮啦！</b><span class="rb-sub">豆豆为你骄傲——去成就墙看看你的徽章吧</span></div>' +
+        '<a class="btn sm" href="achievements/index.html" data-sfx>' + DM.icon("trophy") + "看成就墙</a></div>";
+      return;
+    }
+    var meta = DM.MODULE_META[cur.key];
+    var total = 0;
+    for (var t = 0; t < DM.MODULES.length; t++) total += DM.store.modulePercent(DM.MODULES[t]);
+    total = Math.round(total / DM.MODULES.length);
+    el.innerHTML = '<div class="rb-inner">' +
+      '<span class="rb-ic" style="background-color:' + meta.color + '">' + DM.icon(meta.ic) + "</span>" +
+      '<div class="rb-txt"><b>' + (cur.started ? "继续上次旅程" : "从这里出发") + "</b>" +
+      '<span class="rb-sub">' + meta.name + " · " + meta.scene + " · 已完成 " + cur.pc + "%</span>" +
+      '<span class="progress-track rb-track"><span class="progress-fill" style="width:' + cur.pc + '%"></span></span></div>' +
+      '<div class="rb-stats">' + DM.ring(total, 56, 5, "lg") +
+      '<span class="rb-gem">' + DM.icon("stone") + '<b data-count="' + DM.store.get().stones + '">0</b><small>雨花石</small></span></div>' +
+      '<a class="btn sm" href="' + nextHref(cur.key) + '" data-sfx>' + DM.icon("forward") + (cur.started ? "继续学习" : "开始学习") + "</a></div>";
+  }
+
+  document.getElementById("kicker-ic").innerHTML = DM.icon("droplet");
+  document.getElementById("path-entry").innerHTML = DM.LEVELS.entry.map(pathCard).join("");
+  document.getElementById("path-adv").innerHTML = DM.LEVELS.advanced.map(pathCard).join("");
+
+  /** 进阶航道锁定提示：列出还差的入门模块，点击锁定卡时滚动并抖动提醒 */
+  (function advNotice() {
+    if (ENTRY_DONE) return;
+    var note = document.getElementById("adv-lock-note");
+    if (!note) return;
+    var missing = DM.LEVELS.entry.filter(function (k) { return !DM.store.moduleDone(k); })
+      .map(function (k) { return DM.MODULE_META[k].name; });
+    note.innerHTML = DM.icon("lock") + "<span>完成入门航线全部关卡后解锁进阶航道（还差：" + missing.join("、") + "）</span>";
+    note.style.display = "flex";
+    function flash() {
+      DM.sfx("retry");
+      note.classList.remove("shake"); void note.offsetWidth; note.classList.add("shake");
+      note.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    document.querySelectorAll("[data-lock]").forEach(function (el) {
+      el.addEventListener("click", function (ev) { ev.preventDefault(); flash(); });
+    });
+  })();
+
+  renderResume();
+
+  /** Hero 航线站点：沿 SVG path 等比取点放置 6 个可点击节点（图即导航） */
+  (function buildRoute() {
+    var route = document.getElementById("route-path");
+    var box = document.getElementById("route-nodes");
+    if (!route || !box || !route.getTotalLength) return;
+    var NS = "http://www.w3.org/2000/svg";
+    var L = route.getTotalLength();
+    var fracs = [0.045, 0.23, 0.41, 0.59, 0.77, 0.95];
+    /* 悬停提示卡：站名 + 场景 + 课程简介，定位在站点上方（空间不足翻到下方），箭头指向节点 */
+    var tip = document.getElementById("route-tip");
+    function tipShow(a, key) {
+      if (!tip) return;
+      var meta = DM.MODULE_META[key];
+      var adv = DM.LEVELS.advanced.indexOf(key) >= 0;
+      var locked = adv && !ENTRY_DONE;
+      tip.innerHTML =
+        "<b>" + meta.name + "</b>" +
+        '<span class="rt-meta">' + NUM[key] + " · " + meta.scene + " · " + LESSONS[key] + " 关" + (adv ? " · 进阶" : "") + (locked ? " · 待解锁" : "") + "</span>" +
+        "<p>" + (DESC[key] || "") + "</p>";
+      tip.style.setProperty("--nc", meta.color);
+      tip.setAttribute("aria-hidden", "false");
+      var scale = route.ownerSVGElement.getBoundingClientRect().width / 1200;
+      var x = parseFloat(a.getAttribute("data-x")) * scale;
+      var y = parseFloat(a.getAttribute("data-y")) * scale;
+      var fig = tip.parentElement, figW = fig.clientWidth, figH = fig.clientHeight;
+      tip.style.left = "0px"; tip.style.top = "0px";
+      var tw = tip.offsetWidth, th = tip.offsetHeight;
+      var left = Math.min(Math.max(10, x - tw / 2), Math.max(10, figW - tw - 10));
+      var above = y - th - 30 >= 6;
+      var topPx = above ? y - th - 24 : y + 26;
+      if (!above && topPx + th > figH - 6) topPx = figH - th - 6;
+      tip.style.left = left + "px";
+      tip.style.top = topPx + "px";
+      tip.style.setProperty("--ax", Math.round(x - left) + "px");
+      tip.classList.toggle("below", !above);
+      requestAnimationFrame(function () { tip.classList.add("show"); });
+    }
+    function tipHide() {
+      if (!tip) return;
+      tip.classList.remove("show");
+      tip.setAttribute("aria-hidden", "true");
+    }
+    DM.MODULES.forEach(function (key, i) {
+      var meta = DM.MODULE_META[key];
+      var pt = route.getPointAtLength(L * fracs[i]);
+      var done = DM.store.modulePercent(key) >= 100;
+      var locked = DM.LEVELS.advanced.indexOf(key) >= 0 && !ENTRY_DONE;
+      var g = document.createElementNS(NS, "g");
+      g.setAttribute("transform", "translate(" + pt.x.toFixed(1) + " " + pt.y.toFixed(1) + ")");
+      var a = document.createElementNS(NS, "a");
+      a.setAttribute("href", locked ? "javascript:void(0)" : nextHref(key));
+      a.setAttribute("class", "route-node" + (done ? " done" : "") + (locked ? " locked" : ""));
+      a.setAttribute("data-rv", "pop");
+      a.setAttribute("data-sfx", "");
+      a.setAttribute("aria-label", meta.name + (locked ? "（未解锁）" : done ? "（已完成）" : ""));
+      a.style.setProperty("--i", Math.min(i, 7));
+      a.style.setProperty("--nc", meta.color);
+      a.innerHTML =
+        '<circle class="n-halo" r="34"/>' +
+        '<circle class="ripple" r="22"/>' +
+        '<circle class="n-plate" r="22"/>' +
+        DM.icon(meta.ic) +
+        '<text class="n-label" y="47" text-anchor="middle">' + meta.name + "</text>" +
+        '<text class="n-sub" y="63" text-anchor="middle">' + NUM[key] + " · " + meta.scene + "</text>";
+      var ic = a.querySelector("svg");
+      ic.setAttribute("x", -12); ic.setAttribute("y", -12);
+      ic.setAttribute("width", 24); ic.setAttribute("height", 24);
+      ic.classList.add("n-ic");
+      g.appendChild(a);
+      box.appendChild(g);
+      a.setAttribute("data-x", pt.x.toFixed(1));
+      a.setAttribute("data-y", pt.y.toFixed(1));
+      /* 悬停 / 键盘聚焦：站点提示卡（触屏点击即直达，无需提示） */
+      a.addEventListener("mouseenter", function () { tipShow(a, key); });
+      a.addEventListener("mouseleave", tipHide);
+      a.addEventListener("focus", function () { tipShow(a, key); });
+      a.addEventListener("blur", tipHide);
+      /* 锁定站点：点击不跳转，滚动到解锁提示并抖动提醒 */
+      if (locked) a.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        DM.sfx("retry");
+        var note = document.getElementById("adv-lock-note");
+        if (note) {
+          note.classList.remove("shake"); void note.offsetWidth; note.classList.add("shake");
+          note.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      });
+    });
+  })();
+
+  /* Hero 主按钮 = 智能续读；成就按钮带徽章数 */
+  document.getElementById("hero-go").innerHTML = DM.icon("play") + (DM.store.get().stones > 0 ? "继续旅程" : "从花灯小镇出发");
+  document.getElementById("hero-go").href = (function () {
+    var mods = DM.MODULES.filter(function (k) { return ENTRY_DONE || DM.LEVELS.advanced.indexOf(k) < 0; });
+    for (var i = 0; i < mods.length; i++) {
+      var pc = DM.store.modulePercent(mods[i]);
+      if (pc > 0 && pc < 100) return nextHref(mods[i]);
+    }
+    return "binary/lesson-01.html";
+  })();
+  document.getElementById("hero-trophy").innerHTML = DM.icon("trophy") + "成就墙";
+
+  document.getElementById("sum-ic").innerHTML = DM.icon("stone");
+  var trophy = document.getElementById("sum-trophy");
+  trophy.innerHTML = DM.icon("trophy") + "成就墙（徽章 " + DM.store.badgeCount() + "/" + DM.MODULES.length + "）";
+  var cont = document.getElementById("sum-continue");
+  cont.innerHTML = DM.icon("play") + (DM.store.get().stones > 0 ? "继续旅程" : "从花灯小镇出发");
+  cont.href = document.getElementById("hero-go").href;
+
+  // 首页所有按钮点击音效
+  document.querySelectorAll("[data-sfx]").forEach(function (el) {
+    el.addEventListener("click", function () { DM.sfx("click"); });
+  });
+
+  DM.rvAll(); // 动态内容渲染完成，补扫入场动效（幂等）
+})();
+</script>
+</body>
+</html>

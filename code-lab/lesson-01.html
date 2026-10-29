@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>变量与数据类型 · 代码实验室 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="code"></span>代码实验室</a>
+    <span class="sep">/</span>
+    <span>第 1 课 · 变量与数据类型</span>
+  </nav>
+
+  <!-- ① 课程头卡 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="code"></span>进阶 · 第 1 课</span>
+    <h2>变量与数据类型</h2>
+    <p style="color:var(--muted)">在紫峰实验室写下你人生第一行<b>真实可运行的 Python</b>。迷你运行器不联网、不上传，代码只在你自己的浏览器里跑。</p>
+    <div class="learn-caps">
+      <span><span data-ic="bulb"></span>变量是什么</span>
+      <span><span data-ic="spark"></span>str·int·float·bool</span>
+      <span><span data-ic="box"></span>f-string 填空</span>
+      <span><span data-ic="terminal"></span>print()</span>
+    </div>
+    <div style="margin-top:14px;display:flex;align-items:center;gap:10px;background:#EAF4FD;border:1.5px dashed #2E86DE;border-radius:12px;padding:10px 14px;flex-wrap:wrap">
+      <span data-ic="bulb" style="display:inline-flex;color:#2E86DE;flex:none"></span>
+      <span style="font-size:14.5px">从没写过代码？先看 <b>第 0 课 · 写代码之前</b>：5 分钟认识运行器，回来再开始。</span>
+      <a class="btn sm blue" href="pre.html" onclick="DM.sfx('click')" style="margin-left:auto;flex:none">去第 0 课<span data-ic="arrowRight"></span></a>
+    </div>
+  </section>
+
+  <!-- ② 课前导读：左总览图 + 右开场白 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>课前导读</span>
+    <div class="intro-split" style="margin-top:12px">
+      <img class="intro-img" src="../assets/img/lab-1.jpg" alt="紫峰大厦下的实验室里，少年在屏幕前敲下第一行 Python 代码" loading="lazy">
+      <div class="intro-txt">
+        <h3>变量，就是贴了名字的箱子</h3>
+        <p>想象你在快递站打包行李：每个箱子都要<b>贴上标签</b>，才知道里面装的是什么。程序里的「变量」就是这种贴了名字的箱子——标签上写 <b>city</b>，箱子里放 <b>"南京"</b>。</p>
+        <p>这一课你将学会：给箱子贴标签（<b>赋值</b>）、认出箱子里装的是<b>文字、整数、小数还是"是/否"</b>（数据类型），再用 <b>f-string</b> 把它们漂亮地打印出来。学完就动手改 3 段真代码！</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 概念卡片 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>先懂 4 个概念</span>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3><span data-ic="box"></span>变量 Variable</h3>
+        <p>贴名字的箱子。Python 不用先打招唿，<b>一个等号直接赋值</b>就能用；想换内容，再赋一次就行。</p>
+        <pre>city = "南京"</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="spark"></span>四种类型</h3>
+        <p><b>str</b> 文字："南京" ｜ <b>int</b> 整数：12 ｜ <b>float</b> 小数：3.5 ｜ <b>bool</b> 是非：True / False（首字母要大写）。</p>
+        <pre>n = 12   s = "12"   f = 3.5</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="box"></span>f-string 填空模板</h3>
+        <p>引号前加一个 <b>f</b>，文字就变成填空题：<b>{ }</b> 里放变量或算式，运行时自动把结果填进去。</p>
+        <pre>f"我 {age} 岁"</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="terminal"></span>print()</h3>
+        <p>程序员的<b>调试望远镜</b>：把内容打印到屏幕上。看不清程序在想什么时，就打印一行出来瞧瞧。</p>
+        <pre>print("你好")</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 动手实验：一任务一图 -->
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="terminal"></span>动手实验 · 迷你运行器</span>
+    <h2 style="font-size:22px">改代码，命中目标输出（<span id="task-done">0</span> / 3）</h2>
+    <p style="color:var(--muted);margin:6px 0 2px">把 TODO 处改成正确写法，点「运行代码」，让输出和绿色目标完全一致。</p>
+
+    <!-- 任务 1 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：航线公告屏工程图，屏上显示南京→长江">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 屏体双线框 -->
+          <rect x="30" y="36" width="140" height="56" rx="4"/>
+          <rect x="35" y="41" width="130" height="46" rx="2" stroke-width="1" opacity=".5"/>
+          <!-- 状态指示 -->
+          <circle cx="43" cy="48" r="2.2" fill="#E06C6A" stroke="none"/>
+          <circle cx="51" cy="48" r="2.2" fill="#43B58F" stroke="none"/>
+          <!-- 屏显内容 -->
+          <text x="100" y="63" text-anchor="middle" font-size="14" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">南京 → 长江</text>
+          <text x="100" y="80" text-anchor="middle" font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="3">ROUTE 01</text>
+          <!-- 顶部信号 -->
+          <path d="M100 36V22" stroke-width="1.4"/>
+          <path d="M90 22a14 14 0 0 1 20 0" stroke="#C9A86A" stroke-width="1.1" stroke-dasharray="3 3"/>
+          <!-- 支腿与尺寸线 -->
+          <path d="M46 92v12M154 92v12" stroke-width="1.3"/>
+          <path d="M46 110h108M46 106v8M154 106v8" stroke="#C9A86A" stroke-width="1"/>
+          <text x="100" y="122" text-anchor="middle" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">公告屏 140×56</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 1 · 航线公告</h3>
+        <p class="task-guide">画舫要广播航线，可两个「箱子」还空着。把 <b>city</b> 的问号换成「南京」、<b>river</b> 换成「长江」，船就知道该开往哪儿了。练：<b>变量赋值</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>南京 → 长江</code></span>
+        <div class="code-run" id="run1">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-01.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 2 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：零件图 12 加 3 等于问号，船票加小吃的算式">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 零件 A：船票 -->
+          <rect x="20" y="44" width="40" height="40" rx="3"/>
+          <path d="M20 38v52M60 38v52" stroke-width="1" stroke-dasharray="2 3" opacity=".5"/>
+          <text x="40" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">12</text>
+          <text x="40" y="99" text-anchor="middle" font-size="8" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="1">船票</text>
+          <!-- 加号 -->
+          <path d="M74 62h12M80 56v12" stroke-width="2"/>
+          <!-- 零件 B：小吃 -->
+          <rect x="100" y="44" width="32" height="40" rx="3"/>
+          <path d="M100 38v32" stroke-width="1" stroke-dasharray="2 3" opacity=".5"/>
+          <text x="116" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">3</text>
+          <text x="116" y="99" text-anchor="middle" font-size="8" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="1">小吃</text>
+          <!-- 等号 -->
+          <path d="M146 60h12M146 67h12" stroke-width="2"/>
+          <!-- 待求件（金虚线框） -->
+          <rect x="166" y="44" width="24" height="40" rx="3" stroke="#C9A86A" stroke-dasharray="4 3"/>
+          <text x="178" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">?</text>
+          <text x="178" y="99" text-anchor="middle" font-size="8" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="1">合计</text>
+          <!-- 底部基准 -->
+          <path d="M20 116h170M20 112v8M190 112v8" stroke-width="1" opacity=".45"/>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 2 · 买船票</h3>
+        <p class="task-guide">船票从 9 元涨到 <b>12</b> 元。把 <b>ticket</b> 后面的数字改对，f-string 的 <b>{ }</b> 已把「票价＋小吃」的算式放好，一运行就自动算出总价。练：<b>数字变量 + f-string</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>一共 15 元</code></span>
+        <div class="code-run" id="run2">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-02.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 3 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：检票闸机工程图，指示灯亮 True">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 闸机立柱 -->
+          <rect x="126" y="30" width="32" height="84" rx="3"/>
+          <path d="M142 30v84" stroke-width="1" stroke-dasharray="2 3" opacity=".5"/>
+          <!-- 指示灯 -->
+          <circle cx="142" cy="48" r="7"/>
+          <circle cx="142" cy="48" r="2.6" fill="#43B58F" stroke="none"/>
+          <text x="142" y="70" text-anchor="middle" font-size="10" font-weight="700" fill="#43B58F" stroke="none" font-family="ui-monospace,Consolas,monospace">True</text>
+          <path d="M150 42l16-8 8 2" stroke="#C9A86A" stroke-width="1"/>
+          <text x="178" y="34" text-anchor="middle" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="1">PASS</text>
+          <!-- 三叉转臂 -->
+          <circle cx="142" cy="88" r="4"/>
+          <path d="M142 88l-22-7M142 88l20-10M142 88l3 19" stroke-width="1.5"/>
+          <!-- 乘客 -->
+          <circle cx="46" cy="58" r="7" stroke-width="1.5"/>
+          <path d="M46 65v13M38 71h16M46 78l-6 11M46 78l6 11" stroke-width="1.4"/>
+          <!-- 通行虚线 -->
+          <path d="M64 90h40" stroke="#7FA6C9" stroke-width="1.2" stroke-dasharray="5 4"/>
+          <path d="M98 85l9 5-9 5" stroke="#7FA6C9" stroke-width="1.2"/>
+          <!-- 地面 -->
+          <path d="M24 116h134" stroke-width="1.3" opacity=".7"/>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 3 · 检票口</h3>
+        <p class="task-guide">检票口只看一盏「是/否」指示灯：<b>True</b> 放行、<b>False</b> 拦下（首字母要大写哦）。你已经买到票了，把 <b>has_ticket</b> 拨成 True。练：<b>bool 赋值 + f-string</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>能上画舫：True</code></span>
+        <div class="code-run" id="run3">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-03.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">3 个任务全部命中目标，通关按钮就会亮起来</p>
+  </section>
+
+  <!-- ⑤ 自主练习 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="flask"></span>自主练习 · 不计进度，随便试</span>
+    <h2 style="font-size:22px">试一试，看你真的懂了吗</h2>
+
+    <div class="pq" data-pq>
+      <h3>练 1 · 这段代码会怎样？</h3>
+      <div class="pq-code">a = 5
+b = "5"
+print(a + b)</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">55</button>
+        <button class="pq-opt" type="button" data-ok="0">10</button>
+        <button class="pq-opt" type="button" data-ok="1">报错</button>
+        <button class="pq-opt" type="button" data-ok="0">5 5</button>
+      </div>
+      <p class="pq-exp">Python 很严格：数字和文字不能直接相加，会抛出 TypeError。想拼在一起要用 f-string（f"{a}{b}" 得 "55"）或先转换（str(a) + b）。这一点它不像有些语言那样"悄悄帮你转"。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 2 · age = "9" 和 age = 9 的区别是？</h3>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">完全一样，随便用</button>
+        <button class="pq-opt" type="button" data-ok="1">前者是文字（str），后者是数字（int）</button>
+        <button class="pq-opt" type="button" data-ok="0">前者是数字，后者是文字</button>
+        <button class="pq-opt" type="button" data-ok="0">都是小数</button>
+      </div>
+      <p class="pq-exp">引号是文字的标志：type("9") 是 str，type(9) 是 int。类型不同，能做的事也不同——数字能加减乘除，文字能拼接。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 3 · 这段代码输出什么？</h3>
+      <div class="pq-code">name = "豆豆"
+print(f"你好，{name}")</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">你好，{name}</button>
+        <button class="pq-opt" type="button" data-ok="1">你好，豆豆</button>
+        <button class="pq-opt" type="button" data-ok="0">报错</button>
+        <button class="pq-opt" type="button" data-ok="0">name</button>
+      </div>
+      <p class="pq-exp">f-string 的 { } 是填空位：运行时把变量的值填进去，花括号本身不会出现在结果里。别忘了引号前那个小写 f，少了它 { } 就只是普通文字。</p>
+    </div>
+
+    <div class="pq">
+      <h3>练 4 · 自由编码：自我介绍</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">下面这段代码能跑，但用的是「逗号拼接」。把它改成<b>一个 f-string</b> 打印「我 X 岁啦」，体会两种写法的区别。</p>
+      <div class="code-run" id="free1">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-04.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+
+    <div class="pq">
+      <h3>练 5 · 自由编码：想读的书</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">声明 <b>name</b> 和 <b>book</b> 两个变量，用 f-string 打印「谁 想读《什么书」》。变量名用小写英文，装的内容随你换。</p>
+      <div class="code-run" id="free2">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-05.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot">改坏了也不怕，随时点「还原」。真实的程序员就是这样：大胆试，错了再看报错信息。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="../index.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>返回首页</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-02.html" onclick="DM.sfx('click')">下一课 · 条件与分支<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "lab" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  /* 动手实验：公共任务运行器（改代码命中目标输出） */
+  var doneCount = 0;
+  var doneSet = {};
+  var doneEl = document.getElementById("task-done");
+  var doneBtn = document.getElementById("done");
+  function onPass(key) {
+    if (!doneSet[key]) { doneSet[key] = true; doneCount++; }
+    doneEl.textContent = doneCount;
+    if (doneCount >= 3) doneBtn.disabled = false;
+  }
+
+  DM.taskRunner("run1", {
+    name: "t1",
+    goal: ["南京 → 长江"],
+    onPass: onPass,
+    initial: '# 任务 1：画舫要广播航线，先给两个箱子贴上标签\ncity = "?"      # TODO：把 "?" 换成 "南京"\nriver = "?"     # TODO：把 "?" 换成 "长江"\n\nprint(city + " → " + river)'
+  });
+
+  DM.taskRunner("run2", {
+    name: "t2",
+    goal: ["一共 15 元"],
+    onPass: onPass,
+    initial: '# 任务 2：船票涨价了，把票价改对\nticket = 9      # TODO：从 9 改成 12\nsnack = 3       # 船上小吃 3 元\n\nprint(f"一共 {ticket + snack} 元")'
+  });
+
+  DM.taskRunner("run3", {
+    name: "t3",
+    goal: ["能上画舫：True"],
+    onPass: onPass,
+    initial: '# 任务 3：检票口的灯只有 True / False（首字母大写）\nhas_ticket = False   # TODO：买到票了，改成 True\n\nprint(f"能上画舫：{has_ticket}")'
+  });
+
+  /* 自主练习：自由编码题（运行 / 还原 / 填入参考答案） */
+  DM.practiceRunner("free1", {
+    file: "practice-04.py",
+    initial: '# 把逗号拼接改成 f-string：一个 f"…" 打印整句\nage = 10\n\nprint("我", age, "岁啦")',
+    ref: 'age = 10\nprint(f"我 {age} 岁啦")'
+  });
+
+  DM.practiceRunner("free2", {
+    file: "practice-05.py",
+    initial: '# 用 f-string 把两句话拼成一句\nname = "豆豆"\nbook = "夏洛的网"\n\nprint(name, "想读", book)',
+    ref: 'name = "豆豆"\nbook = "夏洛的网"\nprint(f"{name} 想读《{book}》")'
+  });
+
+  doneBtn.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("lab", 0, 3);
+    doneBtn.innerHTML = DM.icon("check") + "太棒了，第 1 课通关！";
+    doneBtn.disabled = true;
+  });
+
+  /* 自主练习：选择题即时反馈（不计进度） */
+  document.querySelectorAll("[data-pq]").forEach(function (pq) {
+    var exp = pq.querySelector(".pq-exp");
+    var answered = false;
+    pq.querySelectorAll(".pq-opt").forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        if (answered) return; // 答对即锁定，防重复刷
+        if (opt.dataset.ok === "1") {
+          opt.classList.add("ok");
+          exp.classList.add("show");
+          DM.sfx("right");
+          answered = true;
+        } else {
+          opt.classList.add("bad");
+          DM.sfx("retry");
+          setTimeout(function () { opt.classList.remove("bad"); }, 700);
+        }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

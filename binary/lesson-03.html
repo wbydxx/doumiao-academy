@@ -1,0 +1,179 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字符变变变 · 二进制的秘密 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="lantern"></span>二进制的秘密</a>
+    <span class="sep">/</span>
+    <span>第 3 关 · 字符变变变</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="lantern"></span>第 3 关</span>
+    <h2>字符变变变</h2>
+    <p style="color:var(--muted)">字母想住进计算机，要先换上 0 和 1 的衣服。</p>
+  </section>
+
+  <section class="panel scene-panel scene-center">
+    <svg class="scene-svg" viewBox="0 0 640 300" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="字母A编号65，变成7位灯语1000001">
+      <!-- 字母卡片 -->
+      <rect x="64" y="80" width="136" height="136" rx="26" fill="#EAF4FD"/>
+      <text x="132" y="172" text-anchor="middle" font-size="74" font-weight="800" fill="#1A3A5C" stroke="none">A</text>
+      <text x="132" y="248" text-anchor="middle" font-size="20" font-weight="800" fill="#5D7FA3" stroke="none">编号 65</text>
+      <!-- 箭头 -->
+      <g stroke="#2E86DE">
+        <path d="M214 148h64"/>
+        <path d="M278 148l-13-8M278 148l-13 8"/>
+      </g>
+      <!-- 7 盏小花灯 -->
+      <line x1="310" y1="80" x2="620" y2="80"/>
+      <!-- 灯1 亮 -->
+      <g>
+        <line x1="340" y1="80" x2="340" y2="90"/>
+        <rect x="332" y="90" width="16" height="8" rx="3" stroke="#FF9F43"/>
+        <ellipse cx="340" cy="120" rx="16" ry="22" fill="#FFF6EA" stroke="#FF9F43"/>
+        <g stroke="#FF9F43"><path d="M318 96l-8-7M362 96l8-7M314 120h-10M366 120h10M318 144l-8 7M362 144l8 7"/></g>
+      </g>
+      <!-- 灯2-6 灭 -->
+      <g>
+        <line x1="382" y1="80" x2="382" y2="90"/><rect x="374" y="90" width="16" height="8" rx="3"/>
+        <ellipse cx="382" cy="120" rx="16" ry="22" fill="#EAF4FD"/>
+        <line x1="424" y1="80" x2="424" y2="90"/><rect x="416" y="90" width="16" height="8" rx="3"/>
+        <ellipse cx="424" cy="120" rx="16" ry="22" fill="#EAF4FD"/>
+        <line x1="466" y1="80" x2="466" y2="90"/><rect x="458" y="90" width="16" height="8" rx="3"/>
+        <ellipse cx="466" cy="120" rx="16" ry="22" fill="#EAF4FD"/>
+        <line x1="508" y1="80" x2="508" y2="90"/><rect x="500" y="90" width="16" height="8" rx="3"/>
+        <ellipse cx="508" cy="120" rx="16" ry="22" fill="#EAF4FD"/>
+        <line x1="550" y1="80" x2="550" y2="90"/><rect x="542" y="90" width="16" height="8" rx="3"/>
+        <ellipse cx="550" cy="120" rx="16" ry="22" fill="#EAF4FD"/>
+      </g>
+      <!-- 灯7 亮 -->
+      <g>
+        <line x1="592" y1="80" x2="592" y2="90"/>
+        <rect x="584" y="90" width="16" height="8" rx="3" stroke="#FF9F43"/>
+        <ellipse cx="592" cy="120" rx="16" ry="22" fill="#FFF6EA" stroke="#FF9F43"/>
+        <g stroke="#FF9F43"><path d="M570 96l-8-7M614 96l8-7M566 120h-10M618 120h10M570 144l-8 7M614 144l8 7"/></g>
+      </g>
+      <!-- 灯语位 -->
+      <g fill="#2E86DE" stroke="none" font-size="16" font-weight="800" font-family="monospace">
+        <text x="340" y="170" text-anchor="middle">1</text>
+        <text x="382" y="170" text-anchor="middle">0</text>
+        <text x="424" y="170" text-anchor="middle">0</text>
+        <text x="466" y="170" text-anchor="middle">0</text>
+        <text x="508" y="170" text-anchor="middle">0</text>
+        <text x="550" y="170" text-anchor="middle">0</text>
+        <text x="592" y="170" text-anchor="middle">1</text>
+      </g>
+      <text x="466" y="214" text-anchor="middle" font-size="20" font-weight="800" fill="#2E86DE" stroke="none">65 → 1 0 0 0 0 0 1</text>
+      <text x="466" y="244" text-anchor="middle" font-size="15" fill="#5D7FA3" stroke="none">字母 A 住进计算机的样子</text>
+    </svg>
+  </section>
+
+  <section class="panel learn-text">
+    <p>计算机不认识字母，就给每个字母发一个<b>编号</b>。</p>
+    <p>比如 A 的编号是 <b>65</b>，编号再变成一串 0 和 1 住进电路。</p>
+    <p>这串 0 和 1 像花灯的亮灭密码，我们叫它「灯语」。</p>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>动手试一试</span>
+    <h2 style="font-size:22px">点字母，看它的编号和灯语</h2>
+    <div class="palette" id="row">
+      <button class="cmd-chip" type="button" data-ch="A">A</button>
+      <button class="cmd-chip" type="button" data-ch="B">B</button>
+      <button class="cmd-chip" type="button" data-ch="C">C</button>
+      <button class="cmd-chip" type="button" data-ch="a">a</button>
+      <button class="cmd-chip" type="button" data-ch="b">b</button>
+      <button class="cmd-chip" type="button" data-ch="c">c</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin:14px 0">
+      <span class="big-num" id="big" style="font-size:60px;color:var(--ink)">?</span>
+      <span style="color:var(--muted)">编号</span>
+      <span class="big-num" id="code">--</span>
+    </div>
+    <p style="text-align:center;margin:2px 0;color:var(--muted)">7 位灯语</p>
+    <p class="binary-read" style="text-align:center;font-size:24px;font-weight:800;color:var(--accent)" id="light">· · · · · · ·</p>
+    <p style="text-align:center;min-height:32px;color:var(--muted)" id="msg">任务：找到字母 B 的灯语！</p>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p>原来字母住进计算机，都要换上 0 和 1 的衣服呀！你敲的每个字都是这样变身的。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-02.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一关 · 用花灯数数</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="game-lightbulb.html" onclick="DM.sfx('click')">下一关 · 花灯密码游戏<span data-ic="gamepad"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "binary" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  var CODE = { A: 65, B: 66, C: 67, a: 97, b: 98, c: 99 };
+  var big = document.getElementById("big");
+  var codeEl = document.getElementById("code");
+  var light = document.getElementById("light");
+  var msg = document.getElementById("msg");
+  var found = false;
+
+  function bin7(n) {
+    var s = n.toString(2);
+    while (s.length < 7) s = "0" + s;
+    return s.split("").join(" ");
+  }
+
+  document.querySelectorAll("#row .cmd-chip").forEach(function (btn) {
+    btn.addEventListener("click", function (ev) {
+      var ch = btn.getAttribute("data-ch");
+      DM.sfx("click");
+      big.textContent = ch;
+      codeEl.textContent = CODE[ch];
+      light.textContent = bin7(CODE[ch]);
+      if (ch === "B") {
+        msg.textContent = "找到啦！B 的编号是 66，灯语 1 0 0 0 0 1 0，字母变身成功！";
+        msg.style.color = "var(--green)";
+        if (!found) {
+          found = true;
+          DM.sfx("wow");
+          DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+          DM.store.completeLesson("binary", 2, 3);
+        }
+      } else {
+        msg.textContent = "这是 " + ch + "，编号 " + CODE[ch] + "。继续找 B 哦～";
+        msg.style.color = "var(--muted)";
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>综合项目：南京小导游 · 代码实验室 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="code"></span>代码实验室</a>
+    <span class="sep">/</span>
+    <span>第 7 课 · 综合项目：南京小导游</span>
+  </nav>
+
+  <!-- ① 课程头卡 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="code"></span>进阶 · 第 7 课 · 毕业课</span>
+    <h2>综合项目：南京小导游</h2>
+    <p style="color:var(--muted)">毕业时刻！把前六课学的<b>变量、f-string、函数、列表、字典、循环</b>全部用上，亲手拼出一份能自动播报的「南京两日游」程序。</p>
+    <div class="learn-caps">
+      <span><span data-ic="book"></span>字典存景点</span>
+      <span><span data-ic="box"></span>函数做播报</span>
+      <span><span data-ic="loop"></span>for 算总账</span>
+      <span><span data-ic="spark"></span>项目组合拳</span>
+    </div>
+  </section>
+
+  <!-- ② 课前导读 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>课前导读</span>
+    <div class="intro-split" style="margin-top:12px">
+      <img class="intro-img" src="../assets/img/lab-7.jpg" alt="明城墙上的少年手持全息导览地图，规划两日行程" loading="lazy">
+      <div class="intro-txt">
+        <h3>真正的程序 = 零件 + 组装</h3>
+        <p>真实项目从来不是一行神代码，而是像拼积木：<b>字典</b>存景点门票，<b>函数</b>负责播报行程，<b>列表 + for</b> 算出总预算。每块积木你都学过，今天只做一件事——<b>组装</b>。</p>
+        <p>完成这 3 个任务，你的程序就能替导游说话：查门票、排行程、报预算。这就是「掌握」的标志：不看教程，也知道该拿起哪块积木。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 概念卡片 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>开工前回看 4 件工具</span>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3><span data-ic="book"></span>字典：查门票</h3>
+        <p>景点名做键、门票价做值，一行建好速查表。取值用 spots[name]，键打错会 KeyError。</p>
+        <pre>spots = {"中山陵": 0}</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="box"></span>函数：播报员</h3>
+        <p>把「打印一天行程」打包成 plan(day, spot)，参数喂什么它播什么——调用两次就排两天。</p>
+        <pre>def plan(day, spot):
+    print(f"第 {day} 天：{spot}")</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="loop"></span>for-in：遍历</h3>
+        <p>for cost in costs 让 cost 依次变成列表里的每一项，循环体里做累加。</p>
+        <pre>for cost in costs:
+    total = total + cost</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="spark"></span>组合拳心法</h3>
+        <p>先想「要什么输出」，再倒推「用哪件工具」：查信息→字典；重复说话→函数；逐笔记账→for。</p>
+        <pre>数据 → 逻辑 → 输出</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 动手实验 -->
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="terminal"></span>动手实验 · 迷你运行器</span>
+    <h2 style="font-size:22px">改代码，命中目标输出（<span id="task-done">0</span> / 3）</h2>
+    <p style="color:var(--muted);margin:6px 0 2px">每改一处前先想清楚它在项目里扮演什么角色——这是毕业课的隐藏考点。</p>
+
+    <!-- 任务 1 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：导览地图与三处景点检索">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 地图框 -->
+          <rect x="28" y="24" width="144" height="92" rx="4"/>
+          <path d="M28 52h144" stroke-width="1" opacity=".4"/>
+          <text x="38" y="44" font-size="9" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">NANJING MAP</text>
+          <!-- 指北针 -->
+          <circle cx="158" cy="40" r="7" stroke-width="1.2"/>
+          <path d="M158 45v-9M154 40l4-5 4 5" stroke-width="1"/>
+          <!-- 三个景点 pin -->
+          <g stroke-width="1.4">
+            <path d="M62 66c0-6 4-10 9-10s9 4 9 10c0 6-9 14-9 14s-9-8-9-14z"/><circle cx="71" cy="66" r="2.5"/>
+            <path d="M91 84c0-6 4-10 9-10s9 4 9 10c0 6-9 14-9 14s-9-8-9-14z" stroke="#C9A86A"/><circle cx="100" cy="84" r="2.5" stroke="#C9A86A"/>
+            <path d="M120 62c0-6 4-10 9-10s9 4 9 10c0 6-9 14-9 14s-9-8-9-14z"/><circle cx="129" cy="62" r="2.5"/>
+          </g>
+          <g font-size="8" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">
+            <text x="71" y="96">中山陵</text><text x="129" y="92">夫子庙</text>
+          </g>
+          <text x="100" y="112" text-anchor="middle" font-size="8.5" fill="#E3CFA2" stroke="none" font-family="ui-monospace,Consolas,monospace">玄武湖</text>
+          <!-- 金引线 -->
+          <path d="M100 92V76h20l6-6" stroke="#C9A86A" stroke-width="1"/>
+          <text x="150" y="70" text-anchor="middle" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">spots[?]</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 1 · 门票速查</h3>
+        <p class="task-guide">导览词典 spots 已存好三家门票价。把查询目标从「夫子庙」改成<b>玄武湖</b>，就能播报「玄武湖门票：0 元」。练：<b>字典按键取值</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>玄武湖门票：0 元</code></span>
+        <div class="code-run" id="run1">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-01.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 2 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：两日行程卡，第二天待排">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- DAY 1 实卡 -->
+          <rect x="24" y="36" width="70" height="56" rx="4"/>
+          <path d="M24 56h70" stroke-width="1" opacity=".5"/>
+          <text x="59" y="50" text-anchor="middle" font-size="9" font-weight="700" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">DAY 1</text>
+          <text x="59" y="78" text-anchor="middle" font-size="10.5" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">中山陵</text>
+          <!-- DAY 2 虚卡 -->
+          <rect x="106" y="36" width="70" height="56" rx="4" stroke-dasharray="6 4" stroke="#C9A86A"/>
+          <path d="M106 56h70" stroke-width="1" opacity=".5"/>
+          <text x="141" y="50" text-anchor="middle" font-size="9" font-weight="700" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">DAY 2</text>
+          <text x="141" y="78" text-anchor="middle" font-size="12" font-weight="700" fill="#E3CFA2" stroke="none" font-family="ui-monospace,Consolas,monospace">?</text>
+          <!-- 函数标注 -->
+          <path d="M141 30v-6h22" stroke="#C9A86A" stroke-width="1"/>
+          <text x="172" y="22" text-anchor="middle" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">plan(2, ?)</text>
+          <!-- 底注 -->
+          <text x="100" y="122" text-anchor="middle" font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="2">route = ["中山陵", "夫子庙"]</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 2 · 排两天行程</h3>
+        <p class="task-guide">播报函数 plan 已造好，第一天也排进了 route[0]。照样子在 TODO 处<b>补一行</b> plan(2, route[1])，把夫子庙排进第二天。练：<b>函数调用 + 列表索引</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>第 1 天：中山陵</code> + <code>第 2 天：夫子庙</code>（2 行）</span>
+        <div class="code-run" id="run2">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-02.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 3 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：三笔账单累加求总预算">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 三张账单 -->
+          <rect x="28" y="34" width="38" height="30" rx="3"/>
+          <text x="47" y="53" text-anchor="middle" font-size="10" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">30</text>
+          <rect x="80" y="34" width="38" height="30" rx="3"/>
+          <text x="99" y="53" text-anchor="middle" font-size="10" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">20</text>
+          <rect x="132" y="34" width="38" height="30" rx="3"/>
+          <text x="151" y="53" text-anchor="middle" font-size="10" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">30</text>
+          <!-- 加号 -->
+          <g stroke="#7FA6C9" stroke-width="1.2">
+            <path d="M70 49h6M73 46v6M122 49h6M125 46v6"/>
+          </g>
+          <!-- 汇流箭头 -->
+          <g stroke-width="1.2" opacity=".8">
+            <path d="M47 64v14h49l0 10"/><path d="M99 64v24"/><path d="M151 64v14h-49"/>
+          </g>
+          <!-- 金总额框 -->
+          <rect x="72" y="92" width="56" height="24" rx="3" stroke="#C9A86A"/>
+          <text x="100" y="108" text-anchor="middle" font-size="10.5" font-weight="700" fill="#E3CFA2" stroke="none" font-family="ui-monospace,Consolas,monospace">total = ?</text>
+          <!-- 底注 -->
+          <text x="100" y="130" text-anchor="middle" font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="2">交通 · 门票 · 小吃</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 3 · 一日预算</h3>
+        <p class="task-guide">循环已经在跑，可每圈都只加 0——账本永远归零。把 <b>total + 0</b> 里的 0 改成 <b>cost</b>，每一笔钱才真正入账。练：<b>for 累加求和</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>总预算 80 元</code></span>
+        <div class="code-run" id="run3">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-03.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">3 个任务全部命中目标，通关按钮就会亮起来</p>
+  </section>
+
+  <!-- ⑤ 自主练习 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="flask"></span>自主练习 · 不计进度，随便试</span>
+    <h2 style="font-size:22px">毕业挑战，看你真的出师了吗</h2>
+
+    <div class="pq" data-pq>
+      <h3>练 1 · 存「景点 → 门票」该用哪件工具？</h3>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">列表 list</button>
+        <button class="pq-opt" type="button" data-ok="1">字典 dict</button>
+        <button class="pq-opt" type="button" data-ok="0">f-string</button>
+        <button class="pq-opt" type="button" data-ok="0">while</button>
+      </div>
+      <p class="pq-exp">「名字查价格」是一对一映射，正是字典的主场。列表适合「一串同类的排队站」，字典适合「贴标签的抽屉」。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 2 · 这个调用会打印什么？</h3>
+      <div class="pq-code">def plan(day, spot):
+    print(f"第 {day} 天：{spot}")
+
+plan(2, "夫子庙")</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="1">第 2 天：夫子庙</button>
+        <button class="pq-opt" type="button" data-ok="0">第 1 天：中山陵</button>
+        <button class="pq-opt" type="button" data-ok="0">第 {day} 天：{spot}</button>
+        <button class="pq-opt" type="button" data-ok="0">什么都不打印</button>
+      </div>
+      <p class="pq-exp">调用 plan(2, "夫子庙") 时，2 传给 day、"夫子庙" 传给 spot，按位置一一对应。f-string 再把两个参数填进模板——函数体执行，打印出播报词。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 3 · 这段累加在干嘛？</h3>
+      <div class="pq-code">total = 0
+for cost in costs:
+    total = total + cost</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">把 costs 清空</button>
+        <button class="pq-opt" type="button" data-ok="0">数 costs 有几项</button>
+        <button class="pq-opt" type="button" data-ok="1">把列表里的数逐个累加进 total</button>
+        <button class="pq-opt" type="button" data-ok="0">报错，类型不对</button>
+      </div>
+      <p class="pq-exp">这是最经典的「累加器」套路：total 从 0 起步，每圈把一项 cost 加进去，循环结束就是总和。「零起手、圈圈加」——记住它，求和题全是它。</p>
+    </div>
+
+    <div class="pq">
+      <h3>练 4 · 自由编码：导游问候</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">写函数 <b>greet_guide(name)</b>，用 <b>return</b> 交出 f"欢迎来南京，{name}！"，再打印 greet_guide("波波")。</p>
+      <div class="code-run" id="free1">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-04.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+
+    <div class="pq">
+      <h3>练 5 · 自由编码：自动行程播报</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">终极组合拳：写函数 <b>visit(day, spot)</b> 打印「第 X 天：景点」，再用 <b>for i in range(1, 3)</b> 配合 route[i - 1] 自动播报两天行程。</p>
+      <div class="code-run" id="free2">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-05.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot">通关之后，试着把 route 换成你自己的旅行清单、costs 换成真实物价——能自己改造的程序，才是真正属于你的程序。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-06.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一课 · while 与猜数字</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="game-puzzle.html" onclick="DM.sfx('click')">下一关 · 代码谜题闯关<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "lab" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  /* 动手实验：公共任务运行器（改代码命中目标输出） */
+  var doneCount = 0;
+  var doneSet = {};
+  var doneEl = document.getElementById("task-done");
+  var doneBtn = document.getElementById("done");
+  function onPass(key) {
+    if (!doneSet[key]) { doneSet[key] = true; doneCount++; }
+    doneEl.textContent = doneCount;
+    if (doneCount >= 3) doneBtn.disabled = false;
+  }
+
+  DM.taskRunner("run1", {
+    name: "t1",
+    goal: ["玄武湖门票：0 元"],
+    onPass: onPass,
+    initial: '# 任务 1：门票速查\nspots = {"中山陵": 0, "玄武湖": 0, "夫子庙": 30}\nname = "夫子庙"   # TODO：改查玄武湖\n\nprint(f"{name}门票：{spots[name]} 元")'
+  });
+
+  DM.taskRunner("run2", {
+    name: "t2",
+    goal: ["第 1 天：中山陵", "第 2 天：夫子庙"],
+    onPass: onPass,
+    initial: '# 任务 2：排两天行程\nroute = ["中山陵", "夫子庙"]\n\ndef plan(day, spot):\n    print(f"第 {day} 天：{spot}")\n\nplan(1, route[0])\n# TODO：补一行 plan(2, route[1])，把夫子庙排进第二天'
+  });
+
+  DM.taskRunner("run3", {
+    name: "t3",
+    goal: ["总预算 80 元"],
+    onPass: onPass,
+    initial: '# 任务 3：一日预算（交通、门票、小吃）\ncosts = [30, 20, 30]\n\ntotal = 0\nfor cost in costs:\n    total = total + 0    # TODO：把 0 改成 cost，逐笔入账\nprint(f"总预算 {total} 元")'
+  });
+
+  /* 自主练习：自由编码题（运行 / 还原 / 填入参考答案） */
+  DM.practiceRunner("free1", {
+    file: "practice-04.py",
+    initial: '# 写导游问候函数 greet_guide(name)，返回 f"欢迎来南京，{name}！"\n# 然后打印 greet_guide("波波")\n\n# 在下面动手',
+    ref: 'def greet_guide(name):\n    return f"欢迎来南京，{name}！"\n\nprint(greet_guide("波波"))'
+  });
+
+  DM.practiceRunner("free2", {
+    file: "practice-05.py",
+    initial: '# 终极组合拳：函数 + for + 列表\nroute = ["明孝陵", "梅花山"]\n\n# 1. 写函数 visit(day, spot) 打印「第 X 天：景点」\n# 2. 用 for i in range(1, 3) 配合 route[i - 1] 自动播报\n\n# 在下面动手',
+    ref: 'route = ["明孝陵", "梅花山"]\n\ndef visit(day, spot):\n    print(f"第 {day} 天：{spot}")\n\nfor i in range(1, 3):\n    visit(i, route[i - 1])'
+  });
+
+  doneBtn.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("lab", 6, 3);
+    doneBtn.innerHTML = DM.icon("check") + "太棒了，第 7 课通关！";
+    doneBtn.disabled = true;
+  });
+
+  /* 自主练习：选择题即时反馈（不计进度） */
+  document.querySelectorAll("[data-pq]").forEach(function (pq) {
+    var exp = pq.querySelector(".pq-exp");
+    var answered = false;
+    pq.querySelectorAll(".pq-opt").forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        if (answered) return;
+        if (opt.dataset.ok === "1") {
+          opt.classList.add("ok");
+          exp.classList.add("show");
+          DM.sfx("right");
+          answered = true;
+        } else {
+          opt.classList.add("bad");
+          DM.sfx("retry");
+          setTimeout(function () { opt.classList.remove("bad"); }, 700);
+        }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

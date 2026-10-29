@@ -1,0 +1,215 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>循环的威力 · 编程初体验 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+  [data-ic] { display: inline-flex; align-items: center; }
+  .h-ic { display: inline-flex; vertical-align: -4px; margin-right: 8px; color: var(--green); }
+  .h-ic svg { width: 26px; height: 26px; }
+  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0 6px; }
+  @media (max-width: 640px) { .duel { grid-template-columns: 1fr; } }
+  .duel-box { border: 2px solid var(--rule); border-radius: var(--radius); padding: 16px; text-align: center; background: var(--bg); }
+  .duel-tag { font-size: 14px; font-weight: 800; letter-spacing: .06em; color: var(--accent); }
+  .duel-box .big-num { margin: 4px 0 0; }
+  .duel-p { font-size: 14.5px; color: var(--muted); margin: 2px 0 12px; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" id="crumbs"></nav>
+
+  <!-- 标题 -->
+  <section class="panel" style="text-align:center">
+    <span class="panel-tag" style="justify-content:center"><span data-ic="boat"></span>编程初体验 · 第 3 关</span>
+    <h2><span class="h-ic" data-ic="spark"></span>循环的威力</h2>
+    <p style="color:var(--muted)">一样的事重复做，一句话搞定</p>
+  </section>
+
+  <!-- 场景图：5 格水道 -->
+  <section class="panel scene-panel scene-center">
+    <svg class="scene-svg" viewBox="0 0 640 240" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <!-- 云与梅花 -->
+      <path d="M60 46c0-10 8-16 17-15 2-7 12-10 18-4 7-3 15 2 15 10 0 7-6 11-13 11H69c-5 0-9-2-9-2z" stroke="#5D7FA3"/>
+      <g stroke="#FF6B9D">
+        <circle cx="590" cy="52" r="6"/><circle cx="582" cy="58" r="6"/><circle cx="598" cy="58" r="6"/>
+        <circle cx="587" cy="64" r="6"/><circle cx="593" cy="64" r="6"/>
+      </g>
+      <!-- 六格水道（起点 + 前进 5 格） -->
+      <rect x="30" y="120" width="92" height="66" rx="12" stroke="#5D7FA3" stroke-dasharray="7 7" fill="rgba(46,134,222,.05)"/>
+      <rect x="130" y="120" width="92" height="66" rx="12" stroke="#5D7FA3" stroke-dasharray="7 7" fill="rgba(46,134,222,.05)"/>
+      <rect x="230" y="120" width="92" height="66" rx="12" stroke="#5D7FA3" stroke-dasharray="7 7" fill="rgba(46,134,222,.05)"/>
+      <rect x="330" y="120" width="92" height="66" rx="12" stroke="#5D7FA3" stroke-dasharray="7 7" fill="rgba(46,134,222,.05)"/>
+      <rect x="430" y="120" width="92" height="66" rx="12" stroke="#5D7FA3" stroke-dasharray="7 7" fill="rgba(46,134,222,.05)"/>
+      <rect x="530" y="120" width="92" height="66" rx="12" stroke="#2ECC9A" stroke-dasharray="7 7" fill="rgba(46,204,154,.08)"/>
+      <g stroke="#2E86DE" opacity=".45">
+        <path d="M46 172q10-5 20 0t20 0"/><path d="M146 172q10-5 20 0t20 0"/><path d="M246 172q10-5 20 0t20 0"/>
+        <path d="M346 172q10-5 20 0t20 0"/><path d="M446 172q10-5 20 0t20 0"/><path d="M546 172q10-5 20 0t20 0"/>
+      </g>
+      <text x="76" y="210" text-anchor="middle" font-size="14" fill="#5D7FA3" stroke="none">起点</text>
+      <text x="576" y="210" text-anchor="middle" font-size="14" fill="#2ECC9A" stroke="none">码头 · 5 格</text>
+      <!-- 码头灯柱 -->
+      <path d="M612 118v-56"/><circle cx="612" cy="54" r="6" stroke="#FF9F43"/>
+      <path d="M620 62l14-6" stroke="#FF9F43"/>
+      <!-- 画舫 -->
+      <g id="boat3" style="transform:translate(76px,158px) scale(.6);transition:transform .45s ease">
+        <g id="boat3-inner">
+          <path d="M-95 0c22 0 190 0 190 0-14 26-52 40-95 40s-81-14-95-40z" fill="#FFF6EA"/>
+          <path d="M-80 0v-14h160v14"/>
+          <path d="M-65 -14v-16c0-8 6-14 14-14h102c8 0 14 6 14 14v16" fill="#FFF6EA"/>
+          <path d="M0 -44v-12"/><circle cx="0" cy="-62" r="6" stroke="#FF9F43"/>
+          <path d="M-22 -30h44" stroke="#FF9F43"/>
+          <g stroke-width="2">
+            <circle cx="-50" cy="-27" r="12" fill="#fff"/>
+            <path d="M-60 -35c-3-2-4-6-2-8s6-1 8 2M-40 -35c3-2 4-6 2-8s-6-1-8 2"/>
+            <circle cx="-54" cy="-28" r="1.4" fill="#1A3A5C" stroke="none"/>
+            <circle cx="-46" cy="-28" r="1.4" fill="#1A3A5C" stroke="none"/>
+            <path d="M-53 -24c2 1.6 4 1.6 6 0"/>
+          </g>
+          <g stroke="#2E86DE">
+            <path d="M50 -34c6 8 10 13 10 18a10 10 0 1 1-20 0c0-5 4-10 10-18z" fill="#EAF4FD"/>
+            <circle cx="47" cy="-17" r="1.2" fill="#1A3A5C" stroke="none"/>
+            <circle cx="53" cy="-17" r="1.2" fill="#1A3A5C" stroke="none"/>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </section>
+
+  <!-- 学一学 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>学一学</span>
+    <h2>重复的事，交给循环</h2>
+    <div class="learn-text">
+      <p>要让画舫前进 5 格，难道要喊 5 遍"前进"？喊得口都干了，指令清单还长长的。</p>
+      <p>聪明的办法，是把重复的动作<b>圈</b>起来，只说一句："像这样，<b>重复 5 次</b>！"——这就是<b>循环</b>。</p>
+      <p>程序员最爱循环啦：画舫绕城一圈、花灯亮十下，只要是重复的事情，一句话就搞定。</p>
+    </div>
+  </section>
+
+  <!-- 动手试试 -->
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>动手试试</span>
+    <h2>任务：让画舫前进 5 格</h2>
+    <p>两种办法都能到码头，各试一试，看看哪种更省力：</p>
+    <div class="duel">
+      <div class="duel-box">
+        <span class="duel-tag">方式 A · 一步一步点</span>
+        <div class="big-num" id="cnt-a">0</div>
+        <p class="duel-p">一共点了几次「前进」</p>
+        <button class="btn blue" id="btn-a" data-sfx><span data-ic="forward"></span>前进 1 格</button>
+      </div>
+      <div class="duel-box">
+        <span class="duel-tag" style="color:#d5497a">方式 B · 循环</span>
+        <div class="big-num" id="cnt-b" style="color:#d5497a">0</div>
+        <p class="duel-p">一共按了几次按钮</p>
+        <button class="btn" id="btn-b" data-sfx><span data-ic="loop"></span>循环 ×5</button>
+      </div>
+    </div>
+    <p class="hint" id="l3-msg">提示：方式 B 只要按 1 次，画舫就会一口气滑 5 格！</p>
+    <div style="margin-top:12px">
+      <button class="btn ghost sm" id="l3-reset" data-sfx><span data-ic="reset"></span>再玩一次</button>
+    </div>
+  </section>
+
+  <!-- 豆豆气泡 -->
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆说</div>
+      <p>下次让画舫绕秦淮河开 100 圈，你愿意喊 100 遍指令，还是说一句"循环 ×100"？</p>
+    </div>
+  </div>
+
+  <!-- 翻页 -->
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-02.html" data-sfx><span data-ic="arrowLeft"></span>上一关</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" id="read-btn"><span data-ic="speaker"></span>朗读这一页</button>
+    <a class="btn blue" href="game-maze.html" data-sfx><span data-ic="gamepad"></span>下一关：航线闯关</a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+(function () {
+  var DM = window.DM;
+  DM.boot({ root: "..", module: "coding" });
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.innerHTML = DM.icon(el.getAttribute("data-ic"));
+  });
+  document.getElementById("crumbs").innerHTML =
+    '<a href="../index.html">' + DM.icon("home") + "首页</a>" +
+    '<span class="sep">/</span>' +
+    '<a href="lesson-01.html">' + DM.icon("boat") + "编程初体验</a>" +
+    '<span class="sep">/</span><span>第 3 关 · 循环的威力</span>';
+  document.querySelectorAll("[data-sfx]").forEach(function (el) {
+    el.addEventListener("click", function () { DM.sfx("click"); });
+  });
+  document.getElementById("read-btn").addEventListener("click", function () { DM.speakPage(this); });
+
+  /* ---------- 互动：一步一步 vs 循环 ---------- */
+  var XS = [76, 176, 276, 376, 476, 576];
+  var Y = 158, S = .6;
+  var pos = 0, cntA = 0, cntB = 0, busy = false;
+  var boat = document.getElementById("boat3");
+  var msg = document.getElementById("l3-msg");
+  var btnA = document.getElementById("btn-a");
+  var btnB = document.getElementById("btn-b");
+
+  function go(p, slow) {
+    boat.style.transition = slow ? "transform 1s ease" : "transform .45s ease";
+    boat.style.transform = "translate(" + XS[p] + "px," + Y + "px) scale(" + S + ")";
+  }
+  function counts() {
+    document.getElementById("cnt-a").textContent = cntA;
+    document.getElementById("cnt-b").textContent = cntB;
+  }
+
+  btnA.addEventListener("click", function (ev) {
+    if (busy || pos >= 5) { if (pos >= 5) msg.textContent = "已经到码头啦！点「再玩一次」，再试试方式 B 吧。"; return; }
+    cntA++; pos++; counts();
+    go(pos, false);
+    DM.sfx("toggle");
+    if (pos === 5) finish("方式 A", ev.clientX, ev.clientY);
+  });
+
+  btnB.addEventListener("click", function () {
+    if (busy || pos >= 5) { if (pos >= 5) msg.textContent = "已经到码头啦！点「再玩一次」，再试试方式 A 吧。"; return; }
+    cntB++; busy = true; counts();
+    var r = btnB.getBoundingClientRect();
+    go(5, true);
+    DM.sfx("toggle");
+    setTimeout(function () {
+      busy = false;
+      finish("方式 B", r.left + r.width / 2, r.top);
+    }, 1000);
+  });
+
+  function finish(way, x, y) {
+    DM.sfx("wow");
+    DM.petals(x || window.innerWidth / 2, y || 200);
+    DM.store.completeLesson("coding", 2, 3);
+    msg.textContent = "到码头！" + way + "搞定任务。对比一下：方式 A 共按了 " + cntA + " 次，方式 B 只按了 " + cntB +
+      " 次——重复的事情，用循环一句话就搞定！";
+  }
+
+  document.getElementById("l3-reset").addEventListener("click", function () {
+    pos = 0; busy = false;
+    go(0, false);
+    msg.textContent = "画舫回到起点，再试一次吧！这次换另一种方式试试？";
+  });
+})();
+</script>
+</body>
+</html>

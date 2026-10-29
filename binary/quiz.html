@@ -1,0 +1,116 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>挑战测验 · 二进制的秘密 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="lantern"></span>二进制的秘密</a>
+    <span class="sep">/</span>
+    <span>挑战测验</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="quiz"></span>二进制的秘密 · 挑战测验</span>
+    <h2>0 和 1 小测验</h2>
+    <p style="color:var(--muted)">三道小题，答对全部就能赢雨花石！</p>
+  </section>
+
+  <section class="panel scene-panel scene-center">
+    <svg class="scene-svg" viewBox="0 0 640 220" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="花灯与问号">
+      <line x1="90" y1="26" x2="550" y2="26"/>
+      <text x="150" y="126" text-anchor="middle" font-size="44" font-weight="800" fill="#2E86DE" stroke="none">1?</text>
+      <text x="490" y="126" text-anchor="middle" font-size="44" font-weight="800" fill="#FF9F43" stroke="none">0?</text>
+      <g>
+        <line x1="320" y1="26" x2="320" y2="46"/>
+        <rect x="304" y="46" width="32" height="10" rx="5" stroke="#FF9F43"/>
+        <ellipse cx="320" cy="112" rx="52" ry="56" fill="#FFF6EA" stroke="#FF9F43"/>
+        <path d="M280 92q40 15 80 0M280 132q40 15 80 0" stroke="#FF9F43"/>
+        <text x="320" y="128" text-anchor="middle" font-size="44" font-weight="800" fill="#FF9F43" stroke="none">?</text>
+        <g stroke="#FF9F43">
+          <path d="M258 52l-12-9M382 52l12-9M250 112h-16M390 112h16M258 172l-12 9M382 172l12 9"/>
+        </g>
+        <path d="M312 170l-7 22M328 170l7 22" stroke="#FF9F43"/>
+      </g>
+      <text x="320" y="212" text-anchor="middle" font-size="16" font-weight="700" fill="#5D7FA3" stroke="none">亮是 1，灭是 0，你记住了吗？</text>
+    </svg>
+  </section>
+
+  <section class="panel learn-text">
+    <p>学完三关，来接受豆豆的挑战吧！答错一下也没关系，<b>再想想看</b>就好。</p>
+  </section>
+
+  <div id="quiz"></div>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p>别紧张，慢慢读题。你可是点亮过好多花灯的小高手，一定可以的！</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="game-lightbulb.html" onclick="DM.sfx('click')"><span data-ic="gamepad"></span>上一关 · 花灯密码</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="../achievements/index.html" onclick="DM.sfx('click')">下一站 · 成就墙<span data-ic="trophy"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "binary" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  DM.quiz({
+    el: "#quiz",
+    module: "binary",
+    nextHref: "../achievements/index.html",
+    data: [
+      {
+        q: "计算机最喜欢用哪两个数字工作？",
+        opts: ["1 和 2", "0 和 1", "8 和 9"],
+        a: 1,
+        why: "计算机用电路的亮和灭表示 0 和 1，就像花灯的亮和灭。",
+        hint: "想一想花灯只有亮和灭两种状态哦"
+      },
+      {
+        q: "四盏花灯（8、4、2、1）里，亮了 8 和 1 两盏，表示数字几？",
+        opts: ["5", "9", "8"],
+        a: 1,
+        why: "8 + 0 + 0 + 1 = 9，亮着的花灯加起来就是答案。",
+        hint: "把亮着的花灯数字加一加"
+      },
+      {
+        q: "字母 A 的编号是 65，计算机是怎么记住它的？",
+        opts: ["用一串 0 和 1", "拍一张照片", "唱一首歌"],
+        a: 0,
+        why: "编号 65 写成二进制就是一串 0 和 1 存进电路里。",
+        hint: "计算机只认识哪两个数字呢？"
+      }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

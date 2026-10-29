@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>循环与函数 · 代码实验室 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="code"></span>代码实验室</a>
+    <span class="sep">/</span>
+    <span>第 3 课 · 循环与函数</span>
+  </nav>
+
+  <!-- ① 课程头卡 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="code"></span>进阶 · 第 3 课</span>
+    <h2>循环与函数</h2>
+    <p style="color:var(--muted)">计算机的两大超能力：不厌其烦地<b>重复</b>（循环），以及把复杂动作打包成一句命令（函数）。</p>
+    <div class="learn-caps">
+      <span><span data-ic="loop"></span>for + range 循环</span>
+      <span><span data-ic="box"></span>def 函数与参数</span>
+      <span><span data-ic="forward"></span>return 返回值</span>
+      <span><span data-ic="spark"></span>循环 + 函数组合技</span>
+    </div>
+  </section>
+
+  <!-- ② 课前导读 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>课前导读</span>
+    <div class="intro-split" style="margin-top:12px">
+      <img class="intro-img" src="../assets/img/lab-3.jpg" alt="明城墙旁的灯塔光束绕圈扫过垛口，比喻循环与函数的重复调用" loading="lazy">
+      <div class="intro-txt">
+        <h3>一台「代工机器」和一条「绕圈跑道」</h3>
+        <p><b>函数</b>就像家里的豆浆机：放进豆子（参数），机器加工，倒出豆浆（返回值）。用 <b>def</b> 把它造好一次，以后喊一声名字就能用——不用每次重新造机器。</p>
+        <p><b>循环</b>是绕圈跑道：<b>for i in range(1, 6)</b> 就是"从第 1 圈跑到第 5 圈"，range 数头不数尾，程序绝不偷懒也不多跑。这一课你将学会写循环、造函数，最后把两者组合起来，打磨出一批雨花石。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 概念卡片 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>先懂 4 个概念</span>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3><span data-ic="loop"></span>for + range 循环</h3>
+        <p><b>range(1, 6)</b> 依次给出 1、2、3、4、5——<b>数头不数尾</b>，终点不计入。只写一个数的 range(5) 则从 0 数到 4。</p>
+        <pre>for i in range(1, 6):
+    print(i)</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="box"></span>def 函数与参数</h3>
+        <p>用 <b>def</b> 把操作打包命名，随时调用。括号里的 <b>name</b> 是参数（进料口），调用时传什么它就收什么。</p>
+        <pre>def greet(name):
+    …
+greet("波波")</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="forward"></span>return 返回值</h3>
+        <p>return 负责<b>交出结果</b>（出料口）并立刻结束函数。没有 return 的函数像只响不回话的喇叭。</p>
+        <pre>return "你好, " + name</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="spark"></span>DRY 原则</h3>
+        <p>Don't Repeat Yourself——同一逻辑写一次到处调用，需求变了只改一处。真实程序就是循环里调函数、函数里套条件。</p>
+        <pre>total = total + shine(i)</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 动手实验 -->
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="terminal"></span>动手实验 · 迷你运行器</span>
+    <h2 style="font-size:22px">改代码，命中目标输出（<span id="task-done">0</span> / 3）</h2>
+    <p style="color:var(--muted);margin:6px 0 2px">任务 1 的目标有多行——循环输出几行，输出区就有几行，顺序也要一致。</p>
+
+    <!-- 任务 1 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：灯塔光束量角器图，五档刻度">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 地面 -->
+          <path d="M18 118h72" stroke-width="1.4" opacity=".7"/>
+          <g stroke="#7FA6C9" stroke-width="1" opacity=".4">
+            <path d="M30 118l-6 8M46 118l-6 8M62 118l-6 8M78 118l-6 8"/>
+          </g>
+          <!-- 塔身 -->
+          <path d="M34 118l9-56h14l9 56"/>
+          <path d="M38 100h24M41 86h18M44 72h12" stroke-width="1" opacity=".55"/>
+          <!-- 灯室 -->
+          <rect x="41" y="50" width="18" height="12" rx="1.5"/>
+          <path d="M38 50l12-9 12 9"/>
+          <path d="M50 41v-7" stroke-width="1.2"/><circle cx="50" cy="31" r="2" stroke-width="1.2"/>
+          <!-- 光束（虚线三线） -->
+          <g stroke-dasharray="6 4" stroke-width="1.2" opacity=".85">
+            <path d="M59 52L150 30M59 52L154 52M59 52L146 72"/>
+          </g>
+          <!-- 量角弧 -->
+          <path d="M142 34A85 85 0 0 1 142 70" stroke="#C9A86A" stroke-width="1"/>
+          <!-- 五档刻度 -->
+          <g stroke="#C9A86A" stroke-width="1">
+            <path d="M142 34l-6.9 1.4M143.5 43l-7 .7M144 52l-7 0M143.5 61l-7 -.7M142 70l-6.9 -1.4"/>
+          </g>
+          <g font-size="8.5" fill="#E3CFA2" stroke="none" font-family="ui-monospace,Consolas,monospace">
+            <text x="147" y="37">1</text><text x="149" y="46">2</text><text x="150" y="55">3</text><text x="149" y="64">4</text><text x="147" y="73">5</text>
+          </g>
+          <text x="136" y="94" text-anchor="middle" font-size="10" font-weight="700" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">× 5 次</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 1 · 击掌五次</h3>
+        <p class="task-guide">现在只击了 3 掌就停。把 range 的<b>终点改成 6</b>——谨记「数头不数尾」，第 6 个数不会被打印，正好击满 5 下。练：<b>for + range</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>第 1 次击掌 … 第 5 次击掌</code>（5 行）</span>
+        <div class="code-run" id="run1">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-01.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 2 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：函数机器工程图，进料 name 出料 return">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 中心线 -->
+          <path d="M100 30v84" stroke-width="1" stroke-dasharray="8 3 2 3" opacity=".5"/>
+          <!-- 机身双框 + 螺栓 -->
+          <rect x="62" y="46" width="76" height="52" rx="4"/>
+          <rect x="69" y="53" width="62" height="38" rx="2" stroke-width="1" opacity=".5"/>
+          <g stroke-width="1.2">
+            <circle cx="67" cy="51" r="1.7"/><circle cx="133" cy="51" r="1.7"/><circle cx="67" cy="93" r="1.7"/><circle cx="133" cy="93" r="1.7"/>
+          </g>
+          <!-- 铭牌 -->
+          <text x="100" y="70" text-anchor="middle" font-size="11.5" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">greet( )</text>
+          <path d="M82 80h36" stroke-width="1" opacity=".4"/>
+          <!-- 进料 -->
+          <path d="M100 18v20" stroke="#7FA6C9" stroke-width="1.4"/>
+          <path d="M95 30l5 8 5-8" stroke="#7FA6C9" stroke-width="1.4"/>
+          <text x="108" y="26" font-size="9" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace">name="波波"</text>
+          <!-- 出料 -->
+          <path d="M100 98v18" stroke="#43B58F" stroke-width="1.4"/>
+          <path d="M95 108l5 8 5-8" stroke="#43B58F" stroke-width="1.4"/>
+          <text x="100" y="136" text-anchor="middle" font-size="9" fill="#43B58F" stroke="none" font-family="ui-monospace,Consolas,monospace">return "你好, …"</text>
+          <!-- 金标注 -->
+          <path d="M138 56h20l6 8" stroke="#C9A86A" stroke-width="1"/>
+          <text x="172" y="70" text-anchor="middle" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="1">FUNC</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 2 · 向波波问好</h3>
+        <p class="task-guide">问候机 greet 是现成的，可现在只会喊「豆豆」。把最后一行 <b>greet("豆豆")</b> 里的名字换成「波波」，机器就改口了。练：<b>函数调用与传参</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>你好, 波波</code></span>
+        <div class="code-run" id="run2">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-02.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 3 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：传送带上的三颗雨花石与求和公式">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 传送带 -->
+          <path d="M22 94h156" stroke-width="1.6"/>
+          <circle cx="42" cy="101" r="4.5" stroke-width="1.3"/>
+          <circle cx="158" cy="101" r="4.5" stroke-width="1.3"/>
+          <g stroke="#7FA6C9" stroke-width="1" opacity=".4">
+            <path d="M64 94l-4 7M86 94l-4 7M108 94l-4 7M130 94l-4 7"/>
+          </g>
+          <!-- 三颗石头（线框） -->
+          <path d="M36 82c0-8 6-13 13-13s13 5 13 13-6 12-13 12-13-4-13-12z"/>
+          <path d="M43 77c3-2 7-2 10 0" stroke-width="1" opacity=".6"/>
+          <path d="M82 82c0-8 6-13 13-13s13 5 13 13-6 12-13 12-13-4-13-12z"/>
+          <path d="M89 77c3-2 7-2 10 0" stroke-width="1" opacity=".6"/>
+          <path d="M128 82c0-8 6-13 13-13s13 5 13 13-6 12-13 12-13-4-13-12z"/>
+          <path d="M135 77c3-2 7-2 10 0" stroke-width="1" opacity=".6"/>
+          <!-- 编号 -->
+          <g font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">
+            <text x="49" y="60">n=1</text><text x="95" y="60">n=2</text><text x="141" y="60">n=3</text>
+          </g>
+          <!-- 工艺标注 -->
+          <path d="M95 64V44h10" stroke="#C9A86A" stroke-width="1"/>
+          <text x="110" y="44" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">shine(n) 工艺</text>
+          <!-- 求和 -->
+          <text x="100" y="126" text-anchor="middle" font-size="10.5" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">1×? + 2×? + 3×? = ?</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 3 · 打磨雨花石</h3>
+        <p class="task-guide">换一道更细的打磨工艺：把 shine 里的 <b>n * 2</b> 改成 <b>n * 3</b>。动手前先心算 1、2、3 号石头各磨出几，再运行验证总和。练：<b>循环 + 函数组合技</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>18</code>（3 + 6 + 9）</span>
+        <div class="code-run" id="run3">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-03.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">3 个任务全部命中目标，通关按钮就会亮起来</p>
+  </section>
+
+  <!-- ⑤ 自主练习 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="flask"></span>自主练习 · 不计进度，随便试</span>
+    <h2 style="font-size:22px">试一试，看你真的懂了吗</h2>
+
+    <div class="pq" data-pq>
+      <h3>练 1 · 这个循环打印出什么？</h3>
+      <div class="pq-code">for i in range(3):
+    print(i)</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="1">0、1、2（三行）</button>
+        <button class="pq-opt" type="button" data-ok="0">1、2、3（三行）</button>
+        <button class="pq-opt" type="button" data-ok="0">0、1、2、3（四行）</button>
+        <button class="pq-opt" type="button" data-ok="0">3（一行）</button>
+      </div>
+      <p class="pq-exp">range(3) 从 0 数到 2——数头不数尾。所以 i 是 0、1、2，共三行。程序员数数从 0 开始。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 2 · 函数里的 return 是干什么的？</h3>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">在屏幕上打印内容</button>
+        <button class="pq-opt" type="button" data-ok="1">交出结果并结束函数</button>
+        <button class="pq-opt" type="button" data-ok="0">让循环重新开始</button>
+        <button class="pq-opt" type="button" data-ok="0">删除变量</button>
+      </div>
+      <p class="pq-exp">return 是函数的「出料口」：把结果交还给调用者，同时函数立刻收工。打印屏幕是 print() 的活，两者别搞混。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 3 · 这段代码打印几行？</h3>
+      <div class="pq-code">for i in range(2):
+    print("你好")</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">1 行</button>
+        <button class="pq-opt" type="button" data-ok="1">2 行</button>
+        <button class="pq-opt" type="button" data-ok="0">4 行</button>
+        <button class="pq-opt" type="button" data-ok="0">0 行，会报错</button>
+      </div>
+      <p class="pq-exp">range(2) 让循环跑 2 圈，每圈 print 一次，所以是 2 行。print 里没用到 i，i 只负责「数圈数」——这是循环最常见的用法：让同一句话重复 N 遍。</p>
+    </div>
+
+    <div class="pq">
+      <h3>练 4 · 自由编码：翻倍机</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">写一个函数 <b>double(n)</b> 返回 n 的 2 倍，再用循环打印 1 到 5 每个数的翻倍结果。下面的起点还只会「原样奉还」——把出料口改成 2 倍，再套上循环。</p>
+      <div class="code-run" id="free1">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-04.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+
+    <div class="pq">
+      <h3>练 5 · 自由编码：三倍机器</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">写一个函数 <b>triple(n)</b> 返回 n 的 3 倍，打印 <b>triple(4)</b> 的结果——它应该输出 12。</p>
+      <div class="code-run" id="free2">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-05.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot">读懂 for 循环的诀窍：盯住 i。第一圈 i 是几？最后一圈是几？记住 range 数头不数尾。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-02.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一课 · 条件与分支</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-04.html" onclick="DM.sfx('click')">下一课 · 列表与遍历<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "lab" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  /* 动手实验：公共任务运行器（改代码命中目标输出） */
+  var doneCount = 0;
+  var doneSet = {};
+  var doneEl = document.getElementById("task-done");
+  var doneBtn = document.getElementById("done");
+  function onPass(key) {
+    if (!doneSet[key]) { doneSet[key] = true; doneCount++; }
+    doneEl.textContent = doneCount;
+    if (doneCount >= 3) doneBtn.disabled = false;
+  }
+
+  DM.taskRunner("run1", {
+    name: "t1",
+    goal: ["第 1 次击掌", "第 2 次击掌", "第 3 次击掌", "第 4 次击掌", "第 5 次击掌"],
+    onPass: onPass,
+    initial: '# 任务 1：和豆豆击掌 5 次\nfor i in range(1, 4):    # TODO：终点改成 6，正好击满 5 下\n    print(f"第 {i} 次击掌")'
+  });
+
+  DM.taskRunner("run2", {
+    name: "t2",
+    goal: ["你好, 波波"],
+    onPass: onPass,
+    initial: '# 任务 2：函数是一台「代工机器」\ndef greet(name):\n    return "你好, " + name\n\nprint(greet("豆豆"))    # TODO：让它向波波问好'
+  });
+
+  DM.taskRunner("run3", {
+    name: "t3",
+    goal: ["18"],
+    onPass: onPass,
+    initial: '# 任务 3：循环 + 函数组合技\ndef shine(n):        # 每颗雨花石磨出光泽\n    return n * 2     # TODO：改成 n * 3，换一种打磨工艺\n\ntotal = 0\nfor i in range(1, 4):\n    total = total + shine(i)\nprint(total)         # 先心算，再运行验证'
+  });
+
+  /* 自主练习：自由编码题（运行 / 还原 / 填入参考答案） */
+  DM.practiceRunner("free1", {
+    file: "practice-04.py",
+    initial: '# 1. 把 return 改成 2 倍\n# 2. 套上 for 循环，打印 1 到 5 的翻倍结果\ndef double(n):\n    return n\n\nprint(double(3))',
+    ref: 'def double(n):\n    return n * 2\n\nfor i in range(1, 6):\n    print(double(i))'
+  });
+
+  DM.practiceRunner("free2", {
+    file: "practice-05.py",
+    initial: '# 把出料口改成 3 倍，让 triple(4) 输出 12\ndef triple(n):\n    return n\n\nprint(triple(4))',
+    ref: 'def triple(n):\n    return n * 3\n\nprint(triple(4))'
+  });
+
+  doneBtn.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("lab", 2, 3);
+    doneBtn.innerHTML = DM.icon("check") + "太棒了，第 3 课通关！";
+    doneBtn.disabled = true;
+  });
+
+  /* 自主练习：选择题即时反馈（不计进度） */
+  document.querySelectorAll("[data-pq]").forEach(function (pq) {
+    var exp = pq.querySelector(".pq-exp");
+    var answered = false;
+    pq.querySelectorAll(".pq-opt").forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        if (answered) return;
+        if (opt.dataset.ok === "1") {
+          opt.classList.add("ok");
+          exp.classList.add("show");
+          DM.sfx("right");
+          answered = true;
+        } else {
+          opt.classList.add("bad");
+          DM.sfx("retry");
+          setTimeout(function () { opt.classList.remove("bad"); }, 700);
+        }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>花灯的开关魔法 · 二进制的秘密 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="lantern"></span>二进制的秘密</a>
+    <span class="sep">/</span>
+    <span>第 1 关 · 花灯的开关魔法</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="lantern"></span>第 1 关</span>
+    <h2>花灯的开关魔法</h2>
+    <p style="color:var(--muted)">秦淮河畔的花灯，藏着计算机的第一个小秘密。</p>
+  </section>
+
+  <section class="panel scene-panel scene-center">
+    <img class="scene-svg" src="../assets/img/binary-1.jpg" alt="秦淮河畔夜色中的两盏花灯，一盏亮着一盏熄灭，比喻 1 和 0" loading="lazy">
+  </section>
+
+  <section class="panel learn-text">
+    <p>计算机只认识两个数字：<b>0</b> 和 <b>1</b>，再多就不认识啦。</p>
+    <p>就像花灯只有两种样子：<b>亮</b>记作 1，<b>灭</b>记作 0。</p>
+    <p>一排花灯亮亮灭灭，就能说出好多好多话！</p>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>动手试一试</span>
+    <h2 style="font-size:22px">点一点花灯，切换亮和灭</h2>
+    <div class="lantern-row" id="row">
+      <button class="lantern" type="button" data-i="0" aria-label="第一盏花灯"><span data-ic="lantern"></span></button>
+      <button class="lantern" type="button" data-i="1" aria-label="第二盏花灯"><span data-ic="lantern"></span></button>
+    </div>
+    <p style="text-align:center;margin:10px 0 2px;color:var(--muted)">现在的灯语</p>
+    <p class="binary-read big-num" style="text-align:center" id="read">0 0</p>
+    <p style="text-align:center;min-height:32px" id="say">两盏花灯都灭着，灯语是 0 0，安安静静～</p>
+    <p class="hint" style="text-align:center">两盏花灯各点亮一次，「我学会了」按钮就会亮起来</p>
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p>计算机的世界里，只有 0 和 1 两个小伙伴。亮是 1，灭是 0，花灯就是会说话的小灯！</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="../index.html" onclick="DM.sfx('click')"><span data-ic="home"></span>上一站 · 回首页</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-02.html" onclick="DM.sfx('click')">下一关 · 用花灯数数<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "binary" });
+(function () {
+  var DM = window.DM;
+
+  // 填充静态占位图标
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  var lit = [false, false];
+  var touched = [false, false];
+  var btns = Array.prototype.slice.call(document.querySelectorAll("#row .lantern"));
+  var read = document.getElementById("read");
+  var say = document.getElementById("say");
+  var done = document.getElementById("done");
+  var SAY = {
+    "00": "两盏花灯都灭着，灯语是 0 0，安安静静～",
+    "10": "左边亮、右边灭，灯语是 1 0，读作「一零」！",
+    "01": "左边灭、右边亮，灯语是 0 1，读作「零一」！",
+    "11": "两盏都亮，灯语是 1 1，读作「一一」，亮闪闪！"
+  };
+
+  function render() {
+    btns.forEach(function (b, i) { b.classList.toggle("on", lit[i]); });
+    read.textContent = (lit[0] ? "1" : "0") + " " + (lit[1] ? "1" : "0");
+    say.textContent = SAY[(lit[0] ? "1" : "0") + (lit[1] ? "1" : "0")];
+    done.disabled = !(touched[0] && touched[1]);
+  }
+
+  btns.forEach(function (b, i) {
+    b.addEventListener("click", function () {
+      lit[i] = !lit[i];
+      touched[i] = true;
+      DM.sfx("toggle");
+      render();
+    });
+  });
+
+  done.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("binary", 0, 2);
+    done.innerHTML = DM.icon("check") + "太棒了，第 1 关通关！";
+    done.disabled = true;
+    say.textContent = "你学会花灯的开关魔法啦！0 和 1 就是这么简单～";
+    say.style.color = "var(--green)";
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

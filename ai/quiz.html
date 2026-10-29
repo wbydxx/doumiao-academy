@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>挑战测验 · AI 小课堂 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="robot"></span>AI 小课堂</a>
+    <span class="sep">/</span>
+    <span>挑战测验</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="quiz"></span>AI 小课堂 · 挑战测验</span>
+    <h2>AI 小测验</h2>
+    <p style="color:var(--muted)">三道小题，答对全部就能赢雨花石！</p>
+  </section>
+
+  <section class="panel scene-panel scene-center">
+    <svg class="scene-svg" viewBox="0 0 640 220" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="AI 机器人提问">
+      <rect x="250" y="60" width="140" height="100" rx="26" fill="#EAF4FD"/>
+      <path d="M320 36v24"/>
+      <circle cx="320" cy="30" r="7"/>
+      <circle cx="290" cy="100" r="7" fill="#2E86DE" stroke="none"/>
+      <circle cx="350" cy="100" r="7" fill="#2E86DE" stroke="none"/>
+      <path d="M296 128h48"/>
+      <path d="M250 100h-30M390 100h30"/>
+      <text x="320" y="200" text-anchor="middle" font-size="18" font-weight="800" fill="#5D7FA3" stroke="none">关于 AI，你都学会了吗？</text>
+    </svg>
+  </section>
+
+  <section class="panel learn-text">
+    <p>学完四关和游戏，来接受豆豆的挑战吧！答错一下也没关系，<b>再想想看</b>就好。</p>
+  </section>
+
+  <div id="quiz"></div>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p>别紧张，慢慢读题。你已经教过 AI 认小猫，还帮它纠过错，一定可以的！</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="game-trainer.html" onclick="DM.sfx('click')"><span data-ic="gamepad"></span>上一关 · 训练 AI 小助手</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="../achievements/index.html" onclick="DM.sfx('click')">下一站 · 成就墙<span data-ic="trophy"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "ai" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  DM.quiz({
+    el: "#quiz",
+    module: "ai",
+    nextHref: "../achievements/index.html",
+    data: [
+      {
+        q: "家里的语音助手为什么能听懂你说话？",
+        opts: ["它有魔法", "它学习过海量的语音例子", "它耳朵特别大"],
+        a: 1,
+        why: "语音助手\"听\"过成千上万段语音，靠机器学习才听懂人话。",
+        hint: "AI 的本领都是怎么来的呢？"
+      },
+      {
+        q: "AI 认小猫越来越准，是因为什么？",
+        opts: ["看了很多很多小猫图片，不断练习", "睡了一觉就变聪明了", "猜的次数多了总会对"],
+        a: 0,
+        why: "喂的图片越多，AI 的把握度越高，这就是\"机器学习\"。",
+        hint: "回想第 2 关，你喂了几张图片给 AI？"
+      },
+      {
+        q: "AI 猜错了的时候，谁来检查和纠正它？",
+        opts: ["再猜一次就行了", "不用管，它自己会好", "由人来检查、帮忙纠正"],
+        a: 2,
+        why: "AI 会犯错，最后的检查要靠人——会用 AI 的小朋友还要会帮 AI 挑错！",
+        hint: "神秘箱子游戏里，你扮演的是什么角色？"
+      }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

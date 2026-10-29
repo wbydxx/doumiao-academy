@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字典与字符串 · 代码实验室 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="code"></span>代码实验室</a>
+    <span class="sep">/</span>
+    <span>第 5 课 · 字典与字符串</span>
+  </nav>
+
+  <!-- ① 课程头卡 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="code"></span>进阶 · 第 5 课</span>
+    <h2>字典与字符串</h2>
+    <p style="color:var(--muted)">列表靠编号找东西，<b>字典</b>靠名字找东西——「南京」对应「210000」。<b>字符串</b>则是文字的游乐场：大写、替换、拼接随你玩。</p>
+    <div class="learn-caps">
+      <span><span data-ic="book"></span>字典 {键: 值}</span>
+      <span><span data-ic="box"></span>按键取值 [key]</span>
+      <span><span data-ic="spark"></span>upper / replace</span>
+      <span><span data-ic="terminal"></span>方法链连招</span>
+    </div>
+  </section>
+
+  <!-- ② 课前导读 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="book"></span>课前导读</span>
+    <div class="intro-split" style="margin-top:12px">
+      <img class="intro-img" src="../assets/img/lab-5.jpg" alt="邮政档案墙的抽屉贴着城市名标签，拉开抽屉取出对应编码" loading="lazy">
+      <div class="intro-txt">
+        <h3>贴着标签的抽屉墙</h3>
+        <p>老邮局的档案墙上，每格抽屉贴一个城市名，拉开就取出它的邮政编码。<b>字典</b>就是这面墙：花括号里写「<b>键: 值</b>」，查东西不靠编号，靠<b>键</b>——codes["南京"] 一下取出 "210000"。</p>
+        <p>这一课后半场玩<b>字符串</b>：.upper() 把招牌全部大写，.replace() 把船票上的「-」换成「→」。学完你就能整理一份会自己说话的南京小档案。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 概念卡片 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>先懂 4 个概念</span>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3><span data-ic="book"></span>字典 Dict</h3>
+        <p>花括号里一组组「<b>键: 值</b>」，逗号隔开。键像抽屉标签，值是抽屉里的东西，一一对应。</p>
+        <pre>codes = {"南京": "210000"}</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="box"></span>按键取值</h3>
+        <p>方括号里放<b>键</b>，取出对应的值。键不存在会 KeyError——就像拉开没贴标签的空抽屉。</p>
+        <pre>codes["南京"]   # "210000"</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="spark"></span>字符串方法</h3>
+        <p>文字自带小工具：<b>.upper()</b> 全大写、<b>.replace(旧, 新)</b> 查找替换。用点号挂在字符串后面调用。</p>
+        <pre>"nanjing".upper()</pre>
+      </div>
+      <div class="concept-card">
+        <h3><span data-ic="terminal"></span>方法链</h3>
+        <p>小工具可以<b>连着用</b>：从左往右挨个变身，前一步的输出就是后一步的输入，像流水线。</p>
+        <pre>s.upper().replace("-", " ")</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 动手实验 -->
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="terminal"></span>动手实验 · 迷你运行器</span>
+    <h2 style="font-size:22px">改代码，命中目标输出（<span id="task-done">0</span> / 3）</h2>
+    <p style="color:var(--muted);margin:6px 0 2px">字典查不到键会报 KeyError——报错不吓人，读一读它说哪个键找不到。</p>
+
+    <!-- 任务 1 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：邮政档案抽屉墙，键值对应示意">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 抽屉墙外框 -->
+          <rect x="36" y="28" width="128" height="84" rx="4"/>
+          <!-- 四格抽屉 -->
+          <path d="M36 70h128M100 28v84" stroke-width="1.2" opacity=".7"/>
+          <g stroke-width="1" opacity=".6">
+            <path d="M62 46h12M126 46h12M62 88h12M126 88h12"/>
+          </g>
+          <g font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">
+            <text x="68" y="40">南京</text><text x="68" y="64">210000</text>
+            <text x="132" y="40" fill="#E3CFA2">苏州</text><text x="132" y="64">215000</text>
+          </g>
+          <text x="68" y="84" font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">·</text>
+          <text x="132" y="108" font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">·</text>
+          <!-- 金引线 -->
+          <path d="M132 60v18h24l6 8" stroke="#C9A86A" stroke-width="1"/>
+          <text x="164" y="100" text-anchor="middle" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">codes[?]</text>
+          <!-- 底注 -->
+          <text x="100" y="130" text-anchor="middle" font-size="8.5" fill="#7FA6C9" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="2">KEY → VALUE</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 1 · 查苏州邮编</h3>
+        <p class="task-guide">邮编簿里存着两座城。现在 <b>city</b> 还停在「南京」——改成「苏州」，字典就会按名字取出 215000。练：<b>按键取值</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>苏州 的邮编：215000</code></span>
+        <div class="code-run" id="run1">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-01.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 2 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：街边招牌升级为大写字样">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 招牌双框 -->
+          <rect x="30" y="52" width="140" height="44" rx="4"/>
+          <rect x="35" y="57" width="130" height="34" rx="2" stroke-width="1" opacity=".5"/>
+          <!-- 小写字样 -->
+          <text x="100" y="79" text-anchor="middle" font-size="12" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">nanjing road</text>
+          <!-- 吊环 -->
+          <path d="M50 52v-8M150 52v-8" stroke-width="1.3"/>
+          <!-- 升级箭头 -->
+          <path d="M100 40v-14" stroke="#C9A86A" stroke-width="1.4"/>
+          <path d="M94 32l6-9 6 9" stroke="#C9A86A" stroke-width="1.4"/>
+          <path d="M112 30h20l6-6" stroke="#C9A86A" stroke-width="1"/>
+          <text x="146" y="22" text-anchor="middle" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">.upper( )</text>
+          <!-- 底注 -->
+          <text x="100" y="122" text-anchor="middle" font-size="9" font-weight="700" fill="#E3CFA2" stroke="none" font-family="ui-monospace,Consolas,monospace" letter-spacing="3">? ? ?</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 2 · 拼音招牌</h3>
+        <p class="task-guide">招牌上的拼音全小写，看着没气势。把 print 里那个光秃秃的 <b>sign</b>，升级成 <b>sign.upper()</b>，整块招牌立刻大写。练：<b>字符串方法</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>NANJING ROAD</code></span>
+        <div class="code-run" id="run2">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-02.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任务 3 -->
+    <div class="task-card">
+      <div class="task-fig bp">
+        <svg viewBox="0 0 200 140" fill="none" stroke="#3FB6D8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="蓝图风：船票排版，把横线替换为箭头">
+          <g stroke="#2E5A78" stroke-width="1" opacity=".5">
+            <path d="M8 16V8h8M184 8h8v8M192 124v8h-8M16 132h-8v-8"/>
+          </g>
+          <!-- 票券 -->
+          <rect x="26" y="52" width="148" height="44" rx="4"/>
+          <path d="M26 96l10-10M174 96l-10-10" stroke-width="1" opacity=".5"/>
+          <circle cx="26" cy="74" r="2.5" fill="#0D1E33" stroke-width="1"/>
+          <circle cx="174" cy="74" r="2.5" fill="#0D1E33" stroke-width="1"/>
+          <!-- 票面文字 -->
+          <text x="42" y="79" font-size="12" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">南京</text>
+          <text x="92" y="79" font-size="12" font-weight="700" fill="#E06C6A" stroke="none" font-family="ui-monospace,Consolas,monospace">-</text>
+          <text x="122" y="79" font-size="12" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">上海</text>
+          <!-- 替换标注 -->
+          <path d="M96 64v-14h22l6 8" stroke="#C9A86A" stroke-width="1"/>
+          <text x="142" y="52" text-anchor="middle" font-size="8.5" fill="#C9A86A" stroke="none" font-family="ui-monospace,Consolas,monospace">replace(-, ?)</text>
+          <!-- 底注 -->
+          <text x="100" y="122" text-anchor="middle" font-size="9.5" font-weight="700" fill="#BFE9FA" stroke="none" font-family="ui-monospace,Consolas,monospace">南京 ? 上海</text>
+        </svg>
+      </div>
+      <div class="task-body">
+        <h3>任务 3 · 船票排版</h3>
+        <p class="task-guide">船票上「南京-上海」的短横太寒酸。在 TODO 处用 <b>ticket.replace("-", " → ")</b>，把它换成有派头的箭头。练：<b>replace 替换</b>。</p>
+        <span class="task-goal"><span data-ic="check"></span>目标输出：<code>南京 → 上海</code></span>
+        <div class="code-run" id="run3">
+          <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>task-03.py</span></div>
+          <textarea spellcheck="false"></textarea>
+          <div class="run-row">
+            <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+            <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+            <span class="cr-flag" style="align-self:center;font-weight:800;color:var(--green);display:none"></span>
+          </div>
+          <div class="cr-out">点「运行代码」查看输出</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">3 个任务全部命中目标，通关按钮就会亮起来</p>
+  </section>
+
+  <!-- ⑤ 自主练习 -->
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="flask"></span>自主练习 · 不计进度，随便试</span>
+    <h2 style="font-size:22px">试一试，看你真的懂了吗</h2>
+
+    <div class="pq" data-pq>
+      <h3>练 1 · 字典靠什么找东西？</h3>
+      <div class="pq-code">codes = {"南京": "210000"}
+print(codes["南京"])</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">编号 [0]</button>
+        <button class="pq-opt" type="button" data-ok="0">值 "210000"</button>
+        <button class="pq-opt" type="button" data-ok="1">键 "南京"</button>
+        <button class="pq-opt" type="button" data-ok="0">顺序</button>
+      </div>
+      <p class="pq-exp">列表靠编号（[0]、[1]），字典靠键（["南京"]）。键是唯一标签——方括号里放键，取出来的是对应的值。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 2 · upper 之后是什么？</h3>
+      <div class="pq-code">print("nanjing".upper())</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">Nanjing</button>
+        <button class="pq-opt" type="button" data-ok="1">NANJING</button>
+        <button class="pq-opt" type="button" data-ok="0">nanjing</button>
+        <button class="pq-opt" type="button" data-ok="0">报错</button>
+      </div>
+      <p class="pq-exp">.upper() 把每个字母都变成大写。它不会改原字符串，而是「变出一个新字符串」交给你——所以 print 里直接用返回的新值。</p>
+    </div>
+
+    <div class="pq" data-pq>
+      <h3>练 3 · 替换后打印什么？</h3>
+      <div class="pq-code">print("南京-上海".replace("-", "→"))</div>
+      <div class="pq-opts">
+        <button class="pq-opt" type="button" data-ok="0">南京-上海</button>
+        <button class="pq-opt" type="button" data-ok="1">南京→上海</button>
+        <button class="pq-opt" type="button" data-ok="0">南京→ 上海</button>
+        <button class="pq-opt" type="button" data-ok="0">-→-</button>
+      </div>
+      <p class="pq-exp">replace(旧, 新) 把所有「-」换成「→」。注意第二个参数 "→" 里没有空格，所以结果也没有空格——想空格就写 " → "。</p>
+    </div>
+
+    <div class="pq">
+      <h3>练 4 · 自由编码：美食词典</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">往 foods 里补一道<b>「鸭血粉丝汤」: 18</b>，再用 f-string 打印「鸭血粉丝汤：18 元」。</p>
+      <div class="code-run" id="free1">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-04.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+
+    <div class="pq">
+      <h3>练 5 · 自由编码：字符串连招</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">把 "yangtze-river" 先 <b>.upper()</b> 再把「-」换成空格——一条<b>方法链</b>搞定，输出「YANGTZE RIVER」。</p>
+      <div class="code-run" id="free2">
+        <div class="cr-bar"><span class="dot"></span><span class="dot g"></span><span class="dot" style="background:#FFD08A"></span><span>practice-05.py</span></div>
+        <textarea spellcheck="false"></textarea>
+        <div class="run-row">
+          <button class="btn sm blue" type="button" data-act="run"><span data-ic="play"></span>运行代码</button>
+          <button class="btn sm ghost" type="button" data-act="reset"><span data-ic="reset"></span>还原</button>
+          <button class="btn sm ghost" type="button" data-act="ref"><span data-ic="bulb"></span>填入参考答案</button>
+          <span class="cr-flag" style="align-self:center;font-weight:800;display:none"></span>
+        </div>
+        <div class="cr-out">点「运行代码」查看输出</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot">字典的键必须是「唯一的抽屉标签」——同一个键写两遍，后面那本会覆盖前面那本。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-04.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一课 · 列表与遍历</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-06.html" onclick="DM.sfx('click')">下一课 · while 与猜数字<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "lab" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  /* 动手实验：公共任务运行器（改代码命中目标输出） */
+  var doneCount = 0;
+  var doneSet = {};
+  var doneEl = document.getElementById("task-done");
+  var doneBtn = document.getElementById("done");
+  function onPass(key) {
+    if (!doneSet[key]) { doneSet[key] = true; doneCount++; }
+    doneEl.textContent = doneCount;
+    if (doneCount >= 3) doneBtn.disabled = false;
+  }
+
+  DM.taskRunner("run1", {
+    name: "t1",
+    goal: ["苏州 的邮编：215000"],
+    onPass: onPass,
+    initial: '# 任务 1：查邮编\ncodes = {"南京": "210000", "苏州": "215000"}\ncity = "南京"    # TODO：改查苏州的邮编\n\nprint(f"{city} 的邮编：{codes[city]}")'
+  });
+
+  DM.taskRunner("run2", {
+    name: "t2",
+    goal: ["NANJING ROAD"],
+    onPass: onPass,
+    initial: '# 任务 2：拼音招牌\nsign = "nanjing road"    # 小写不精神\n\n# TODO：挂上 .upper() 让招牌全部大写\nprint(sign)'
+  });
+
+  DM.taskRunner("run3", {
+    name: "t3",
+    goal: ["南京 → 上海"],
+    onPass: onPass,
+    initial: '# 任务 3：船票排版\nticket = "南京-上海"\n\n# TODO：用 .replace 把 - 换成 " → "\nprint(ticket)'
+  });
+
+  /* 自主练习：自由编码题（运行 / 还原 / 填入参考答案） */
+  DM.practiceRunner("free1", {
+    file: "practice-04.py",
+    initial: '# 补上「鸭血粉丝汤」: 18，再打印「鸭血粉丝汤：18 元」\nfoods = {"盐水鸭": 38}\n\n# 在下面动手',
+    ref: 'foods = {"盐水鸭": 38, "鸭血粉丝汤": 18}\n\nname = "鸭血粉丝汤"\nprint(f"{name}：{foods[name]} 元")'
+  });
+
+  DM.practiceRunner("free2", {
+    file: "practice-05.py",
+    initial: '# 一条方法链：先 .upper()，再 .replace("-", " ")\nroad = "yangtze-river"\n\n# 在下面写 print(...)',
+    ref: 'road = "yangtze-river"\nprint(road.upper().replace("-", " "))'
+  });
+
+  doneBtn.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("lab", 4, 3);
+    doneBtn.innerHTML = DM.icon("check") + "太棒了，第 5 课通关！";
+    doneBtn.disabled = true;
+  });
+
+  /* 自主练习：选择题即时反馈（不计进度） */
+  document.querySelectorAll("[data-pq]").forEach(function (pq) {
+    var exp = pq.querySelector(".pq-exp");
+    var answered = false;
+    pq.querySelectorAll(".pq-opt").forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        if (answered) return;
+        if (opt.dataset.ok === "1") {
+          opt.classList.add("ok");
+          exp.classList.add("show");
+          DM.sfx("right");
+          answered = true;
+        } else {
+          opt.classList.add("bad");
+          DM.sfx("retry");
+          setTimeout(function () { opt.classList.remove("bad"); }, 700);
+        }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

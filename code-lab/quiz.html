@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>挑战测验 · 代码实验室 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="code"></span>代码实验室</a>
+    <span class="sep">/</span>
+    <span>挑战测验</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="quiz"></span>代码实验室 · 挑战测验</span>
+    <h2>进阶测验</h2>
+    <p style="color:var(--muted)">变量、条件、循环、函数、列表、字典——八道概念题，检验全部七课的功底。</p>
+  </section>
+
+  <section class="panel scene-panel scene-center">
+    <svg class="scene-svg" viewBox="0 0 640 220" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="终端窗口与代码符号">
+      <text x="320" y="34" text-anchor="middle" font-size="17" font-weight="800" fill="#2E86DE" stroke="none">代码读三遍，答案自然现</text>
+      <rect x="180" y="62" width="280" height="120" rx="14" fill="#142438" stroke="#142438"/>
+      <circle cx="204" cy="84" r="5" fill="#E74C3C" stroke="none"/>
+      <circle cx="222" cy="84" r="5" fill="#FF9F43" stroke="none"/>
+      <circle cx="240" cy="84" r="5" fill="#2ECC9A" stroke="none"/>
+      <g font-family="monospace" font-size="13" fill="#8CE9C3" stroke="none">
+        <text x="204" y="106">n = 3</text>
+        <text x="204" y="128">if n &gt; 2:</text>
+        <text x="204" y="150">    n = n * n</text>
+        <text x="204" y="172">print(n)</text>
+      </g>
+      <g font-size="15" font-weight="800" fill="#2E86DE" stroke="none" font-family="monospace">
+        <text x="500" y="100">if</text>
+        <text x="560" y="100">for</text>
+        <text x="500" y="140">def</text>
+        <text x="548" y="140">range</text>
+      </g>
+      <path d="M486 96h-30M546 96h-40M486 136h-30M542 136h-36" stroke="#C9DFF2"/>
+    </svg>
+  </section>
+
+  <section class="panel learn-text">
+    <p>范围：第 1 课变量与类型、第 2 课条件分支、第 3 课循环与函数、第 4 课列表、第 5 课字典与字符串、第 6 课 while 与随机数、第 7 课综合运用。答错也有解析，别怕错。</p>
+  </section>
+
+  <div id="quiz"></div>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p id="mascot-text">把每道题当成一次「人工执行」：一行行读，盯住变量盒子里现在的值。</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="game-puzzle.html" onclick="DM.sfx('click')"><span data-ic="gamepad"></span>上一关 · 代码谜题闯关</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="../achievements/index.html" onclick="DM.sfx('click')">下一站 · 成就墙<span data-ic="trophy"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "lab" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  DM.quiz({
+    el: "#quiz",
+    module: "lab",
+    nextHref: "../achievements/index.html",
+    data: [
+      {
+        q: "Python 里给变量赋值，正确的是？",
+        opts: ["let x = 5", "x = 5", "x == 5"],
+        a: 1,
+        why: "Python 不需要 let、var 这些关键字，一个等号 = 就是赋值。x == 5 是在比较相等，不是赋值。",
+        hint: "第 1 课说过：直接贴标签。"
+      },
+      {
+        q: 'type("5") 的结果是？',
+        opts: ["int（整数）", "str（文字）", "float（小数）"],
+        a: 1,
+        why: "带引号的就是文字（str）；不带引号的 5 才是整数（int）。类型不同，能做的事也不同。",
+        hint: "回忆引号是谁的标志。"
+      },
+      {
+        q: "range(1, 4) 依次产生哪些数？",
+        opts: ["1、2、3", "1、2、3、4", "0、1、2、3"],
+        a: 0,
+        why: "range 数头不数尾：从 1 出发，到 4 之前停下，所以是 1、2、3 三个数。",
+        hint: "第 3 课的跑道：终点线不撞线。"
+      },
+      {
+        q: "函数里的 return 语句起什么作用？",
+        opts: ["把结果返回给调用者，并立即结束函数", "只是打印结果，函数继续往下跑", "声明一个新变量"],
+        a: 0,
+        why: "return 双重职责：交回结果 + 终止函数。return 之后的代码不会执行；打印屏幕是 print() 的活，两者别搞混。",
+        hint: "函数机器的「出料口」。"
+      },
+      {
+        q: 'stations = ["下关", "玄武门"]，stations[0] 是？',
+        opts: ['"下关"', '"玄武门"', "报错"],
+        a: 0,
+        why: "列表索引从 0 数：stations[0] 是第 1 个「下关」，stations[1] 才是「玄武门」。「第几个」和「索引几」永远差 1。",
+        hint: "第 4 课的口诀：程序员从 0 开始数。"
+      },
+      {
+        q: "列表的 append( ) 和 len( ) 分别是干嘛的？",
+        opts: ["append 加一件到队尾，len 数出件数", "append 数件数，len 加一件", "两个都是删除"],
+        a: 0,
+        why: "append(x) 把 x 装到列表末尾；len(列表) 返回当前元素个数。一个负责「装」，一个负责「数」。",
+        hint: "码头装货：一件装船，一件点数。"
+      },
+      {
+        q: 'spots = {"中山陵": 0, "夫子庙": 30}，spots["夫子庙"] 取出什么？',
+        opts: ["0", "30", '"夫子庙"'],
+        a: 1,
+        why: "字典按键取值：方括号里放键，取出来的是对应的值。「夫子庙」对应的值是 30。列表靠编号，字典靠键。",
+        hint: "第 5 课的档案墙：贴标签的抽屉。"
+      },
+      {
+        q: "n = 1，while n < 3 里打印 n 并每圈加 1，共打印几行？",
+        opts: ["2 行：1、2", "3 行：1、2、3", "无限行"],
+        a: 0,
+        why: "n 从 1 起：1 < 3 打印 1 并加到 2；2 < 3 打印 2 并加到 3；3 < 3 不成立，循环停——3 本身不打印。",
+        hint: "默念 while 三要素：起点、终点、每圈动。"
+      },
+      {
+        q: "random.randint(1, 6) 能掷出哪些数？",
+        opts: ["1 到 5（不含 6）", "1 到 6，两头都算", "0 到 6"],
+        a: 1,
+        why: "randint 两端都包含，相当于一颗真骰子。对比 range(1, 6) 数头不数尾——两者刚好相反，别记混。",
+        hint: "第 6 课的江水盲盒。"
+      }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

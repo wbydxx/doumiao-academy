@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机器学习：喂图片给电脑 · AI 小课堂 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="robot"></span>AI 小课堂</a>
+    <span class="sep">/</span>
+    <span>第 2 关 · 机器学习</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="robot"></span>第 2 关</span>
+    <h2>机器学习：喂图片给电脑</h2>
+    <p style="color:var(--muted)">AI 的聪明不是天生的，是"喂"出来的。</p>
+  </section>
+
+  <section class="panel learn-text">
+    <p>想让 AI 认出小猫，就要<b>给它看很多很多小猫图片</b>，这叫"训练"。</p>
+    <p>每喂一张图，AI 就多记一点。它心里还会打分：<b>把握度（confidence）</b>越高，说明它越有底气。</p>
+    <p>来，一起把 AI 教到"信心满满"！</p>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>动手试一试</span>
+    <h2 style="font-size:22px">喂给 AI 小猫图片，看把握度涨起来</h2>
+    <div class="animal-card" id="pic"></div>
+    <p style="text-align:center;color:var(--muted);margin:4px 0 0">你刚喂给 AI 的图片：<b id="pic-name">—</b></p>
+    <div class="confidence" aria-label="AI 的把握度"><div class="fill" id="conf"></div></div>
+    <p style="text-align:center;font-weight:800" id="conf-text">AI 的把握度：5%</p>
+    <p style="text-align:center;min-height:32px" id="say">AI 睁大眼睛："这是……是猫吗？我不太确定……"</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+      <button class="btn blue" type="button" id="feed"><span data-ic="loop"></span>再喂一张小猫图片</button>
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">喂满 6 张图片，通关按钮就会亮起来</p>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p>你看，AI 和你一样：第一次见新东西都会认不准，看得多了、学得多了，就越来越厉害！</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-01.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一关 · 身边的 AI</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-03.html" onclick="DM.sfx('click')">下一关 · AI 也会犯错<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "ai" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  // 小猫的 6 种变体（颜色不同，都是小猫）
+  var CATS = [
+    { name: "橘猫",   c: "#FF9F43" },
+    { name: "黑猫",   c: "#5D7FA3" },
+    { name: "白猫",   c: "#B8CBE0" },
+    { name: "灰猫",   c: "#9BAAB8" },
+    { name: "奶牛猫", c: "#2E86DE" },
+    { name: "三花猫", c: "#E4907E" }
+  ];
+  var CONF = [5, 22, 45, 66, 84, 96];
+  var SAY = [
+    "AI 睁大眼睛：\"这是……是猫吗？我不太确定……\"",
+    "AI 咦了一声：\"尖耳朵、有胡须……好像有点懂了！\"",
+    "AI 说：\"圆圆的脸、长长的尾巴，我猜是猫！\"",
+    "AI 越来越有底气：\"是猫！我记住了这几点！\"",
+    "AI 自信满满：\"肯定是猫，这种样子我见得多了！\"",
+    "AI 大声说：\"这就是小猫！我有 96% 的把握！\""
+  ];
+  function catSvg(c) {
+    return '<svg viewBox="0 0 120 120" fill="none" stroke="#1A3A5C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M34 30 28 10l18 8M86 30l6-20-18 8"/>' +
+      '<circle cx="60" cy="62" r="34" fill="' + c + '"/>' +
+      '<circle cx="48" cy="56" r="3.5" fill="#1A3A5C" stroke="none"/>' +
+      '<circle cx="72" cy="56" r="3.5" fill="#1A3A5C" stroke="none"/>' +
+      '<path d="M54 68q6 5 12 0"/>' +
+      '<path d="M26 60H8M26 68H10M94 60h18M94 68h16"/>' +
+      '<path d="M60 96v14M52 110h16"/>' +
+      "</svg>";
+  }
+  var pic = document.getElementById("pic");
+  var picName = document.getElementById("pic-name");
+  var conf = document.getElementById("conf");
+  var confText = document.getElementById("conf-text");
+  var say = document.getElementById("say");
+  var feed = document.getElementById("feed");
+  var done = document.getElementById("done");
+  var n = 0;
+
+  function show(i) {
+    pic.innerHTML = catSvg(CATS[i].c);
+    picName.textContent = CATS[i].name + "（小猫）";
+    conf.style.width = CONF[i] + "%";
+    confText.textContent = "AI 的把握度：" + CONF[i] + "%";
+    say.textContent = SAY[i];
+  }
+  feed.addEventListener("click", function () {
+    if (n >= CATS.length) return;
+    n++;
+    DM.sfx("right");
+    show(n - 1);
+    if (n >= CATS.length) {
+      feed.disabled = true;
+      done.disabled = false;
+      feed.innerHTML = DM.icon("check") + "训练完成！";
+    }
+  });
+  show(0);
+  done.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("ai", 1, 3);
+    done.innerHTML = DM.icon("check") + "太棒了，第 2 关通关！";
+    done.disabled = true;
+    say.textContent = "喂的图片越多，AI 的把握度越高——这就是机器学习！";
+    say.style.color = "var(--green)";
+  });
+})();
+</script>
+</body>
+</html>

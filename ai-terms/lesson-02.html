@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大语言模型与提示词 · AI 术语解码 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="brain"></span>AI 术语解码</a>
+    <span class="sep">/</span>
+    <span>第 2 课 · 大语言模型与提示词</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="brain"></span>进阶 · 第 2 课</span>
+    <h2>大语言模型与提示词</h2>
+    <p style="color:var(--muted)">ChatGPT、文心一言、通义千问……它们都是 LLM。这一课讲清它的工作原理和 Prompt 技巧。</p>
+  </section>
+
+  <section class="panel scene-panel scene-center">
+    <svg class="scene-svg" viewBox="0 0 640 300" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="文本被切成 token 送入模型，逐个预测下一个词">
+      <text x="320" y="30" text-anchor="middle" font-size="17" font-weight="800" fill="#3A5FBF" stroke="none">LLM 的核心任务：预测下一个 Token</text>
+      <!-- 输入句子的 token 方块 -->
+      <g font-family="monospace" font-weight="800">
+        <rect x="70"  y="70" width="88" height="44" rx="10" fill="#EAF4FD" stroke="#3A5FBF"/><text x="114" y="98" text-anchor="middle" font-size="17" fill="#3A5FBF" stroke="none">南京的</text>
+        <rect x="180" y="70" width="88" height="44" rx="10" fill="#EAF4FD" stroke="#3A5FBF"/><text x="224" y="98" text-anchor="middle" font-size="17" fill="#3A5FBF" stroke="none">市花</text>
+        <rect x="290" y="70" width="88" height="44" rx="10" fill="#EAF4FD" stroke="#3A5FBF"/><text x="334" y="98" text-anchor="middle" font-size="17" fill="#3A5FBF" stroke="none">是</text>
+      </g>
+      <path d="M390 92h60" stroke="#3A5FBF"/>
+      <path d="M442 84l12 8-12 8" stroke="#3A5FBF"/>
+      <!-- 模型块 -->
+      <rect x="466" y="52" width="140" height="80" rx="14" fill="#EAF4FD"/>
+      <text x="536" y="86" text-anchor="middle" font-size="16" font-weight="800" fill="#1A3A5C" stroke="none">大语言模型</text>
+      <text x="536" y="110" text-anchor="middle" font-size="13" fill="#5D7FA3" stroke="none">LLM</text>
+      <!-- 概率输出 -->
+      <g font-size="14" font-weight="700">
+        <rect x="120" y="170" width="360" height="26" rx="13" fill="#EAF4FD" stroke="#3A5FBF"/><rect x="120" y="170" width="313" height="26" rx="13" fill="#3A5FBF" opacity=".85"/><text x="132" y="189" fill="#fff" stroke="none">梅花  87%</text>
+        <rect x="120" y="208" width="360" height="26" rx="13" fill="#EAF4FD" stroke="#3A5FBF"/><rect x="120" y="208" width="40" height="26" rx="13" fill="#3A5FBF" opacity=".55"/><text x="170" y="227" fill="#5D7FA3" stroke="none">桂花  5%</text>
+        <rect x="120" y="246" width="360" height="26" rx="13" fill="#EAF4FD" stroke="#3A5FBF"/><rect x="120" y="246" width="26" height="26" rx="13" fill="#3A5FBF" opacity=".35"/><text x="156" y="265" fill="#5D7FA3" stroke="none">菊花  3%</text>
+      </g>
+      <text x="530" y="215" text-anchor="middle" font-size="14" fill="#5D7FA3" stroke="none">逐词生成</text>
+      <text x="530" y="238" text-anchor="middle" font-size="14" fill="#5D7FA3" stroke="none">直到整句完成</text>
+    </svg>
+  </section>
+
+  <section class="panel learn-text">
+    <p><b>大语言模型（LLM, Large Language Model）</b>：在海量文本上训练的深度神经网络。它不"查资料"回答问题，而是在做一件事——<b>预测下一个 Token（词块）</b>，一个接一个，直到句子完成。</p>
+    <p><b>Token</b> 是模型处理文本的最小单位，可能是一个字、一个词或一段词块。<b>上下文窗口（Context Window）</b>指模型一次能"看见"的最大 Token 数，超出就会"忘记"。</p>
+    <p><b>提示词（Prompt）</b>是你发给模型的指令。提示词的质量直接决定回答质量——这已经是一门学问，叫<b>提示词工程（Prompt Engineering）</b>。</p>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>动手实验 · 当一次 LLM</span>
+    <h2 style="font-size:22px">你来预测下一个词（<span id="pn">1</span> / 3）</h2>
+    <p style="color:var(--muted);margin:6px 0 0">假设你只见过下面的语料，选下一个最可能的词：</p>
+    <p class="code-box" id="corpus" style="margin:8px 0"></p>
+    <div class="code-box" style="background:#EAF4FD;color:#1A3A5C" id="sentence">—</div>
+    <div id="pn-opts" style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0"></div>
+    <p id="pn-say" style="min-height:56px;color:var(--muted)">模型会算出每个候选词的概率，选最合理的那个——这就是"生成"。</p>
+    <div style="text-align:center;margin-top:6px">
+      <button class="btn blue" type="button" id="pn-done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">3 轮预测全部答对，通关按钮就会亮起来</p>
+  </section>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="spark"></span>提示词对比 · 点卡片看差别</span>
+    <div class="term-grid" id="prompt-cards">
+      <div class="term-card flip" data-i="0"><div class="tc-front"><h3>弱提示<span class="en">"写首诗"</span></h3><p>点看模型的反应 →</p></div><div class="tc-back"><h3>结果不可控</h3><p>模型只能瞎猜：主题、长度、风格全都靠默认，得到一首泛泛的诗。</p></div></div>
+      <div class="term-card flip" data-i="1"><div class="tc-front"><h3>好提示<span class="en">角色 + 任务 + 要求</span></h3><p>点看模型的反应 →</p></div><div class="tc-back"><h3>结果精准</h3><p>"你是小学语文老师。写一首 4 句、关于南京梅花的七言诗，押韵，给 10 岁孩子读。"——每一条约束都在缩小"下一个词"的范围。</p></div></div>
+    </div>
+    <p style="color:var(--muted);font-size:15px">公式：<b>好提示 = 角色（你是谁）+ 任务（做什么）+ 要求（格式/长度/受众）+ 示例（照这个样子）</b>。</p>
+  </section>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-01.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一课 · 神经网络</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-03.html" onclick="DM.sfx('click')">下一课 · 数据、幻觉与 AI 安全<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "terms" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  /* 下一词预测 */
+  var ROUNDS = [
+    {
+      corpus: "语料：南京市花是梅花。桂花是杭州的象征。菊花在秋天开放。",
+      prefix: "南京的市花是",
+      opts: ["梅花", "菊花", "桂花"], a: 0,
+      why: "语料里\"南京市花\"后面紧跟\"梅花\"，概率最高——模型就是靠统计规律选词的。"
+    },
+    {
+      corpus: "语料：床前明月光，疑是地上霜。举头望明月，低头思故乡。",
+      prefix: "床前明月光，疑是地上",
+      opts: ["霜", "光", "乡"], a: 0,
+      why: "见过的文本里这个位置几乎总是\"霜\"，模型对高频搭配非常有把握。"
+    },
+    {
+      corpus: "语料：今天天气真好，我们去公园玩。天气不好就宅在家看书。",
+      prefix: "今天天气真好，我们去",
+      opts: ["公园", "家", "睡觉"], a: 0,
+      why: "上下文\"天气真好\"让\"公园\"的概率远超其他词——LLM 每一步都在结合上下文重新计算。"
+    }
+  ];
+  var idx = 0, right = 0;
+  var corpusEl = document.getElementById("corpus");
+  var sentEl = document.getElementById("sentence");
+  var optsEl = document.getElementById("pn-opts");
+  var sayEl = document.getElementById("pn-say");
+  var pnEl = document.getElementById("pn");
+  var done = document.getElementById("pn-done");
+
+  function render() {
+    var r = ROUNDS[idx];
+    corpusEl.textContent = r.corpus;
+    sentEl.textContent = "待补全：" + r.prefix + " ＿";
+    pnEl.textContent = idx + 1;
+    optsEl.innerHTML = "";
+    r.opts.forEach(function (o, i) {
+      var b = document.createElement("button");
+      b.className = "btn sm" + (i === 0 ? "" : " ghost");
+      b.type = "button";
+      b.textContent = o;
+      b.addEventListener("click", function () {
+        if (i === r.a) {
+          right++;
+          DM.sfx("right");
+          b.classList.add("blue");
+          sayEl.textContent = r.why;
+          sayEl.style.color = "var(--green)";
+          idx++;
+          if (idx >= ROUNDS.length) {
+            done.disabled = false;
+            optsEl.innerHTML = "";
+          } else {
+            setTimeout(render, 900);
+          }
+        } else {
+          DM.sfx("retry");
+          sayEl.textContent = "模型没选它，因为这个搭配在语料里概率低。再试试概率最大的那个词。";
+          sayEl.style.color = "var(--accent-2)";
+          b.disabled = true;
+        }
+      });
+      optsEl.appendChild(b);
+    });
+  }
+  render();
+
+  done.addEventListener("click", function (ev) {
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("terms", 1, 3);
+    done.innerHTML = DM.icon("check") + "太棒了，第 2 课通关！";
+    done.disabled = true;
+  });
+
+  /* 提示词翻转卡 */
+  document.querySelectorAll("#prompt-cards .term-card.flip").forEach(function (card) {
+    card.addEventListener("click", function () {
+      card.classList.toggle("on");
+      DM.sfx("toggle");
+    });
+  });
+})();
+</script>
+</body>
+</html>

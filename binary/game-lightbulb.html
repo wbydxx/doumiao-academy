@@ -1,0 +1,152 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游戏 · 花灯密码 · 二进制的秘密 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="lantern"></span>二进制的秘密</a>
+    <span class="sep">/</span>
+    <span>游戏 · 花灯密码</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="gamepad"></span>花灯小镇 · 游戏</span>
+    <h2>花灯密码</h2>
+    <p style="color:var(--muted)">破解花灯的灯语，赢取雨花石！</p>
+  </section>
+
+  <section class="panel learn-text">
+    <p>8 盏花灯从左到右代表 <b>128、64、32、16、8、4、2、1</b>。</p>
+    <p>把亮着的花灯分值<b>加起来</b>，正好等于目标数，就破解成功！</p>
+    <p>一次拼对拿 3 颗雨花石，第二次拿 2 颗，之后也有 1 颗哦。</p>
+  </section>
+
+  <section class="game-stage">
+    <div class="game-top">
+      <span class="gt-label"><span data-ic="bulb"></span>目标数字</span>
+      <span class="big-num" id="target">?</span>
+      <span class="gt-label"><span data-ic="loop"></span><span id="round">第 1 回合</span></span>
+    </div>
+    <div class="lantern-row" id="row">
+      <button class="lantern" type="button" data-i="0" aria-label="分值 128 的花灯"><span data-ic="lantern"></span><span class="lv">128</span></button>
+      <button class="lantern" type="button" data-i="1" aria-label="分值 64 的花灯"><span data-ic="lantern"></span><span class="lv">64</span></button>
+      <button class="lantern" type="button" data-i="2" aria-label="分值 32 的花灯"><span data-ic="lantern"></span><span class="lv">32</span></button>
+      <button class="lantern" type="button" data-i="3" aria-label="分值 16 的花灯"><span data-ic="lantern"></span><span class="lv">16</span></button>
+      <button class="lantern" type="button" data-i="4" aria-label="分值 8 的花灯"><span data-ic="lantern"></span><span class="lv">8</span></button>
+      <button class="lantern" type="button" data-i="5" aria-label="分值 4 的花灯"><span data-ic="lantern"></span><span class="lv">4</span></button>
+      <button class="lantern" type="button" data-i="6" aria-label="分值 2 的花灯"><span data-ic="lantern"></span><span class="lv">2</span></button>
+      <button class="lantern" type="button" data-i="7" aria-label="分值 1 的花灯"><span data-ic="lantern"></span><span class="lv">1</span></button>
+    </div>
+    <p class="binary-read" style="font-size:22px;font-weight:800;color:var(--muted);margin:6px 0" id="bin">0 0 0 0 0 0 0 0 · 当前 0</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+      <button class="btn blue" type="button" id="check"><span data-ic="check"></span>对答案</button>
+      <button class="btn ghost sm" type="button" id="reset"><span data-ic="reset"></span>重置</button>
+      <button class="btn ghost sm read-btn" type="button" onclick="DM.sfx('click');DM.speakPage(this)"><span data-ic="speaker"></span>朗读规则</button>
+    </div>
+    <p class="hint" style="text-align:center">点亮或熄灭花灯，把分值加成目标数，再点「对答案」</p>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="droplet"></span>
+    <div>
+      <div class="dd-name">波波</div>
+      <p id="tip">把亮着的花灯加起来，凑出目标数，然后点「对答案」！</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-03.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一关 · 字符变变变</a>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="quiz.html" onclick="DM.sfx('click')">下一关 · 挑战测验<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "binary" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  var W = [128, 64, 32, 16, 8, 4, 2, 1];
+  var on = W.map(function () { return false; });
+  var btns = Array.prototype.slice.call(document.querySelectorAll("#row .lantern"));
+  var targetEl = document.getElementById("target");
+  var roundEl = document.getElementById("round");
+  var binEl = document.getElementById("bin");
+  var tip = document.getElementById("tip");
+  var target = 0, round = 1, tries = 0;
+
+  function rnd() { return 1 + Math.floor(Math.random() * 255); }
+  function calc() {
+    var s = 0;
+    on.forEach(function (o, i) { if (o) s += W[i]; });
+    return s;
+  }
+  function render() {
+    btns.forEach(function (b, i) { b.classList.toggle("on", on[i]); });
+    binEl.textContent = on.map(function (o) { return o ? "1" : "0"; }).join(" ") + " · 当前 " + calc();
+  }
+  function newRound() {
+    target = rnd();
+    targetEl.textContent = target;
+    roundEl.textContent = "第 " + round + " 回合";
+    on = W.map(function () { return false; });
+    render();
+  }
+
+  btns.forEach(function (b, i) {
+    b.addEventListener("click", function () {
+      on[i] = !on[i];
+      DM.sfx("toggle");
+      render();
+    });
+  });
+
+  document.getElementById("reset").addEventListener("click", function () {
+    on = W.map(function () { return false; });
+    DM.sfx("click");
+    render();
+  });
+
+  document.getElementById("check").addEventListener("click", function (ev) {
+    tries++;
+    if (calc() === target) {
+      var stones = tries === 1 ? 3 : tries === 2 ? 2 : 1;
+      DM.sfx("wow");
+      DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+      DM.store.completeGame("binary", stones);
+      tip.textContent = "答对啦！本轮 " + stones + " 颗雨花石到手！新目标来咯，继续加油～";
+      tip.style.color = "";
+      round++;
+      tries = 0;
+      newRound();
+    } else {
+      DM.sfx("retry");
+      tip.textContent = "再点亮或熄灭几盏花灯试试，波波相信你！";
+      tip.style.color = "var(--accent-2)";
+    }
+  });
+
+  newRound();
+})();
+</script>
+</body>
+</html>

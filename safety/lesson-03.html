@@ -1,0 +1,201 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网上交友要小心 · 城墙小卫士 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+<style>
+  [data-icon] { display: inline-flex; align-items: center; }
+  /* 聊天气泡 */
+  .chat-msg { border: 2px solid var(--rule); background: var(--bg); border-radius: 16px; padding: 12px 16px; margin: 12px 0; text-align: left; transition: border-color .2s, background .2s; }
+  .chat-msg .who { font-size: 13.5px; font-weight: 800; color: var(--muted); letter-spacing: .05em; display: flex; align-items: center; gap: 6px; }
+  .chat-msg .who svg { width: 16px; height: 16px; }
+  .chat-msg .say { font-size: 18px; margin: 4px 0 10px; }
+  .chat-msg .act { display: flex; gap: 10px; flex-wrap: wrap; }
+  .chat-msg .why { margin-top: 10px; font-size: 16px; background: rgba(46,204,154,.12); border-radius: 10px; padding: 8px 12px; display: none; }
+  .chat-msg .remind { margin-top: 8px; font-size: 15.5px; color: #c96f0f; display: none; }
+  .chat-msg.ok { border-color: var(--green); background: rgba(46,204,154,.10); }
+  .chat-msg.ok .why { display: block; }
+  .chat-msg.ok .act { display: none; }
+  .chat-msg.warn { border-color: var(--accent-2); background: rgba(255,159,67,.12); }
+  .chat-msg.warn .remind { display: block; }
+  .chat-msg.enter { animation: chatIn .4s ease; }
+  @keyframes chatIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .done-msg { margin-top: 12px; padding: 12px 16px; border: 2px solid var(--green); border-radius: var(--radius-sm); background: rgba(46,204,154,.12); font-size: 17px; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-icon="home"></span>首页</a><span class="sep">/</span>
+    <span>城墙小卫士</span><span class="sep">/</span><b>第 3 关 · 网上交友要小心</b>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-icon="wall"></span>城墙小卫士 · 第 3 关</span>
+    <h2>网上交友要小心</h2>
+    <p style="color:var(--muted)">屏幕那头的人，你看不到真实样子</p>
+  </section>
+
+  <section class="panel scene-panel scene-center" aria-hidden="true">
+    <svg class="scene-svg" viewBox="0 0 640 300" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- 地面 -->
+      <path d="M40 250h560"/>
+      <!-- 左边：真实的小伙伴 -->
+      <g>
+        <circle cx="140" cy="182" r="20" fill="#fff"/>
+        <circle cx="134" cy="180" r="1.6" fill="#1A3A5C" stroke="none"/>
+        <circle cx="146" cy="180" r="1.6" fill="#1A3A5C" stroke="none"/>
+        <path d="M133 188q7 6 14 0"/>
+        <path d="M118 250c2-26 42-26 44 0"/>
+        <path d="M158 214l16-12"/>
+        <path d="M122 214l-13 9"/>
+        <path d="M140 158c-4-5-3-10 1-12" stroke="#FF6B9D"/>
+      </g>
+      <!-- 小伙伴的气泡 -->
+      <g fill="#fff">
+        <rect x="88" y="94" width="104" height="44" rx="12"/>
+        <path d="M132 138l8 14 10-14"/>
+        <text x="140" y="122" text-anchor="middle" font-size="15" font-weight="700" fill="#1A3A5C" stroke="none" font-family="inherit">你好呀！</text>
+      </g>
+      <!-- 中间：屏幕（一道墙） -->
+      <g>
+        <rect x="252" y="76" width="136" height="150" rx="16" fill="#EAF4FD"/>
+        <circle cx="320" cy="212" r="4"/>
+        <circle cx="320" cy="132" r="16" fill="#fff"/>
+        <path d="M296 178c4-16 44-16 48 0"/>
+        <text x="320" y="112" text-anchor="middle" font-size="22" font-weight="800" fill="#FF9F43" stroke="none" font-family="inherit">？</text>
+        <circle cx="320" cy="76" r="13" fill="#fff"/>
+        <rect x="314" y="74" width="12" height="9" rx="2" fill="#EAF4FD" stroke-width="2"/>
+        <path d="M317 74v-3a3 3 0 0 1 6 0v3" stroke-width="2"/>
+      </g>
+      <!-- 右边：看不清的人 -->
+      <g>
+        <circle cx="500" cy="182" r="20"/>
+        <text x="500" y="190" text-anchor="middle" font-size="18" font-weight="800" fill="#5D7FA3" stroke="none" font-family="inherit">？</text>
+        <path d="M476 250c2-24 46-24 48 0"/>
+      </g>
+      <!-- 那个人的气泡 -->
+      <g fill="#fff">
+        <rect x="444" y="92" width="118" height="40" rx="12"/>
+        <path d="M524 132l6 15 10-15"/>
+        <text x="503" y="117" text-anchor="middle" font-size="14" font-weight="700" fill="#1A3A5C" stroke="none" font-family="inherit">周末见面吧？</text>
+      </g>
+    </svg>
+  </section>
+
+  <section class="panel">
+    <div class="learn-text">
+      <p>屏幕那头的人，你看不到<b>真实的样子</b>。他说自己 10 岁、住在哪条路，不一定是真的。</p>
+      <p>刚认识就问住址、想约你单独见面的，都要<b>多留一个心眼</b>。这不是不礼貌，是保护自己。</p>
+      <p>拿不准的时候，把聊天记录给爸妈看看——遇事先告诉<b>爸妈和老师</b>，永远是最棒的一步。</p>
+    </div>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-icon="spark"></span>试一试 · 这些话安全吗？</span>
+    <p style="margin-top:6px">一位新网友发来消息，一句一句读，你觉得安全还是要点小心？</p>
+    <div id="chat-list"></div>
+    <div class="done-msg" id="chat-done" style="display:none">
+      三条消息都分辨出来了！网友的话要有分辨心，拿不准就先问爸妈——你已经很会守城门了。
+    </div>
+    <div class="hint">小提示：也可以想想，如果这话当面说给你听，你会怎么回答？</div>
+  </section>
+
+  <section class="doudou-bubble">
+    <span class="dd-ic" data-icon="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆说</div>
+      <p>屏幕那头的人，你看不到真实样子。越是很快装熟的人，越要多留一个心眼。</p>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="btn ghost sm" href="lesson-02.html"><span data-icon="arrowLeft"></span>上一关</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" data-speak><span data-icon="speaker"></span>朗读这一页</button>
+    <a class="btn blue sm" href="lesson-04.html">下一关<span data-icon="arrowRight"></span></a>
+  </nav>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+(function () {
+  var DM = window.DM;
+  DM.boot({ root: "..", module: "safety" });
+
+  document.querySelectorAll("[data-icon]").forEach(function (el) {
+    el.innerHTML = DM.icon(el.getAttribute("data-icon"));
+  });
+  document.querySelectorAll("[data-speak]").forEach(function (b) {
+    b.addEventListener("click", function () { DM.speakPage(b); });
+  });
+
+  /* 聊天气泡逐条判断 */
+  var MSGS = [
+    { say: "我叫小明，10 岁，住在梧桐路 12 号，我们做朋友吧！",
+      why: "刚认识的网友一口气报这么多个人信息，很可能也是编的——先别急着全信。" },
+    { say: "你家住哪个小区呀？我去找你玩。",
+      why: "住址是小秘密，说出去可能带来危险，上一关的口诀还记得吗？" },
+    { say: "周末我们单独见面玩吧，就我们俩。",
+      why: "和网友见面一定要有爸妈陪着，单独赴约绝对不行。" }
+  ];
+  var list = document.getElementById("chat-list");
+  var done = document.getElementById("chat-done");
+  var step = 0, finished = false;
+
+  function appendMsg(k) {
+    var d = MSGS[k];
+    var div = document.createElement("div");
+    div.className = "chat-msg enter";
+    div.innerHTML =
+      '<div class="who">' + DM.icon("eye") + "网友的消息 " + (k + 1) + "</div>" +
+      '<div class="say">' + d.say + "</div>" +
+      '<div class="act">' +
+      '<button class="btn ghost sm" data-pick="safe">这样安全</button>' +
+      '<button class="btn ghost sm" data-pick="care">要小心</button>' +
+      "</div>" +
+      '<div class="remind">再想想看：陌生人这样问，真的放心吗？</div>' +
+      '<div class="why"><b>豆豆说：</b>' + d.why + "</div>";
+    list.appendChild(div);
+    div.querySelectorAll("[data-pick]").forEach(function (btn) {
+      btn.addEventListener("click", function (ev) { pick(div, btn, ev); });
+    });
+    div.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+  function pick(div, btn, ev) {
+    if (finished || div.classList.contains("ok")) return;
+    if (btn.dataset.pick === "care") {
+      div.classList.remove("warn");
+      div.classList.add("ok", "pop-ok");
+      DM.sfx("right");
+      DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+      step++;
+      if (step < MSGS.length) {
+        setTimeout(function () { appendMsg(step); }, 350);
+      } else {
+        finished = true;
+        DM.sfx("wow");
+        DM.store.completeLesson("safety", 2, 3);
+        done.style.display = "block";
+      }
+    } else {
+      div.classList.add("warn", "shake");
+      DM.sfx("retry");
+      setTimeout(function () { div.classList.remove("shake"); }, 450);
+      setTimeout(function () { div.classList.remove("warn"); }, 900);
+    }
+  }
+  appendMsg(0);
+})();
+</script>
+</body>
+</html>

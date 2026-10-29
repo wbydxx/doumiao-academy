@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 也会犯错 · AI 小课堂 — 豆苗学堂</title>
+<link rel="stylesheet" href="../assets/css/tokens.css?v=6">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap lesson-main">
+  <nav class="crumbs" aria-label="面包屑">
+    <a href="../index.html"><span data-ic="home"></span>首页</a>
+    <span class="sep">/</span>
+    <a href="lesson-01.html"><span data-ic="robot"></span>AI 小课堂</a>
+    <span class="sep">/</span>
+    <span>第 3 关 · AI 也会犯错</span>
+  </nav>
+
+  <section class="panel">
+    <span class="panel-tag"><span data-ic="robot"></span>第 3 关</span>
+    <h2>AI 也会犯错</h2>
+    <p style="color:var(--muted)">AI 不是神仙，它猜错了的时候，需要你来检查纠正。</p>
+  </section>
+
+  <section class="panel learn-text">
+    <p>红山动物园的"神秘箱子"来客人啦！AI 负责猜箱子里的动物。</p>
+    <p>可是 AI <b>有时候会猜错</b>——它把狼认成狗，把驴认成马，都是常有的事。</p>
+    <p>所以每次 AI 猜完，都要由<b>你</b>来检查：猜对了要点赞，猜错了要帮它纠正！</p>
+  </section>
+
+  <section class="panel try-panel">
+    <span class="panel-tag"><span data-ic="bulb"></span>动手试一试</span>
+    <h2 style="font-size:22px">AI 检查员 · 第 <span id="round">1</span> / 6 次</h2>
+    <p style="text-align:center;color:var(--muted);margin:6px 0 0">箱子里跑出来的动物是——</p>
+    <div class="animal-card" id="pic"></div>
+    <div class="doudou-bubble" style="margin:10px auto 6px">
+      <span class="dd-ic" data-ic="robot"></span>
+      <div>
+        <div class="dd-name">AI 检查员</div>
+        <p id="say">我觉得，它是<b id="guess">—</b>！</p>
+      </div>
+    </div>
+    <div id="judge" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+      <button class="btn blue" type="button" id="ok"><span data-ic="check"></span>AI 猜对啦</button>
+      <button class="btn ghost" type="button" id="bad"><span data-ic="alert"></span>AI 猜错啦</button>
+    </div>
+    <div id="fix" style="display:none">
+      <p style="text-align:center;font-weight:800;margin-top:10px">那它到底是什么？点出正确答案帮 AI 纠正：</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:6px" id="fix-btns"></div>
+    </div>
+    <p style="text-align:center;min-height:32px;margin-top:10px" id="tip">看看动物，再看看 AI 的答案，你觉得它猜得对吗？</p>
+    <div style="text-align:center;margin-top:8px">
+      <button class="btn blue" type="button" id="done" disabled><span data-ic="check"></span>我学会了</button>
+    </div>
+    <p class="hint" style="text-align:center">完成全部 6 次检查，通关按钮就会亮起来</p>
+  </section>
+
+  <div class="doudou-bubble">
+    <span class="dd-ic" data-ic="doudou"></span>
+    <div>
+      <div class="dd-name">豆豆</div>
+      <p>记住哦：AI 猜得快，但<b>最后的检查要靠人</b>。会用 AI 的小朋友，还要会帮 AI 挑错！</p>
+    </div>
+  </div>
+
+  <div class="pager">
+    <a class="btn ghost sm" href="lesson-02.html" onclick="DM.sfx('click')"><span data-ic="arrowLeft"></span>上一关 · 机器学习</a>
+    <span class="grow"></span>
+    <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="lesson-04.html" onclick="DM.sfx('click')">下一关 · AI 能做与不能做<span data-ic="arrowRight"></span></a>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/js/storage.js?v=4"></script><script src="../assets/js/mock-data.js?v=4"></script>
+<script src="../assets/js/pinyin-data.js?v=4"></script><script src="../assets/data/catalog.js?v=1"></script><script src="../assets/js/common.js?v=10"></script>
+<script>
+DM.boot({ root: "..", module: "ai" });
+(function () {
+  var DM = window.DM;
+
+  document.querySelectorAll("[data-ic]").forEach(function (el) {
+    el.insertAdjacentHTML("afterbegin", DM.icon(el.getAttribute("data-ic")));
+  });
+
+  // 三种动物的线性 SVG 头像
+  var ANIMALS = {
+    cat:    { name: "小猫", svg: catSvg },
+    dog:    { name: "小狗", svg: dogSvg },
+    rabbit: { name: "小兔", svg: rabbitSvg }
+  };
+  function catSvg() {
+    return '<svg viewBox="0 0 120 120" fill="none" stroke="#1A3A5C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M34 30 28 10l18 8M86 30l6-20-18 8"/><circle cx="60" cy="62" r="34" fill="#FFF6EA"/><circle cx="48" cy="56" r="3.5" fill="#1A3A5C" stroke="none"/><circle cx="72" cy="56" r="3.5" fill="#1A3A5C" stroke="none"/><path d="M54 68q6 5 12 0"/><path d="M26 60H8M26 68H10M94 60h18M94 68h16"/></svg>';
+  }
+  function dogSvg() {
+    return '<svg viewBox="0 0 120 120" fill="none" stroke="#1A3A5C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M32 34C24 26 22 14 30 10c6-3 12 2 14 10M88 34c8-8 10-20 2-24-6-3-12 2-14 10"/><circle cx="60" cy="60" r="32" fill="#EAF4FD"/><circle cx="49" cy="54" r="3.5" fill="#1A3A5C" stroke="none"/><circle cx="71" cy="54" r="3.5" fill="#1A3A5C" stroke="none"/><ellipse cx="60" cy="66" rx="5" ry="4" fill="#1A3A5C" stroke="none"/><path d="M52 76q8 6 16 0"/><path d="M60 76v6"/></svg>';
+  }
+  function rabbitSvg() {
+    return '<svg viewBox="0 0 120 120" fill="none" stroke="#1A3A5C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="46" cy="26" rx="9" ry="20" fill="#FDF0F5"/><ellipse cx="74" cy="26" rx="9" ry="20" fill="#FDF0F5"/><circle cx="60" cy="68" r="30" fill="#FDF0F5"/><circle cx="50" cy="62" r="3.5" fill="#1A3A5C" stroke="none"/><circle cx="70" cy="62" r="3.5" fill="#1A3A5C" stroke="none"/><path d="M56 74l4 4 4-4"/><path d="M50 76q10 8 20 0"/></svg>';
+  }
+
+  // 6 次检查：ai === real 表示 AI 猜对
+  var ROUNDS = [
+    { real: "cat",    ai: "cat" },
+    { real: "dog",    ai: "dog" },
+    { real: "rabbit", ai: "cat" },
+    { real: "dog",    ai: "rabbit" },
+    { real: "rabbit", ai: "rabbit" },
+    { real: "cat",    ai: "dog" }
+  ];
+  var idx = 0, finished = false;
+  var pic = document.getElementById("pic");
+  var guess = document.getElementById("guess");
+  var say = document.getElementById("say");
+  var tip = document.getElementById("tip");
+  var judge = document.getElementById("judge");
+  var fix = document.getElementById("fix");
+  var fixBtns = document.getElementById("fix-btns");
+  var roundEl = document.getElementById("round");
+  var done = document.getElementById("done");
+
+  function render() {
+    var r = ROUNDS[idx];
+    pic.innerHTML = ANIMALS[r.real].svg();
+    guess.textContent = ANIMALS[r.ai].name;
+    roundEl.textContent = idx + 1;
+    say.innerHTML = '我觉得，它是<b>' + ANIMALS[r.ai].name + "</b>！";
+    judge.style.display = "flex";
+    fix.style.display = "none";
+    tip.textContent = "看看动物，再看看 AI 的答案，你觉得它猜得对吗？";
+    tip.style.color = "";
+  }
+  function advance() {
+    idx++;
+    if (idx >= ROUNDS.length) {
+      finished = true;
+      judge.style.display = "none";
+      tip.textContent = "6 次检查全部完成！你就是最棒的 AI 小监工～";
+      tip.style.color = "var(--green)";
+      done.disabled = false;
+      return;
+    }
+    render();
+  }
+
+  document.getElementById("ok").addEventListener("click", function () {
+    var r = ROUNDS[idx];
+    if (r.ai === r.real) {
+      DM.sfx("right");
+      tip.textContent = "没错，AI 猜对了！看来它这次学得很扎实。";
+      tip.style.color = "var(--green)";
+      advance();
+    } else {
+      DM.sfx("retry");
+      tip.textContent = "再仔细看看，AI 这次真的猜对了吗？";
+      tip.style.color = "var(--accent-2)";
+    }
+  });
+  document.getElementById("bad").addEventListener("click", function () {
+    var r = ROUNDS[idx];
+    if (r.ai !== r.real) {
+      DM.sfx("right");
+      tip.textContent = "被你发现了！AI 确实猜错了，来帮它纠正吧。";
+      tip.style.color = "var(--green)";
+      judge.style.display = "none";
+      fix.style.display = "block";
+      fixBtns.innerHTML = "";
+      Object.keys(ANIMALS).forEach(function (k) {
+        var b = document.createElement("button");
+        b.className = "btn sm";
+        b.type = "button";
+        b.innerHTML = ANIMALS[k].svg().replace('viewBox', 'width="52" height="52" viewBox') + ANIMALS[k].name;
+        b.addEventListener("click", function () {
+          if (k === r.real) {
+            DM.sfx("wow");
+            tip.textContent = "纠正成功！AI 记住了：这是" + ANIMALS[r.real].name + "。人 + AI 组合最棒！";
+            tip.style.color = "var(--green)";
+            advance();
+          } else {
+            DM.sfx("retry");
+            tip.textContent = "不对哦，再看看它的耳朵和脸型～";
+            tip.style.color = "var(--accent-2)";
+          }
+        });
+        fixBtns.appendChild(b);
+      });
+    } else {
+      DM.sfx("retry");
+      tip.textContent = "AI 这回明明猜对了呀，再核对一下～";
+      tip.style.color = "var(--accent-2)";
+    }
+  });
+
+  done.addEventListener("click", function (ev) {
+    if (finished) return;
+    DM.sfx("wow");
+    DM.petals(ev.clientX || window.innerWidth / 2, ev.clientY || 200);
+    DM.store.completeLesson("ai", 2, 3);
+    done.innerHTML = DM.icon("check") + "太棒了，第 3 关通关！";
+    done.disabled = true;
+  });
+  render();
+})();
+</script>
+</body>
+</html>
