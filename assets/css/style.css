@@ -1101,11 +1101,11 @@ body.deck-mode .slide {
   padding: clamp(10px, 2.2vh, 26px) clamp(16px, 4vw, 52px) clamp(30px, 5vh, 44px);
   overflow-y: auto; overflow-x: hidden;
   opacity: 0; visibility: hidden; pointer-events: none;
-  transform: translateY(11%) scale(.975);
+  transform: translateX(11%) scale(.975);
   transition: transform .62s cubic-bezier(.55,0,.78,.55), opacity .34s ease .2s, visibility 0s linear .6s;
   will-change: transform, opacity;
 }
-body.deck-mode .slide.is-above { transform: translateY(-11%) scale(.975); }
+body.deck-mode .slide.is-above { transform: translateX(-11%) scale(.975); }
 body.deck-mode .slide.is-active {
   opacity: 1; visibility: visible; pointer-events: auto;
   transform: none; z-index: 2;
@@ -1137,10 +1137,10 @@ body.deck-mode .deck-hint {
 }
 body.deck-mode .deck-hint:hover { color: #A5F3FC; }
 .deck-hint-arrow {
-  width: 14px; height: 14px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  width: 14px; height: 14px; border-top: 2px solid currentColor; border-right: 2px solid currentColor;
   transform: rotate(45deg); opacity: .8;
 }
-@keyframes hintFloat { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(6px) } }
+@keyframes hintFloat { 0%, 100% { transform: translateX(0) } 50% { transform: translateX(6px) } }
 
 /* —— 星图页 —— */
 body.deck-mode .deck-figwrap {
@@ -1248,7 +1248,7 @@ body.deck-mode .deck-counter {
 }
 body.deck-mode .deck-counter b { color: #7DEBFA; font-weight: 700; }
 body.deck-mode .deck-nav {
-  display: flex; flex-direction: column; gap: 10px;
+  display: flex; flex-direction: row; gap: 10px;
   position: fixed; right: clamp(14px, 2.4vw, 28px); bottom: clamp(12px, 2.4vh, 22px);
   z-index: 40;
 }

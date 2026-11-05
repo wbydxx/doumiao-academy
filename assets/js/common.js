@@ -1658,10 +1658,10 @@
     go(m ? Math.min(n, +m[1]) - 1 : 0, { silent: true });
     window.__deckGo = go;
 
-    /* 滚轮翻页：页内可滚动区域滚动到底/顶后才翻页 */
+    /* 滚轮/触控板横向滑动翻页：取主方向增量；页内可滚动区域滚动到底/顶后才翻页 */
     var wAcc = 0, wLock = 0, wTimer = 0;
     deck.addEventListener("wheel", function (e) {
-      if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      var d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY; /* 横向优先 */
       var t = e.target;
       while (t && t !== deck) {
         if (t.nodeType === 1 && t.scrollHeight > t.clientHeight + 2) {
@@ -1669,7 +1669,7 @@
           if (oy === "auto" || oy === "scroll") {
             var canDown = t.scrollTop + t.clientHeight < t.scrollHeight - 2;
             var canUp = t.scrollTop > 2;
-            if (e.deltaY > 0 ? canDown : canUp) return; /* 让页内滚动先吃掉 */
+            if (d > 0 ? canDown : canUp) return; /* 让页内滚动先吃掉 */
           }
         }
         t = t.parentNode;
@@ -1678,7 +1678,7 @@
       var now = Date.now();
       if (now < wLock) return;
       clearTimeout(wTimer);
-      wAcc += e.deltaY;
+      wAcc += d;
       wTimer = setTimeout(function () { wAcc = 0; }, 220);
       if (Math.abs(wAcc) > 80) {
         go(cur + (wAcc > 0 ? 1 : -1));
@@ -1700,15 +1700,15 @@
       else if (k === "End") { e.preventDefault(); go(n - 1, { sfx: true }); }
     });
 
-    /* 触屏滑动翻页 */
+    /* 触屏左右滑动翻页 */
     var tY = 0, tX = 0, tOn = false;
     deck.addEventListener("touchstart", function (e) {
       tY = e.touches[0].clientY; tX = e.touches[0].clientX; tOn = true;
     }, { passive: true });
     deck.addEventListener("touchend", function (e) {
       if (!tOn) return; tOn = false;
-      var dy = tY - e.changedTouches[0].clientY, dx = tX - e.changedTouches[0].clientX;
-      if (Math.abs(dy) > 52 && Math.abs(dy) > Math.abs(dx) * 1.25) go(cur + (dy > 0 ? 1 : -1));
+      var dx = tX - e.changedTouches[0].clientX, dy = tY - e.changedTouches[0].clientY;
+      if (Math.abs(dx) > 52 && Math.abs(dx) > Math.abs(dy) * 1.25) go(cur + (dx > 0 ? 1 : -1));
     }, { passive: true });
   }
 

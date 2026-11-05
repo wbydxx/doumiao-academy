@@ -14,7 +14,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="assets/css/tokens.css?v=7">
-<link rel="stylesheet" href="assets/css/style.css?v=13">
+<link rel="stylesheet" href="assets/css/style.css?v=14">
 </head>
 <body>
 <canvas id="fx-canvas" class="fx-canvas" aria-hidden="true"></canvas>
@@ -35,8 +35,8 @@
         <a class="btn ghost" href="achievements/index.html" id="hero-trophy" data-sfx></a>
       </div>
     </div>
-    <button class="deck-hint" id="deck-hint" type="button" aria-label="翻到下一页">
-      <span>滚轮 · 方向键 · 滑动 翻页</span>
+    <button class="deck-hint" id="deck-hint" type="button" aria-label="切换到下一页">
+      <span>滚轮 · ← → 方向键 · 左右滑动 切换</span>
       <i class="deck-hint-arrow" aria-hidden="true"></i>
     </button>
   </section>
@@ -145,15 +145,15 @@
 <!-- 翻页控制件（JS 注入行为） -->
 <nav class="deck-dots" id="deck-dots" aria-label="页面导航"></nav>
 <div class="deck-nav">
-  <button class="deck-btn" id="deck-prev" type="button" aria-label="上一页"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14l6-6 6 6"/></svg></button>
-  <button class="deck-btn" id="deck-next" type="button" aria-label="下一页"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10l6 6 6-6"/></svg></button>
+  <button class="deck-btn" id="deck-prev" type="button" aria-label="上一页"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg></button>
+  <button class="deck-btn" id="deck-next" type="button" aria-label="下一页"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6l6 6-6 6"/></svg></button>
 </div>
 <div class="deck-counter" id="deck-counter" aria-hidden="true">01 / 06</div>
 
 <footer id="site-footer"></footer>
 
 <script src="assets/js/storage.js?v=5"></script><script src="assets/js/mock-data.js?v=5"></script>
-<script src="assets/js/pinyin-data.js?v=5"></script><script src="assets/data/catalog.js?v=2"></script><script src="assets/js/common.js?v=12"></script>
+<script src="assets/js/pinyin-data.js?v=5"></script><script src="assets/data/catalog.js?v=2"></script><script src="assets/js/common.js?v=13"></script>
 <script>
 (function () {
   var DM = window.DM;
