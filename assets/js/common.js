@@ -1424,3 +1424,157 @@
     MODULES: MODULES, LESSON_COUNT: LESSON_COUNT, LEVELS: LEVELS, MODULE_META: MODULE_META
   };
 })();
+
+/* ============================================================
+   v7「星际航道 NEBULA」交互特效层（纯增强 · 失败静默）
+   ① 滚动进度光轨  ② Hero 粒子星域（鼠标引力）  ③ 卡片 3D 倾斜
+   全部尊重 prefers-reduced-motion；触屏自动降级
+   ============================================================ */
+(function () {
+  "use strict";
+  var RM = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var FINE = !!(window.matchMedia && matchMedia("(pointer: fine)").matches);
+
+  /* ① 滚动进度光轨：顶部 3px 霓虹条，rAF 节流 */
+  function initProgress() {
+    try {
+      var bar = document.createElement("div");
+      bar.className = "nx-progress";
+      bar.setAttribute("aria-hidden", "true");
+      document.body.appendChild(bar);
+      var ticking = false;
+      function update() {
+        ticking = false;
+        var h = document.documentElement;
+        var max = h.scrollHeight - h.clientHeight;
+        var top = window.pageYOffset || h.scrollTop || 0;
+        var k = max > 0 ? Math.min(1, Math.max(0, top / max)) : 0;
+        bar.style.transform = "scaleX(" + k.toFixed(4) + ")";
+      }
+      function onScroll() {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+      update();
+    } catch (e) { /* 静默 */ }
+  }
+
+  /* ② Hero 粒子星域：星座连线 + 鼠标轻推 + 星辰闪烁 */
+  function initStarfield() {
+    var canvas = document.getElementById("fx-canvas");
+    if (!canvas || !canvas.getContext || RM || !FINE) return;
+    try {
+      var ctx = canvas.getContext("2d");
+      var host = canvas.parentElement || canvas;
+      var DPR = Math.min(2, window.devicePixelRatio || 1);
+      var W = 0, H = 0, pts = [], raf = 0, running = true;
+      var mouse = { x: -9e3, y: -9e3 };
+      var LINK = 116;
+
+      function seed() {
+        var n = Math.max(26, Math.min(62, Math.round(W * H / 24000)));
+        pts = [];
+        for (var i = 0; i < n; i++) {
+          pts.push({
+            x: Math.random() * W, y: Math.random() * H,
+            vx: (Math.random() - .5) * .24, vy: (Math.random() - .5) * .24,
+            r: Math.random() * 1.5 + .6,
+            tw: Math.random() * 6.283,
+            c: Math.random() < .18 ? "167,139,250" : "103,232,249"
+          });
+        }
+      }
+      function resize() {
+        var r = host.getBoundingClientRect();
+        W = Math.max(1, r.width); H = Math.max(1, r.height);
+        canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
+        canvas.style.width = W + "px"; canvas.style.height = H + "px";
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        seed();
+      }
+      function frame() {
+        if (!running) return;
+        ctx.clearRect(0, 0, W, H);
+        var i, j, p, q, dx, dy, d;
+        for (i = 0; i < pts.length; i++) {
+          p = pts[i];
+          p.x += p.vx; p.y += p.vy; p.tw += .022;
+          if (p.x < -10) p.x = W + 10; else if (p.x > W + 10) p.x = -10;
+          if (p.y < -10) p.y = H + 10; else if (p.y > H + 10) p.y = -10;
+          dx = p.x - mouse.x; dy = p.y - mouse.y; d = dx * dx + dy * dy;
+          if (d < 14400 && d > 1) { /* 120px 引力圈：轻推离开 */
+            var f = (14400 - d) / 14400 * .9;
+            p.x += (dx / Math.sqrt(d)) * f;
+            p.y += (dy / Math.sqrt(d)) * f;
+          }
+        }
+        ctx.lineWidth = 1;
+        for (i = 0; i < pts.length; i++) {
+          p = pts[i];
+          for (j = i + 1; j < pts.length; j++) {
+            q = pts[j];
+            dx = p.x - q.x; dy = p.y - q.y; d = dx * dx + dy * dy;
+            if (d < LINK * LINK) {
+              ctx.strokeStyle = "rgba(103,232,249," + (.15 * (1 - Math.sqrt(d) / LINK)).toFixed(3) + ")";
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+            }
+          }
+        }
+        for (i = 0; i < pts.length; i++) {
+          p = pts[i];
+          ctx.fillStyle = "rgba(" + p.c + "," + (.32 + Math.sin(p.tw) * .26).toFixed(3) + ")";
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
+        }
+        raf = requestAnimationFrame(frame);
+      }
+      host.addEventListener("mousemove", function (e) {
+        var r = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+      }, { passive: true });
+      host.addEventListener("mouseleave", function () { mouse.x = mouse.y = -9e3; });
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) { running = false; cancelAnimationFrame(raf); }
+        else if (!running) { running = true; raf = requestAnimationFrame(frame); }
+      });
+      var rT = 0;
+      window.addEventListener("resize", function () {
+        clearTimeout(rT); rT = setTimeout(resize, 180);
+      });
+      resize();
+      raf = requestAnimationFrame(frame);
+    } catch (e) { /* 静默 */ }
+  }
+
+  /* ③ 卡片 3D 倾斜：光标视差（path/module/badge 卡），精确指针专属 */
+  function initTilt() {
+    if (RM || !FINE) return;
+    try {
+      document.querySelectorAll(".path-card, .module-card, .badge-card").forEach(function (el) {
+        if (el.__nxTilt) return;
+        el.__nxTilt = true;
+        el.classList.add("nx-tilt");
+        var raf = 0, tx = 0, ty = 0;
+        function apply() {
+          raf = 0;
+          el.style.transform = "perspective(900px) rotateX(" + ty.toFixed(2) + "deg) rotateY(" + tx.toFixed(2) + "deg) translateY(-2px)";
+        }
+        el.addEventListener("mousemove", function (e) {
+          var r = el.getBoundingClientRect();
+          if (!r.width || !r.height) return;
+          tx = ((e.clientX - r.left) / r.width - .5) * 6.5;
+          ty = -((e.clientY - r.top) / r.height - .5) * 5.5;
+          if (!raf) raf = requestAnimationFrame(apply);
+        }, { passive: true });
+        el.addEventListener("mouseleave", function () {
+          if (raf) { cancelAnimationFrame(raf); raf = 0; }
+          el.style.transform = "";
+        });
+      });
+    } catch (e) { /* 静默 */ }
+  }
+
+  function initAll() { initProgress(); initStarfield(); initTilt(); }
+  if (document.readyState === "complete") initAll();
+  else window.addEventListener("load", initAll);
+})();

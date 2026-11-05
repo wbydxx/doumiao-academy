@@ -1,42 +1,59 @@
 /* ============================================
-   豆苗学堂 · 设计令牌 v6「江蓝」
-   三字体体系 · 长江水位蓝阶 · 中性质感
-   变量名向后兼容（旧页引用不断链），值收敛无突兀亮点
+   豆苗学堂 · 设计令牌 v7「星际航道 NEBULA」
+   深空暗色壳层 × 亮色玻璃内容卡 × 霓虹光效
+   变量名与 v6 完全兼容（旧页引用不断链），
+   仅翻转取值语义：壳层入夜，卡片保持明亮
    ============================================ */
 :root {
-  /* —— 色彩 · 长江水位蓝阶 —— */
-  --bg: #F2F7FC;          /* 浅滩 · 页面底色 */
-  --tint: #E3EEF8;        /* 江面 · 区块淡面 */
-  --surface: #FFFFFF;     /* 云帆白 · 卡片面 */
-  --ink: #16324F;         /* 深流 · 标题与正文 */
-  --muted: #5C7A99;       /* 远岸 · 次要文字 */
-  --rule: #CFE0EF;        /* 浪线 · 分隔线 */
-  --accent: #2372C8;      /* 干流 · 主色（河海蓝） */
-  --deep: #0E2A47;        /* 暗涌 · 进阶区深蓝面 */
-  --cyan: #3FB6D8;        /* 水光青 · 数据/科技元素 */
-  --gold: #C9A86A;        /* 鎏金 · 年份数字/重点（≤5% 面积） */
-  --green: #2FA98C;       /* 汀绿 · 成功语义 */
-  --red: #D9534F;         /* 警示 · 危险语义（克制） */
+  color-scheme: dark;
+
+  /* —— 色彩 · 深空壳层 —— */
+  --bg: #070D1A;            /* 深空 · 页面底色（原浅滩） */
+  --tint: #0E1930;          /* 星云 · 区块淡面 */
+  --surface: #FFFFFF;       /* 云帆白 · 内容卡片面（保持亮色，护插画） */
+  --ink: #12263E;           /* 深流 · 卡片内标题与正文（保持深色） */
+  --muted: #54677D;         /* 远岸 · 卡片内次要文字 */
+  --rule: #C9D9EA;          /* 浪线 · 卡片内分隔线 */
+  --accent: #0EA5E9;        /* 脉冲蓝 · 主色（原干流升级为电光蓝） */
+  --deep: #0A1B33;          /* 暗涌 · 进阶区深蓝面 */
+  --cyan: #22D3EE;          /* 水光青 · 霓虹青（数据/科技元素） */
+  --gold: #F5C56B;          /* 星金 · 鎏金提亮（暗底上可读） */
+  --green: #34D399;         /* 脉冲绿 · 成功语义（霓虹薄荷） */
+  --red: #F87171;           /* 警示 · 危险语义（暗底提亮） */
 
   /* —— 兼容旧引用（值已收敛） —— */
-  --accent-2: #C9A86A;    /* 旧「行动橙」→ 鎏金，主按钮已在 style 层改蓝 */
-  --pink: #3FB6D8;        /* 旧「梅粉」→ 水光青 */
-  --purple: #35619E;      /* 紫峰 · 进阶模块色（蓝系） */
-  --teal: #2372C8;        /* 与干流一致 */
+  --accent-2: #F5C56B;      /* 旧「行动橙」→ 星金 */
+  --pink: #22D3EE;          /* 旧「梅粉」→ 霓虹青 */
+  --purple: #A78BFA;        /* 星紫 · 进阶模块色（电光紫罗兰） */
+  --teal: #0EA5E9;          /* 与脉冲蓝一致 */
 
-  /* —— 圆角 / 阴影（中性分层） —— */
-  --radius: 14px;
-  --radius-sm: 10px;
-  --shadow: 0 1px 2px rgba(14,42,71,.04), 0 4px 14px rgba(14,42,71,.07);
-  --shadow-lg: 0 2px 6px rgba(14,42,71,.06), 0 14px 34px rgba(14,42,71,.13);
-  --stroke: 2;            /* SVG 统一描边（细线更利落） */
+  /* —— 深空壳层专用令牌（v7 新增） —— */
+  --space-0: #05080F;       /* 虚空最深 */
+  --space-1: #070D1A;       /* 页面底色（= --bg） */
+  --space-2: #0B1426;       /* 壳层面板（导航/侧栏/页脚玻璃） */
+  --space-3: #101E38;       /* 壳层高一级面板 */
+  --starline: rgba(148, 197, 255, .16);   /* 壳层描边/分隔 */
+  --starline-hi: rgba(103, 232, 249, .38);/* 壳层霓虹描边 */
+  --shell-text: #D7E7F8;    /* 壳层亮文字 */
+  --shell-dim: #7E9CC0;     /* 壳层暗文字 */
+  --neon-glow: 0 0 22px rgba(34, 211, 238, .35);
+  --glass: rgba(13, 25, 48, .66);         /* 壳层玻璃底 */
+  --card-glow: 0 0 0 1px rgba(255,255,255,.04), 0 18px 46px rgba(2, 8, 20, .55);
+  --card-glow-hi: 0 0 0 1px rgba(34,211,238,.45), 0 0 28px rgba(34,211,238,.16), 0 22px 52px rgba(2, 8, 20, .6);
+
+  /* —— 圆角 / 阴影 —— */
+  --radius: 16px;
+  --radius-sm: 11px;
+  --shadow: 0 2px 6px rgba(2,8,20,.35), 0 10px 30px rgba(2,8,20,.45);
+  --shadow-lg: var(--card-glow-hi);
+  --stroke: 2;
 
   /* —— 三字体体系 —— */
   --font: "PingFang SC", "HarmonyOS Sans SC", "Source Han Sans SC", "Microsoft YaHei", system-ui, sans-serif;
   --font-serif: "Noto Serif SC", "Source Han Serif SC", "STZhongsong", "SimSun", serif;
   --font-mono: "JetBrains Mono", "Cascadia Code", Consolas, "Courier New", monospace;
 
-  /* —— 纹理（低对比 data-uri） —— */
-  --tex-grid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Cpath d='M28 0H0v28' fill='none' stroke='%233FB6D8' stroke-opacity='.08'/%3E%3C/svg%3E");
-  --tex-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='12'%3E%3Cpath d='M0 6q15-8 30 0t30 0 30 0 30 0' fill='none' stroke='%232372C8' stroke-opacity='.18' stroke-width='1.5'/%3E%3C/svg%3E");
+  /* —— 纹理（星域网格 · 霓虹波纹 · 光年刻度） —— */
+  --tex-grid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34'%3E%3Cpath d='M34 0H0v34' fill='none' stroke='%233B82F6' stroke-opacity='.07'/%3E%3C/svg%3E");
+  --tex-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='12'%3E%3Cpath d='M0 6q15-8 30 0t30 0 30 0 30 0' fill='none' stroke='%2322D3EE' stroke-opacity='.30' stroke-width='1.5'/%3E%3C/svg%3E");
 }

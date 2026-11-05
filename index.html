@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>豆苗学堂 — 少儿 AI 与计算机科普学习</title>
 <meta name="description" content="河海大学计算机与软件学院公益科普：用南京城的花灯、画舫、城墙、动物园等场景，带 6-12 岁孩子入门二进制、AI、编程与网络安全。无需注册，即开即学。">
-<meta name="theme-color" content="#0F2A44">
+<meta name="theme-color" content="#070D1A">
 <meta name="author" content="河海大学计算机与软件学院">
 <meta property="og:title" content="豆苗学堂 · 少儿 AI 与计算机科普">
 <meta property="og:description" content="两条航线，顺江而下：从像素火花驶向真实代码。跟着一滴水穿过南京城学计算机。">
@@ -13,8 +13,8 @@
 <meta property="og:locale" content="zh_CN">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="assets/css/tokens.css?v=6">
-<link rel="stylesheet" href="assets/css/style.css?v=11">
+<link rel="stylesheet" href="assets/css/tokens.css?v=7">
+<link rel="stylesheet" href="assets/css/style.css?v=12">
 </head>
 <body>
 <header id="site-header"></header>
@@ -22,6 +22,7 @@
 <main class="wrap">
   <!-- 主视觉 -->
   <section class="hero">
+    <canvas id="fx-canvas" class="fx-canvas" aria-hidden="true"></canvas>
     <span class="hero-kicker" data-rv style="--i:0"><span id="kicker-ic"></span>河海大学计算机与软件学院 · 公益科普</span>
     <h1><span data-rv style="--i:1">两条航线，顺江而下</span><br><span data-rv style="--i:2">从像素火花驶向真实代码</span></h1>
     <p class="hero-sub" data-rv style="--i:3">跟着一滴水穿过南京城：入门航线用游戏点亮直觉，进阶航道打开 AI 与编程的大门</p>
@@ -30,7 +31,7 @@
       <svg viewBox="0 0 1200 480" role="img" aria-label="一滴水的旅程：沿长江航线经过六座学习站点，可点击直达">
         <defs>
           <linearGradient id="hf-bg" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#F8FCFF"/><stop offset="1" stop-color="#E6F1FA"/>
+            <stop offset="0" stop-color="#0A1428"/><stop offset="1" stop-color="#0C1B33"/>
           </linearGradient>
         </defs>
         <rect width="1200" height="480" fill="url(#hf-bg)"/>
@@ -114,8 +115,8 @@
 
 <footer id="site-footer"></footer>
 
-<script src="assets/js/storage.js?v=6"></script><script src="assets/js/mock-data.js?v=6"></script>
-<script src="assets/js/pinyin-data.js?v=6"></script><script src="assets/data/catalog.js?v=1"></script><script src="assets/js/common.js?v=10"></script>
+<script src="assets/js/storage.js?v=5"></script><script src="assets/js/mock-data.js?v=5"></script>
+<script src="assets/js/pinyin-data.js?v=5"></script><script src="assets/data/catalog.js?v=2"></script><script src="assets/js/common.js?v=11"></script>
 <script>
 (function () {
   var DM = window.DM;

@@ -3,22 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070D1A">
 <title>404 · 豆苗学堂</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
-    background:linear-gradient(160deg,#F8FCFF 0%,#E6F1FA 100%);min-height:100vh;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:#0F2A44}
-  .code{font-size:clamp(72px,16vw,160px);font-weight:800;color:#0F2A44;line-height:1;letter-spacing:-4px}
-  .sprout{font-size:clamp(48px,10vw,96px);margin:8px 0}
-  h1{font-size:clamp(20px,4vw,28px);margin:8px 0 12px;font-weight:700}
-  p{color:#5A7A96;font-size:15px;line-height:1.7;max-width:420px;text-align:center;margin-bottom:28px}
-  .btn{display:inline-flex;align-items:center;gap:8px;background:#0F2A44;color:#fff;
+    background:
+      radial-gradient(900px 480px at 80% -10%, rgba(14,165,233,.18), transparent 60%),
+      radial-gradient(760px 460px at -8% 108%, rgba(139,92,246,.16), transparent 60%),
+      #070D1A;
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:#D7E7F8}
+  .code{font-size:clamp(72px,16vw,160px);font-weight:800;line-height:1;letter-spacing:-4px;
+    background:linear-gradient(94deg,#EAF6FF 8%,#7DEBFA 40%,#A78BFA 78%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 30px rgba(34,211,238,.35))}
+  .sprout{font-size:clamp(48px,10vw,96px);margin:8px 0;filter:drop-shadow(0 0 18px rgba(52,211,153,.5))}
+  h1{font-size:clamp(20px,4vw,28px);margin:8px 0 12px;font-weight:700;color:#EAF6FF}
+  p{color:#7E9CC0;font-size:15px;line-height:1.7;max-width:420px;text-align:center;margin-bottom:28px}
+  .btn{display:inline-flex;align-items:center;gap:8px;color:#fff;
+    background:linear-gradient(135deg,#0284C7,#0EA5E9 45%,#22D3EE);
+    box-shadow:0 6px 22px rgba(14,165,233,.45),0 0 26px rgba(34,211,238,.25);
     text-decoration:none;padding:12px 24px;border-radius:999px;font-size:15px;font-weight:600;
-    transition:transform .15s}
-  .btn:hover{transform:translateY(-2px)}
-  .foot{margin-top:40px;font-size:12.5px;color:#8FA8BC}
+    transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(14,165,233,.55),0 0 36px rgba(34,211,238,.4)}
+  .foot{margin-top:40px;font-size:12.5px;color:#5F7FA6}
 </style>
 </head>
 <body>
