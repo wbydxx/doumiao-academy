@@ -1068,6 +1068,236 @@ body.gated { overflow: hidden; }
 .route-node.locked .n-plate { stroke-dasharray: 4 3; }
 
 /* ============================================================
+   v13「PPT 翻页」层 —— 首页全屏幻灯化（跳动转场）
+   仅当 JS 添加 body.deck-mode 后生效；无 JS 时回退普通长页
+   滚轮 / 方向键 / 触屏滑动 翻页，右侧圆点导航，支持 #s1-#s6 深链
+   ============================================================ */
+
+/* —— 翻页控制件（默认隐藏，deck-mode 激活） —— */
+.deck-dots, .deck-nav, .deck-counter, .deck-hint { display: none; }
+
+body.deck-mode {
+  overflow: hidden;
+  height: 100dvh;
+}
+body.deck-mode #site-footer { display: none; }
+
+/* 粒子画布：脱离 Hero，升格为全页星空底 */
+body.deck-mode .fx-canvas {
+  position: fixed; inset: 0; z-index: 0;
+  width: 100%; height: 100%; pointer-events: none;
+}
+
+/* —— 舞台与页面 —— */
+body.deck-mode #deck {
+  position: fixed;
+  inset: var(--deck-top, 64px) 0 0 0;
+  z-index: 1;
+}
+body.deck-mode .slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: clamp(10px, 2.2vh, 26px) clamp(16px, 4vw, 52px) clamp(30px, 5vh, 44px);
+  overflow-y: auto; overflow-x: hidden;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translateY(11%) scale(.975);
+  transition: transform .62s cubic-bezier(.55,0,.78,.55), opacity .34s ease .2s, visibility 0s linear .6s;
+  will-change: transform, opacity;
+}
+body.deck-mode .slide.is-above { transform: translateY(-11%) scale(.975); }
+body.deck-mode .slide.is-active {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: none; z-index: 2;
+  /* 入场回弹＝跳动转场（弹簧过冲） */
+  transition: transform .82s cubic-bezier(.24,1.4,.32,1), opacity .42s ease .05s, visibility 0s;
+}
+body.deck-mode .slide > * { flex-shrink: 0; }
+
+/* —— 封面页 —— */
+body.deck-mode .deck-hero {
+  min-height: 0; padding: 0; position: static;
+  display: flex; flex-direction: column; align-items: center;
+  gap: clamp(8px, 1.6vh, 18px);
+  width: 100%; max-width: 980px; margin: auto; text-align: center;
+}
+body.deck-mode .deck-hero h1 { font-size: clamp(30px, 5vw, 58px); margin: 0; line-height: 1.18; }
+body.deck-mode .deck-hero .hero-sub { font-size: clamp(13.5px, 1.5vw, 17px); margin: 0; }
+body.deck-mode .deck-hero .hero-meta { font-size: 12px; letter-spacing: .18em; }
+body.deck-mode .deck-hero .hero-kicker { font-size: 12.5px; padding: 7px 16px; }
+body.deck-mode .deck-hero .hero-cta { margin: clamp(6px, 1.4vh, 14px) 0 0; }
+
+/* 翻页提示（仅封面，JS 激活点击） */
+body.deck-mode .deck-hint {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 2px;
+  position: absolute; bottom: clamp(8px, 2vh, 18px); left: 50%; translate: -50% 0;
+  background: none; border: 0; cursor: pointer; padding: 6px 14px;
+  color: #7E9CC0; font-size: 11.5px; letter-spacing: .14em;
+  animation: hintFloat 2.6s ease-in-out infinite;
+}
+body.deck-mode .deck-hint:hover { color: #A5F3FC; }
+.deck-hint-arrow {
+  width: 14px; height: 14px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: rotate(45deg); opacity: .8;
+}
+@keyframes hintFloat { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(6px) } }
+
+/* —— 星图页 —— */
+body.deck-mode .deck-figwrap {
+  width: min(1150px, 96vw); margin: auto;
+  display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 1.6vh, 16px);
+}
+.slide-kicker {
+  font-size: 12.5px; letter-spacing: .2em; color: #7DEBFA;
+  padding: 7px 18px; border-radius: 999px;
+  background: rgba(14, 165, 233, .10);
+  border: 1px solid rgba(34, 211, 238, .28);
+  box-shadow: 0 0 18px rgba(34, 211, 238, .12);
+  text-shadow: 0 0 12px rgba(34, 211, 238, .5);
+}
+body.deck-mode .hero-fig { width: 100%; max-height: 76dvh; margin: 0; }
+body.deck-mode .hero-fig svg { width: 100%; height: auto; max-height: 76dvh; display: block; }
+body.deck-mode .hero-cap { font-size: 11px; letter-spacing: .22em; }
+
+/* —— 旅程页（续读横幅 + 徽章面板 竖排） —— */
+body.deck-mode .deck-stack {
+  width: min(980px, 94vw); margin: auto;
+  display: flex; flex-direction: column; gap: clamp(10px, 2vh, 18px);
+}
+body.deck-mode .resume-banner { margin: 0; }
+body.deck-mode .deck-journey { text-align: center; padding: clamp(16px, 2.6vh, 26px) 22px; }
+body.deck-mode .deck-journey h2 { font-size: clamp(19px, 2.4vw, 26px); margin: 0 0 6px; justify-content: center; }
+body.deck-mode .deck-journey-p { color: var(--muted); margin: 0 0 12px; font-size: 14px; }
+body.deck-mode .deck-journey-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* —— 航线页（入门/进阶卡片紧凑化） —— */
+body.deck-mode .deck-path { width: min(1200px, 100%); margin: auto; padding: 0; }
+body.deck-mode .path-head { margin-bottom: clamp(10px, 2vh, 20px); }
+body.deck-mode .path-head h2 { font-size: clamp(22px, 3vw, 32px); }
+body.deck-mode .path-grid { gap: clamp(10px, 1.6vw, 18px); }
+body.deck-mode .path-card { padding: 16px 16px 14px; gap: 7px; }
+body.deck-mode .p-desc {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  font-size: 12.8px;
+}
+@media (max-height: 760px) {
+  body.deck-mode .p-desc { display: none; }
+  body.deck-mode .mc-tags { display: none; }
+  body.deck-mode .path-card { padding: 14px; }
+}
+@media (max-height: 620px) {
+  body.deck-mode .p-scene { display: none; }
+  body.deck-mode .path-head .ph-note { display: none; }
+}
+
+/* —— 尾页 —— */
+body.deck-mode .deck-end {
+  display: flex; flex-direction: column; align-items: center;
+  gap: clamp(8px, 1.8vh, 18px); margin: auto; text-align: center;
+}
+.deck-end-ic {
+  width: 64px; height: 64px; border-radius: 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #EAF6FF;
+  background: linear-gradient(135deg, #0EA5E9, #22D3EE 55%, #8B5CF6);
+  box-shadow: 0 0 34px rgba(34, 211, 238, .45), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.deck-end-ic svg { width: 32px; height: 32px; }
+.deck-end-title { font-size: clamp(26px, 4.2vw, 46px); line-height: 1.2; margin: 0; }
+.deck-end-sub { color: #7E9CC0; font-size: clamp(13px, 1.5vw, 16px); margin: 0; }
+.deck-end-cta { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: clamp(4px, 1.2vh, 12px); }
+.deck-end-credit { margin-top: clamp(10px, 2.4vh, 22px); font-size: 12px; color: #5F7FA6; line-height: 1.9; letter-spacing: .06em; }
+.deck-end-credit span { font-size: 11px; color: #46608A; }
+
+/* —— 右侧圆点导航 —— */
+body.deck-mode .deck-dots {
+  display: flex; flex-direction: column; align-items: center; gap: 13px;
+  position: fixed; right: clamp(10px, 2vw, 24px); top: 50%; translate: 0 -50%;
+  z-index: 40;
+}
+.deck-dot {
+  position: relative; width: 11px; height: 11px; padding: 0;
+  border-radius: 50%; cursor: pointer;
+  background: rgba(125, 235, 250, .16);
+  border: 1.5px solid rgba(125, 235, 250, .38);
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .25s, box-shadow .25s;
+}
+.deck-dot:hover { background: rgba(125, 235, 250, .4); }
+.deck-dot.on {
+  background: var(--cyan); border-color: var(--cyan);
+  transform: scale(1.3);
+  box-shadow: 0 0 14px rgba(34, 211, 238, .85), 0 0 4px rgba(34, 211, 238, 1);
+}
+.deck-dot span {
+  position: absolute; right: 24px; top: 50%; translate: 0 -50%;
+  white-space: nowrap; font-size: 12px; color: #BFE9F6;
+  background: rgba(8, 16, 32, .92);
+  border: 1px solid rgba(34, 211, 238, .3);
+  border-radius: 8px; padding: 4px 12px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s, translate .18s;
+  box-shadow: 0 6px 18px rgba(2, 6, 16, .5);
+}
+.deck-dot:hover span, .deck-dot:focus-visible span { opacity: 1; translate: -4px -50%; }
+
+/* —— 左下页码 · 右下翻页钮 —— */
+body.deck-mode .deck-counter {
+  display: block; position: fixed; left: clamp(14px, 2.4vw, 28px); bottom: clamp(12px, 2.4vh, 22px);
+  z-index: 40; font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .18em;
+  color: #7E9CC0; text-shadow: 0 0 10px rgba(34, 211, 238, .25);
+}
+body.deck-mode .deck-counter b { color: #7DEBFA; font-weight: 700; }
+body.deck-mode .deck-nav {
+  display: flex; flex-direction: column; gap: 10px;
+  position: fixed; right: clamp(14px, 2.4vw, 28px); bottom: clamp(12px, 2.4vh, 22px);
+  z-index: 40;
+}
+.deck-btn {
+  width: 42px; height: 42px; border-radius: 50%; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #9FD8EA;
+  background: rgba(10, 20, 40, .72);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border: 1px solid rgba(34, 211, 238, .3);
+  box-shadow: 0 6px 20px rgba(2, 6, 16, .5), inset 0 1px 0 rgba(255,255,255,.08);
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s, color .2s, border-color .2s;
+}
+.deck-btn:hover {
+  color: #052530; background: var(--cyan); border-color: var(--cyan);
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 10px 26px rgba(34, 211, 238, .4), 0 0 18px rgba(34, 211, 238, .5);
+}
+.deck-btn:active { transform: scale(.94); }
+
+/* —— 移动端 —— */
+@media (max-width: 720px) {
+  body.deck-mode .deck-dots { right: 6px; gap: 10px; }
+  .deck-dot { width: 9px; height: 9px; }
+  .deck-dot span { display: none; }
+  body.deck-mode .deck-nav { display: none; } /* 触屏滑动翻页 */
+  body.deck-mode .deck-counter { left: 12px; bottom: 10px; font-size: 11px; }
+  body.deck-mode .deck-hero h1 { font-size: clamp(24px, 7.2vw, 34px); }
+  body.deck-mode .deck-hero .hero-sub { font-size: 13px; }
+  body.deck-mode .deck-hero .hero-cta .btn { padding: 10px 18px; font-size: 14px; }
+  body.deck-mode .hero-fig { max-height: 52dvh; }
+  body.deck-mode .hero-fig svg { max-height: 52dvh; }
+  body.deck-mode .slide { padding: 12px 14px 40px; }
+  body.deck-mode .deck-hint span { font-size: 10.5px; letter-spacing: .1em; }
+  /* 旅程页合并：小屏隐藏徽章面板，保留续读横幅 */
+  body.deck-mode .deck-journey { display: none; }
+}
+
+/* —— 减少动效 —— */
+@media (prefers-reduced-motion: reduce) {
+  body.deck-mode .slide,
+  body.deck-mode .slide.is-active {
+    transition: opacity .22s ease, visibility 0s;
+    transform: none;
+  }
+  body.deck-mode .deck-hint { animation: none; }
+}
+
+/* ============================================================
    豆苗学堂 · v7「星际航道 NEBULA」科技主题层
    ------------------------------------------------------------
    设计语言：深空壳层（导航/侧栏/页脚/首屏入夜）

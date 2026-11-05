@@ -1,4 +1,4 @@
-﻿﻿﻿﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -14,109 +14,146 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="assets/css/tokens.css?v=7">
-<link rel="stylesheet" href="assets/css/style.css?v=12">
+<link rel="stylesheet" href="assets/css/style.css?v=13">
 </head>
 <body>
+<canvas id="fx-canvas" class="fx-canvas" aria-hidden="true"></canvas>
 <header id="site-header"></header>
 
-<main class="wrap">
-  <!-- 主视觉 -->
-  <section class="hero">
-    <canvas id="fx-canvas" class="fx-canvas" aria-hidden="true"></canvas>
-    <span class="hero-kicker" data-rv style="--i:0"><span id="kicker-ic"></span>河海大学计算机与软件学院 · 公益科普</span>
-    <h1><span data-rv style="--i:1">两条航线，顺江而下</span><br><span data-rv style="--i:2">从像素火花驶向真实代码</span></h1>
-    <p class="hero-sub" data-rv style="--i:3">跟着一滴水穿过南京城：入门航线用游戏点亮直觉，进阶航道打开 AI 与编程的大门</p>
-    <div class="hero-meta" data-rv style="--i:4">SINCE 1915 · 融水明智 · 六镇连江</div>
-    <div class="hero-fig" data-rv style="--i:5">
-      <svg viewBox="0 0 1200 480" role="img" aria-label="一滴水的旅程：沿长江航线经过六座学习站点，可点击直达">
-        <defs>
-          <linearGradient id="hf-bg" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#0A1428"/><stop offset="1" stop-color="#0C1B33"/>
-          </linearGradient>
-        </defs>
-        <rect width="1200" height="480" fill="url(#hf-bg)"/>
-        <!-- 天际线线稿：远山 · 紫峰塔 · 城市块 · 长江大桥 · 明城墙 -->
-        <g class="g-sky" aria-hidden="true">
-          <path class="sky-line" d="M60 148q40-26 90 0M1005 148q46-30 100 0M1085 148q30-20 60 0" opacity=".55"/>
-          <path class="sky-line" d="M150 148L172 58l22 90M161 120h22M156 136h32M166 94h12M172 58V40"/>
-          <path class="sky-line" d="M240 148V96h54v52M256 148v-28h22v28M318 148v-38h38v38M378 148v-22h28v22M428 148v-30h34v30"/>
-          <path class="sky-line" d="M480 108h250M515 84v46M695 84v46"/>
-          <path class="sky-line" d="M515 88c56 22 124 22 180 0M555 99v9M595 102v6M635 102v6M675 99v9"/>
-          <path class="sky-line" d="M790 148v-26h20v10h20v-10h20v10h20v-10h20v10h20v-10h20v10h20v-10h20v26"/>
-          <path class="sky-line" d="M790 136h200"/>
-        </g>
-        <!-- 水纹 -->
-        <g class="g-water" aria-hidden="true">
-          <path class="water-line" d="M60 402q30-8 60 0t60 0t60 0t60 0"/>
-          <path class="water-line" d="M740 428q30-8 60 0t60 0t60 0"/>
-          <path class="water-line" d="M180 444q30-8 60 0t60 0"/>
-          <path class="water-line" d="M900 402q30-8 60 0t60 0"/>
-        </g>
-        <!-- 航线：底笔生长 + 流光 -->
-        <path id="route-path" class="route-base" pathLength="100" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" opacity=".92"
-              d="M-20 330C120 330 150 210 260 200C380 190 400 330 530 335C660 340 660 175 800 170C930 166 950 300 1080 300C1140 300 1160 270 1220 255"/>
-        <path class="route-flow" fill="none" stroke="var(--cyan)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"
-              d="M-20 330C120 330 150 210 260 200C380 190 400 330 530 335C660 340 660 175 800 170C930 166 950 300 1080 300C1140 300 1160 270 1220 255"/>
-        <g id="route-nodes"></g>
-        <!-- 水滴：SMIL 沿航线循环流动 -->
-        <g class="drop-g" aria-hidden="true">
-          <circle r="9" fill="rgba(63,182,216,.22)"/>
-          <circle r="4.5" fill="var(--cyan)"/>
-          <circle r="1.7" cx="-1.4" cy="-1.4" fill="#fff" opacity=".9"/>
-          <animateMotion dur="14s" repeatCount="indefinite"><mpath href="#route-path" xlink:href="#route-path"/></animateMotion>
-        </g>
-      </svg>
-      <div class="route-tip" id="route-tip" role="tooltip" aria-hidden="true"></div>
-      <span class="hero-cap">一滴水的旅程 · WHERE WATER MEETS CODE</span>
+<!-- PPT 式翻页主页：滚轮 / 方向键 / 触屏滑动 切换全屏页面 -->
+<main class="deck" id="deck">
+
+  <!-- S1 封面 -->
+  <section class="slide is-active" data-name="封面" id="s1" aria-label="封面">
+    <div class="hero deck-hero">
+      <span class="hero-kicker" data-rv style="--i:0"><span id="kicker-ic"></span>河海大学计算机与软件学院 · 公益科普</span>
+      <h1><span data-rv style="--i:1">两条航线，顺江而下</span><br><span data-rv style="--i:2">从像素火花驶向真实代码</span></h1>
+      <p class="hero-sub" data-rv style="--i:3">跟着一滴水穿过南京城：入门航线用游戏点亮直觉，进阶航道打开 AI 与编程的大门</p>
+      <div class="hero-meta" data-rv style="--i:4">SINCE 1915 · 融水明智 · 六镇连江</div>
+      <div class="hero-cta" data-rv style="--i:5">
+        <a class="btn" href="binary/lesson-01.html" id="hero-go" data-sfx></a>
+        <a class="btn ghost" href="achievements/index.html" id="hero-trophy" data-sfx></a>
+      </div>
     </div>
-    <div class="hero-cta" data-rv style="--i:6">
-      <a class="btn" href="binary/lesson-01.html" id="hero-go" data-sfx></a>
-      <a class="btn ghost" href="achievements/index.html" id="hero-trophy" data-sfx></a>
+    <button class="deck-hint" id="deck-hint" type="button" aria-label="翻到下一页">
+      <span>滚轮 · 方向键 · 滑动 翻页</span>
+      <i class="deck-hint-arrow" aria-hidden="true"></i>
+    </button>
+  </section>
+
+  <!-- S2 星图航线（图即导航，点击站点直达课程） -->
+  <section class="slide" data-name="星图航线" id="s2" aria-label="星图航线">
+    <div class="deck-figwrap">
+      <div class="slide-kicker" data-rv style="--i:0">ROUTE MAP · 一滴水的旅程，六大站点</div>
+      <div class="hero-fig" data-rv style="--i:1">
+        <svg viewBox="0 0 1200 480" role="img" aria-label="一滴水的旅程：沿长江航线经过六座学习站点，可点击直达">
+          <defs>
+            <linearGradient id="hf-bg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#0A1428"/><stop offset="1" stop-color="#0C1B33"/>
+            </linearGradient>
+          </defs>
+          <rect width="1200" height="480" fill="url(#hf-bg)"/>
+          <g class="g-sky" aria-hidden="true">
+            <path class="sky-line" d="M60 148q40-26 90 0M1005 148q46-30 100 0M1085 148q30-20 60 0" opacity=".55"/>
+            <path class="sky-line" d="M150 148L172 58l22 90M161 120h22M156 136h32M166 94h12M172 58V40"/>
+            <path class="sky-line" d="M240 148V96h54v52M256 148v-28h22v28M318 148v-38h38v38M378 148v-22h28v22M428 148v-30h34v30"/>
+            <path class="sky-line" d="M480 108h250M515 84v46M695 84v46"/>
+            <path class="sky-line" d="M515 88c56 22 124 22 180 0M555 99v9M595 102v6M635 102v6M675 99v9"/>
+            <path class="sky-line" d="M790 148v-26h20v10h20v-10h20v10h20v-10h20v10h20v-10h20v10h20v-10h20v26"/>
+            <path class="sky-line" d="M790 136h200"/>
+          </g>
+          <g class="g-water" aria-hidden="true">
+            <path class="water-line" d="M60 402q30-8 60 0t60 0t60 0t60 0"/>
+            <path class="water-line" d="M740 428q30-8 60 0t60 0t60 0"/>
+            <path class="water-line" d="M180 444q30-8 60 0t60 0"/>
+            <path class="water-line" d="M900 402q30-8 60 0t60 0"/>
+          </g>
+          <path id="route-path" class="route-base" pathLength="100" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" opacity=".92"
+                d="M-20 330C120 330 150 210 260 200C380 190 400 330 530 335C660 340 660 175 800 170C930 166 950 300 1080 300C1140 300 1160 270 1220 255"/>
+          <path class="route-flow" fill="none" stroke="var(--cyan)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"
+                d="M-20 330C120 330 150 210 260 200C380 190 400 330 530 335C660 340 660 175 800 170C930 166 950 300 1080 300C1140 300 1160 270 1220 255"/>
+          <g id="route-nodes"></g>
+          <g class="drop-g" aria-hidden="true">
+            <circle r="9" fill="rgba(63,182,216,.22)"/>
+            <circle r="4.5" fill="var(--cyan)"/>
+            <circle r="1.7" cx="-1.4" cy="-1.4" fill="#fff" opacity=".9"/>
+            <animateMotion dur="14s" repeatCount="indefinite"><mpath href="#route-path" xlink:href="#route-path"/></animateMotion>
+          </g>
+        </svg>
+        <div class="route-tip" id="route-tip" role="tooltip" aria-hidden="true"></div>
+        <span class="hero-cap">一滴水的旅程 · WHERE WATER MEETS CODE</span>
+      </div>
     </div>
   </section>
 
-  <!-- 继续旅程 -->
-  <section class="resume-banner" id="resume"></section>
-
-  <!-- 入门航线 01-04 -->
-  <section class="path-sec" id="modules">
-    <div class="path-head" data-rv>
-      <h2>入门航线</h2>
-      <span class="ph-en">Entry Route · 01–04</span>
-      <span class="ph-note">6–12 岁友好 · 故事与游戏中建立直觉</span>
+  <!-- S3 我的旅程（续读横幅 + 徽章总览） -->
+  <section class="slide" data-name="我的旅程" id="s3" aria-label="我的旅程">
+    <div class="deck-stack">
+      <section class="resume-banner" id="resume"></section>
+      <div class="panel deck-journey">
+        <span class="panel-tag">My Journey</span>
+        <h2 class="deck-journey-h"><span style="color:var(--gold);display:inline-flex" id="sum-ic"></span>我的旅程</h2>
+        <p class="deck-journey-p">收集雨花石，点亮六枚徽章，赢取「小小科学家」证书</p>
+        <div class="deck-journey-cta">
+          <a class="btn sm ghost" href="achievements/index.html" id="sum-trophy" data-sfx></a>
+          <a class="btn sm" href="binary/lesson-01.html" id="sum-continue" data-sfx></a>
+        </div>
+      </div>
     </div>
-    <div class="path-grid" id="path-entry"></div>
   </section>
 
-  <!-- 进阶航道 05-06 -->
-  <section class="path-sec" id="advanced">
-    <div class="path-head" data-rv>
-      <h2>进阶航道</h2>
-      <span class="ph-en">Advanced Route · 05–06</span>
-      <span class="ph-note">面向大孩子与家长 · 主流 AI 术语 + 真实 Python 编程</span>
-    </div>
-    <div class="path-grid path-grid-2" id="path-adv"></div>
-    <p class="adv-lock-note" id="adv-lock-note" style="display:none"></p>
+  <!-- S4 入门航线 01-04 -->
+  <section class="slide" data-name="入门航线" id="s4" aria-label="入门航线">
+    <section class="path-sec deck-path" id="modules">
+      <div class="path-head" data-rv>
+        <h2>入门航线</h2>
+        <span class="ph-en">Entry Route · 01–04</span>
+        <span class="ph-note">6–12 岁友好 · 故事与游戏中建立直觉</span>
+      </div>
+      <div class="path-grid" id="path-entry"></div>
+    </section>
   </section>
 
-  <!-- 我的旅程 -->
-  <section class="panel" style="text-align:center">
-    <span class="panel-tag">My Journey</span>
-    <h2 style="display:flex;align-items:center;justify-content:center;gap:10px">
-      <span style="color:var(--gold);display:inline-flex" id="sum-ic"></span>我的旅程
-    </h2>
-    <p style="color:var(--muted)">收集雨花石，点亮六枚徽章，赢取「小小科学家」证书</p>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:14px 0">
-      <a class="btn sm ghost" href="achievements/index.html" id="sum-trophy" data-sfx></a>
-      <a class="btn sm" href="binary/lesson-01.html" id="sum-continue" data-sfx></a>
+  <!-- S5 进阶航道 05-06 -->
+  <section class="slide" data-name="进阶航道" id="s5" aria-label="进阶航道">
+    <section class="path-sec deck-path" id="advanced">
+      <div class="path-head" data-rv>
+        <h2>进阶航道</h2>
+        <span class="ph-en">Advanced Route · 05–06</span>
+        <span class="ph-note">面向大孩子与家长 · 主流 AI 术语 + 真实 Python 编程</span>
+      </div>
+      <div class="path-grid path-grid-2" id="path-adv"></div>
+      <p class="adv-lock-note" id="adv-lock-note" style="display:none"></p>
+    </section>
+  </section>
+
+  <!-- S6 出发吧 -->
+  <section class="slide" data-name="出发吧" id="s6" aria-label="出发吧">
+    <div class="deck-end">
+      <span class="deck-end-ic" id="end-ic" data-rv="pop" style="--i:0"></span>
+      <h2 class="deck-end-title"><span data-rv style="--i:1">六站航线已点亮</span><br><span data-rv style="--i:2">出发吧，小小科学家</span></h2>
+      <p class="deck-end-sub" data-rv style="--i:3">每一颗雨花石都是一次思考，每一枚徽章都是一座灯塔</p>
+      <div class="deck-end-cta" data-rv style="--i:4">
+        <a class="btn" href="binary/lesson-01.html" id="end-go" data-sfx></a>
+        <a class="btn ghost" href="achievements/index.html" id="end-trophy" data-sfx></a>
+      </div>
+      <div class="deck-end-credit" data-rv style="--i:5">河海大学计算机与软件学院 · 公益科普 · SINCE 1915<br><span>无需注册 · 不联网收集信息 · 家长指引</span></div>
     </div>
   </section>
 </main>
 
+<!-- 翻页控制件（JS 注入行为） -->
+<nav class="deck-dots" id="deck-dots" aria-label="页面导航"></nav>
+<div class="deck-nav">
+  <button class="deck-btn" id="deck-prev" type="button" aria-label="上一页"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14l6-6 6 6"/></svg></button>
+  <button class="deck-btn" id="deck-next" type="button" aria-label="下一页"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10l6 6 6-6"/></svg></button>
+</div>
+<div class="deck-counter" id="deck-counter" aria-hidden="true">01 / 06</div>
+
 <footer id="site-footer"></footer>
 
 <script src="assets/js/storage.js?v=5"></script><script src="assets/js/mock-data.js?v=5"></script>
-<script src="assets/js/pinyin-data.js?v=5"></script><script src="assets/data/catalog.js?v=2"></script><script src="assets/js/common.js?v=11"></script>
+<script src="assets/js/pinyin-data.js?v=5"></script><script src="assets/data/catalog.js?v=2"></script><script src="assets/js/common.js?v=12"></script>
 <script>
 (function () {
   var DM = window.DM;
@@ -190,6 +227,15 @@
       '<span class="p-foot"><span class="p-bar"><i style="width:' + percent + '%"></i></span></span></a>';
   }
 
+  /** PPT 模式下「锁定进阶」提醒：翻到进阶页并抖动（非 PPT 回退为滚动定位） */
+  function deckFocusAdv() {
+    if (window.__deckGo) { window.__deckGo(4, { sfx: false }); }
+    else {
+      var el = document.getElementById("advanced");
+      if (el && el.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+
   /** 继续旅程横幅：优先「进行中」的模块，全 0 从头出发，全部完成则祝贺 */
   function renderResume() {
     var el = document.getElementById("resume");
@@ -227,7 +273,7 @@
   document.getElementById("path-entry").innerHTML = DM.LEVELS.entry.map(pathCard).join("");
   document.getElementById("path-adv").innerHTML = DM.LEVELS.advanced.map(pathCard).join("");
 
-  /** 进阶航道锁定提示：列出还差的入门模块，点击锁定卡时滚动并抖动提醒 */
+  /** 进阶航道锁定提示：列出还差的入门模块，点击锁定卡时翻页/滚动并抖动提醒 */
   (function advNotice() {
     if (ENTRY_DONE) return;
     var note = document.getElementById("adv-lock-note");
@@ -239,7 +285,7 @@
     function flash() {
       DM.sfx("retry");
       note.classList.remove("shake"); void note.offsetWidth; note.classList.add("shake");
-      note.scrollIntoView({ behavior: "smooth", block: "center" });
+      deckFocusAdv();
     }
     document.querySelectorAll("[data-lock]").forEach(function (el) {
       el.addEventListener("click", function (ev) { ev.preventDefault(); flash(); });
@@ -325,15 +371,15 @@
       a.addEventListener("mouseleave", tipHide);
       a.addEventListener("focus", function () { tipShow(a, key); });
       a.addEventListener("blur", tipHide);
-      /* 锁定站点：点击不跳转，滚动到解锁提示并抖动提醒 */
+      /* 锁定站点：点击不跳转，翻到进阶页并抖动提醒 */
       if (locked) a.addEventListener("click", function (ev) {
         ev.preventDefault();
         DM.sfx("retry");
         var note = document.getElementById("adv-lock-note");
         if (note) {
           note.classList.remove("shake"); void note.offsetWidth; note.classList.add("shake");
-          note.scrollIntoView({ behavior: "smooth", block: "center" });
         }
+        deckFocusAdv();
       });
     });
   })();
@@ -356,6 +402,13 @@
   var cont = document.getElementById("sum-continue");
   cont.innerHTML = DM.icon("play") + (DM.store.get().stones > 0 ? "继续旅程" : "从花灯小镇出发");
   cont.href = document.getElementById("hero-go").href;
+
+  /* 尾页按钮 */
+  document.getElementById("end-ic").innerHTML = DM.icon("droplet");
+  var endGo = document.getElementById("end-go");
+  endGo.innerHTML = DM.icon("play") + "现在出发";
+  endGo.href = document.getElementById("hero-go").href;
+  document.getElementById("end-trophy").innerHTML = DM.icon("trophy") + "我的成就墙";
 
   // 首页所有按钮点击音效
   document.querySelectorAll("[data-sfx]").forEach(function (el) {

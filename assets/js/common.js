@@ -1574,7 +1574,145 @@
     } catch (e) { /* 静默 */ }
   }
 
-  function initAll() { initProgress(); initStarfield(); initTilt(); }
+  /* ④ PPT 翻页控制器：仅当存在 #deck（首页幻灯化）时启用
+     滚轮/方向键/触屏滑动翻页 · 右侧圆点 · 页码 · #s1..#s6 深链
+     弹簧回弹转场 + 每页元素动效重播；内容超高时页内滚动优先 */
+  function initDeck() {
+    var deck = document.getElementById("deck");
+    if (!deck || deck.dataset.deckBound) return;
+    deck.dataset.deckBound = "1";
+    var slides = [].slice.call(deck.querySelectorAll(".slide"));
+    if (!slides.length) return;
+    var n = slides.length, cur = -1;
+    var dotsBox = document.getElementById("deck-dots");
+    var counter = document.getElementById("deck-counter");
+    var prevBtn = document.getElementById("deck-prev");
+    var nextBtn = document.getElementById("deck-next");
+    var hint = document.getElementById("deck-hint");
+    var bar = document.querySelector(".nx-progress");
+    var dots = [];
+
+    document.body.classList.add("deck-mode");
+
+    /* 舞台顶部 = 页头实际高度（导航可换行，动态测量） */
+    function measure() {
+      var hd = document.getElementById("site-header");
+      var h = hd ? hd.offsetHeight : 64;
+      document.documentElement.style.setProperty("--deck-top", h + "px");
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    if (window.ResizeObserver) new ResizeObserver(measure).observe(document.getElementById("site-header") || document.body);
+
+    /* 圆点导航 */
+    if (dotsBox) {
+      slides.forEach(function (s, i) {
+        var b = document.createElement("button");
+        b.className = "deck-dot"; b.type = "button";
+        var name = s.getAttribute("data-name") || "第 " + (i + 1) + " 页";
+        b.setAttribute("aria-label", name);
+        b.innerHTML = "<span>" + name + "</span>";
+        b.addEventListener("click", function () { go(i, { sfx: true }); });
+        dotsBox.appendChild(b); dots.push(b);
+      });
+    }
+    if (prevBtn) prevBtn.addEventListener("click", function () { go(cur - 1, { sfx: true }); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { go(cur + 1, { sfx: true }); });
+    if (hint) hint.addEventListener("click", function () { go(cur + 1, { sfx: true }); });
+
+    /* 重播本页 [data-rv] 入场动效（跳动感的灵魂） */
+    function replay(slide) {
+      if (RM) return;
+      var els = slide.querySelectorAll("[data-rv].rv-on");
+      if (!els.length) return;
+      for (var i = 0; i < els.length; i++) els[i].classList.remove("rv-on");
+      void slide.offsetWidth; /* 强制重排，动画从头再放 */
+      requestAnimationFrame(function () {
+        for (var j = 0; j < els.length; j++) els[j].classList.add("rv-on");
+      });
+    }
+
+    function pad(x) { return (x < 10 ? "0" : "") + x; }
+
+    function go(i, opts) {
+      i = Math.max(0, Math.min(n - 1, i));
+      if (i === cur) return;
+      var first = cur === -1;
+      cur = i;
+      for (var k = 0; k < n; k++) {
+        slides[k].classList.toggle("is-active", k === i);
+        slides[k].classList.toggle("is-above", k < i);
+        slides[k].classList.toggle("is-below", k > i);
+        slides[k].setAttribute("aria-hidden", k === i ? "false" : "true");
+      }
+      if (!first) replay(slides[i]);
+      if (dots.length) for (var d = 0; d < dots.length; d++) dots[d].classList.toggle("on", d === i);
+      if (counter) counter.innerHTML = "<b>" + pad(i + 1) + "</b> / " + pad(n);
+      if (bar) bar.style.transform = "scaleX(" + (n > 1 ? (i / (n - 1)).toFixed(4) : 1) + ")";
+      if (opts && opts.sfx && window.DM && DM.sfx) { try { DM.sfx("click"); } catch (e) {} }
+      try { history.replaceState(null, "", "#s" + (i + 1)); } catch (e) {}
+    }
+
+    /* 初始页：支持 #s3 深链 */
+    var m = (location.hash || "").match(/^#s([1-9])$/);
+    go(m ? Math.min(n, +m[1]) - 1 : 0, { silent: true });
+    window.__deckGo = go;
+
+    /* 滚轮翻页：页内可滚动区域滚动到底/顶后才翻页 */
+    var wAcc = 0, wLock = 0, wTimer = 0;
+    deck.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      var t = e.target;
+      while (t && t !== deck) {
+        if (t.nodeType === 1 && t.scrollHeight > t.clientHeight + 2) {
+          var oy = (window.getComputedStyle(t) || {}).overflowY;
+          if (oy === "auto" || oy === "scroll") {
+            var canDown = t.scrollTop + t.clientHeight < t.scrollHeight - 2;
+            var canUp = t.scrollTop > 2;
+            if (e.deltaY > 0 ? canDown : canUp) return; /* 让页内滚动先吃掉 */
+          }
+        }
+        t = t.parentNode;
+      }
+      e.preventDefault();
+      var now = Date.now();
+      if (now < wLock) return;
+      clearTimeout(wTimer);
+      wAcc += e.deltaY;
+      wTimer = setTimeout(function () { wAcc = 0; }, 220);
+      if (Math.abs(wAcc) > 80) {
+        go(cur + (wAcc > 0 ? 1 : -1));
+        wAcc = 0; wLock = now + 680; /* 翻页冷却，防连跳 */
+      }
+    }, { passive: false });
+
+    /* 键盘翻页 */
+    window.addEventListener("keydown", function (e) {
+      if (!document.body.classList.contains("deck-mode")) return;
+      var t = e.target, tag = ((t && t.tagName) || "").toLowerCase();
+      if (tag === "input" || tag === "textarea" || (t && t.isContentEditable)) return;
+      var k = e.key;
+      if (k === "ArrowDown" || k === "ArrowRight" || k === "PageDown" || k === " ") {
+        e.preventDefault(); go(cur + 1, { sfx: true });
+      } else if (k === "ArrowUp" || k === "ArrowLeft" || k === "PageUp") {
+        e.preventDefault(); go(cur - 1, { sfx: true });
+      } else if (k === "Home") { e.preventDefault(); go(0, { sfx: true }); }
+      else if (k === "End") { e.preventDefault(); go(n - 1, { sfx: true }); }
+    });
+
+    /* 触屏滑动翻页 */
+    var tY = 0, tX = 0, tOn = false;
+    deck.addEventListener("touchstart", function (e) {
+      tY = e.touches[0].clientY; tX = e.touches[0].clientX; tOn = true;
+    }, { passive: true });
+    deck.addEventListener("touchend", function (e) {
+      if (!tOn) return; tOn = false;
+      var dy = tY - e.changedTouches[0].clientY, dx = tX - e.changedTouches[0].clientX;
+      if (Math.abs(dy) > 52 && Math.abs(dy) > Math.abs(dx) * 1.25) go(cur + (dy > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+
+  function initAll() { initProgress(); initStarfield(); initTilt(); initDeck(); }
   if (document.readyState === "complete") initAll();
   else window.addEventListener("load", initAll);
 })();
