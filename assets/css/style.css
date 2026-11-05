@@ -1088,17 +1088,22 @@ body.deck-mode .fx-canvas {
   width: 100%; height: 100%; pointer-events: none;
 }
 
-/* —— 舞台与页面 —— */
+/* —— 舞台与页面（真全屏：铺满视口，页头悬浮其上） —— */
 body.deck-mode #deck {
   position: fixed;
-  inset: var(--deck-top, 64px) 0 0 0;
+  inset: 0;
   z-index: 1;
+}
+body.deck-mode #site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+  border-bottom: 0; box-shadow: none;
+  background: linear-gradient(180deg, rgba(6, 11, 22, .92), rgba(6, 11, 22, .5) 62%, transparent);
 }
 body.deck-mode .slide {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  padding: clamp(10px, 2.2vh, 26px) clamp(16px, 4vw, 52px) clamp(30px, 5vh, 44px);
+  padding: clamp(60px, 8.5vh, 92px) clamp(14px, 3vw, 40px) clamp(36px, 6vh, 56px);
   overflow-y: auto; overflow-x: hidden;
   opacity: 0; visibility: hidden; pointer-events: none;
   transform: translateX(11%) scale(.975);
@@ -1119,7 +1124,7 @@ body.deck-mode .deck-hero {
   min-height: 0; padding: 0; position: static;
   display: flex; flex-direction: column; align-items: center;
   gap: clamp(8px, 1.6vh, 18px);
-  width: 100%; max-width: 980px; margin: auto; text-align: center;
+  width: 100%; max-width: 1100px; margin: auto; text-align: center;
 }
 body.deck-mode .deck-hero h1 { font-size: clamp(30px, 5vw, 58px); margin: 0; line-height: 1.18; }
 body.deck-mode .deck-hero .hero-sub { font-size: clamp(13.5px, 1.5vw, 17px); margin: 0; }
@@ -1142,36 +1147,41 @@ body.deck-mode .deck-hint:hover { color: #A5F3FC; }
 }
 @keyframes hintFloat { 0%, 100% { transform: translateX(0) } 50% { transform: translateX(6px) } }
 
-/* —— 星图页 —— */
+/* —— 星图页（无边框全幅：航图悬浮于星空底之上） —— */
 body.deck-mode .deck-figwrap {
-  width: min(1150px, 96vw); margin: auto;
+  width: min(1560px, 100%); margin: auto;
   display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 1.6vh, 16px);
 }
-.slide-kicker {
-  font-size: 12.5px; letter-spacing: .2em; color: #7DEBFA;
-  padding: 7px 18px; border-radius: 999px;
-  background: rgba(14, 165, 233, .10);
-  border: 1px solid rgba(34, 211, 238, .28);
-  box-shadow: 0 0 18px rgba(34, 211, 238, .12);
-  text-shadow: 0 0 12px rgba(34, 211, 238, .5);
+body.deck-mode .slide-kicker {
+  border: 0; background: none; box-shadow: none; padding: 0;
+  letter-spacing: .3em; font-size: clamp(11.5px, 1.2vw, 13px);
+  text-shadow: 0 0 14px rgba(34, 211, 238, .55);
 }
-body.deck-mode .hero-fig { width: 100%; max-height: 76dvh; margin: 0; }
-body.deck-mode .hero-fig svg { width: 100%; height: auto; max-height: 76dvh; display: block; }
+body.deck-mode .hero-fig {
+  width: 100%; max-height: 88dvh; margin: 0;
+  background: transparent; border: 0; border-radius: 0;
+  box-shadow: none; padding: 0; overflow: visible;
+}
+body.deck-mode .hero-fig::after { display: none; }
+body.deck-mode .hero-fig svg { width: 100%; height: auto; max-height: 88dvh; display: block; }
 body.deck-mode .hero-cap { font-size: 11px; letter-spacing: .22em; }
 
-/* —— 旅程页（续读横幅 + 徽章面板 竖排） —— */
+/* —— 旅程页（续读横幅 + 徽章面板 竖排，去描边） —— */
 body.deck-mode .deck-stack {
-  width: min(980px, 94vw); margin: auto;
+  width: min(1020px, 94vw); margin: auto;
   display: flex; flex-direction: column; gap: clamp(10px, 2vh, 18px);
 }
 body.deck-mode .resume-banner { margin: 0; }
+body.deck-mode .rb-inner { border-color: transparent; }
+body.deck-mode .panel { border-color: transparent; box-shadow: 0 18px 46px rgba(2, 8, 20, .42); }
+body.deck-mode .panel::before { display: none; }
 body.deck-mode .deck-journey { text-align: center; padding: clamp(16px, 2.6vh, 26px) 22px; }
 body.deck-mode .deck-journey h2 { font-size: clamp(19px, 2.4vw, 26px); margin: 0 0 6px; justify-content: center; }
 body.deck-mode .deck-journey-p { color: var(--muted); margin: 0 0 12px; font-size: 14px; }
 body.deck-mode .deck-journey-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-/* —— 航线页（入门/进阶卡片紧凑化） —— */
-body.deck-mode .deck-path { width: min(1200px, 100%); margin: auto; padding: 0; }
+/* —— 航线页（入门/进阶卡片紧凑化，去外框线） —— */
+body.deck-mode .deck-path { width: min(1320px, 100%); margin: auto; padding: 0; }
 body.deck-mode .path-head { margin-bottom: clamp(10px, 2vh, 20px); }
 body.deck-mode .path-head h2 { font-size: clamp(22px, 3vw, 32px); }
 body.deck-mode .path-grid { gap: clamp(10px, 1.6vw, 18px); }
@@ -1281,7 +1291,7 @@ body.deck-mode .deck-nav {
   body.deck-mode .deck-hero .hero-cta .btn { padding: 10px 18px; font-size: 14px; }
   body.deck-mode .hero-fig { max-height: 52dvh; }
   body.deck-mode .hero-fig svg { max-height: 52dvh; }
-  body.deck-mode .slide { padding: 12px 14px 40px; }
+  body.deck-mode .slide { padding: 96px 14px 40px; }
   body.deck-mode .deck-hint span { font-size: 10.5px; letter-spacing: .1em; }
   /* 旅程页合并：小屏隐藏徽章面板，保留续读横幅 */
   body.deck-mode .deck-journey { display: none; }

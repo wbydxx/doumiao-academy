@@ -1594,15 +1594,21 @@
 
     document.body.classList.add("deck-mode");
 
-    /* 舞台顶部 = 页头实际高度（导航可换行，动态测量） */
-    function measure() {
-      var hd = document.getElementById("site-header");
-      var h = hd ? hd.offsetHeight : 64;
-      document.documentElement.style.setProperty("--deck-top", h + "px");
+    /* 真·全屏：舞台铺满视口（页头悬浮），可一键进入浏览器全屏 */
+    function toggleFS() {
+      try {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          var x = (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+          if (x && x.catch) x.catch(function () {});
+        } else {
+          var el = document.documentElement;
+          var r = (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+          if (r && r.catch) r.catch(function () {});
+        }
+      } catch (e) {}
     }
-    measure();
-    window.addEventListener("resize", measure);
-    if (window.ResizeObserver) new ResizeObserver(measure).observe(document.getElementById("site-header") || document.body);
+    var fsBtn = document.getElementById("deck-fs");
+    if (fsBtn) fsBtn.addEventListener("click", toggleFS);
 
     /* 圆点导航 */
     if (dotsBox) {
@@ -1698,6 +1704,7 @@
         e.preventDefault(); go(cur - 1, { sfx: true });
       } else if (k === "Home") { e.preventDefault(); go(0, { sfx: true }); }
       else if (k === "End") { e.preventDefault(); go(n - 1, { sfx: true }); }
+      else if (k === "f" || k === "F") { toggleFS(); }
     });
 
     /* 触屏左右滑动翻页 */

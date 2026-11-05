@@ -14,7 +14,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="assets/css/tokens.css?v=7">
-<link rel="stylesheet" href="assets/css/style.css?v=14">
+<link rel="stylesheet" href="assets/css/style.css?v=15">
 </head>
 <body>
 <canvas id="fx-canvas" class="fx-canvas" aria-hidden="true"></canvas>
@@ -47,12 +47,6 @@
       <div class="slide-kicker" data-rv style="--i:0">ROUTE MAP · 一滴水的旅程，六大站点</div>
       <div class="hero-fig" data-rv style="--i:1">
         <svg viewBox="0 0 1200 480" role="img" aria-label="一滴水的旅程：沿长江航线经过六座学习站点，可点击直达">
-          <defs>
-            <linearGradient id="hf-bg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#0A1428"/><stop offset="1" stop-color="#0C1B33"/>
-            </linearGradient>
-          </defs>
-          <rect width="1200" height="480" fill="url(#hf-bg)"/>
           <g class="g-sky" aria-hidden="true">
             <path class="sky-line" d="M60 148q40-26 90 0M1005 148q46-30 100 0M1085 148q30-20 60 0" opacity=".55"/>
             <path class="sky-line" d="M150 148L172 58l22 90M161 120h22M156 136h32M166 94h12M172 58V40"/>
@@ -147,13 +141,14 @@
 <div class="deck-nav">
   <button class="deck-btn" id="deck-prev" type="button" aria-label="上一页"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg></button>
   <button class="deck-btn" id="deck-next" type="button" aria-label="下一页"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6l6 6-6 6"/></svg></button>
+  <button class="deck-btn" id="deck-fs" type="button" aria-label="全屏模式" title="全屏模式（快捷键 F）"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M15 4h5v5M9 20H4v-5M20 15v5h-5"/></svg></button>
 </div>
 <div class="deck-counter" id="deck-counter" aria-hidden="true">01 / 06</div>
 
 <footer id="site-footer"></footer>
 
 <script src="assets/js/storage.js?v=5"></script><script src="assets/js/mock-data.js?v=5"></script>
-<script src="assets/js/pinyin-data.js?v=5"></script><script src="assets/data/catalog.js?v=2"></script><script src="assets/js/common.js?v=13"></script>
+<script src="assets/js/pinyin-data.js?v=5"></script><script src="assets/data/catalog.js?v=2"></script><script src="assets/js/common.js?v=14"></script>
 <script>
 (function () {
   var DM = window.DM;
