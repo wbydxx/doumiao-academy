@@ -1698,9 +1698,10 @@
       var t = e.target, tag = ((t && t.tagName) || "").toLowerCase();
       if (tag === "input" || tag === "textarea" || (t && t.isContentEditable)) return;
       var k = e.key;
-      if (k === "ArrowDown" || k === "ArrowRight" || k === "PageDown" || k === " ") {
+      /* 仅横向翻页：←/→ 与空格；↑↓/PgUp/PgDn 不再翻页 */
+      if (k === "ArrowRight" || k === " ") {
         e.preventDefault(); go(cur + 1, { sfx: true });
-      } else if (k === "ArrowUp" || k === "ArrowLeft" || k === "PageUp") {
+      } else if (k === "ArrowLeft") {
         e.preventDefault(); go(cur - 1, { sfx: true });
       } else if (k === "Home") { e.preventDefault(); go(0, { sfx: true }); }
       else if (k === "End") { e.preventDefault(); go(n - 1, { sfx: true }); }
