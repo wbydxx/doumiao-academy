@@ -133,6 +133,7 @@
     if (muted) return;
     if (kind === "click") tone(620, 0, 0.08, "triangle");
     else if (kind === "flip") { tone(500, 0, 0.05, "triangle", 0.05); tone(740, 0.035, 0.07, "triangle", 0.045); }
+    else if (kind === "warp") { tone(180, 0, .5, "sawtooth", .04); tone(360, .12, .5, "sawtooth", .04); tone(720, .28, .45, "triangle", .06); }
     else if (kind === "right") { tone(660, 0, 0.12); tone(880, 0.1, 0.16); tone(1100, 0.22, 0.2); }
     else if (kind === "wow") { tone(520, 0, 0.12, "triangle"); tone(660, 0.1, 0.12, "triangle"); tone(780, 0.2, 0.12, "triangle"); tone(1040, 0.3, 0.28, "triangle"); }
     else if (kind === "retry") tone(320, 0, 0.18, "sine", 0.09);
@@ -1416,8 +1417,115 @@
   }
 
   /* ---------------- 导出 ---------------- */
+  /* ---------------- 跃迁转场（科幻星光隧道） ---------------- */
+  /** 由目录推算「下一站」：下一课 → 闯关游戏 → 挑战测验 → 下一模块第一课 */
+  function nextTargetOf(m, idx) {
+    var cat = window.DM_CATALOG, mod = cat && cat.modules && cat.modules[m];
+    if (!mod) return null;
+    var ls = mod.lessons || [];
+    if (idx + 1 < ls.length) return { url: ls[idx + 1].file, label: "第 " + (idx + 2) + " 课 · " + ls[idx + 1].title };
+    if (mod.game) return { url: mod.game.file, label: "闯关游戏 · " + mod.game.title };
+    if (mod.quiz) return { url: "quiz.html", label: "挑战测验" };
+    var keys = Object.keys(cat.modules), ki = keys.indexOf(m);
+    if (ki > -1 && ki + 1 < keys.length) {
+      var nm = cat.modules[keys[ki + 1]], fl = nm.lessons && nm.lessons[0];
+      if (fl) return { url: "../" + nm.dir + "/" + fl.file, label: nm.name + " · " + fl.title };
+    }
+    return null;
+  }
+  /** 全屏跃迁转场：星光隧道 + 3 秒倒计时，可立即跃迁或留下 */
+  function warpTo(url, label) {
+    if (document.getElementById("warp-ov")) { location.href = url; return; }
+    sfx("warp");
+    var ov = document.createElement("div");
+    ov.id = "warp-ov"; ov.className = "warp-ov";
+    ov.innerHTML =
+      '<canvas class="warp-cv" aria-hidden="true"></canvas>' +
+      '<div class="warp-core">' +
+        '<div class="warp-k">WARP JUMP · 跃迁通道</div>' +
+        '<div class="warp-t">' + outEsc(label || "下一站") + "</div>" +
+        '<div class="warp-n">3</div>' +
+        '<div class="warp-btns">' +
+          '<button class="btn" type="button" data-w="go">立即跃迁</button>' +
+          '<button class="btn ghost" type="button" data-w="stay">留在这里</button>' +
+        "</div>" +
+      "</div>";
+    document.body.appendChild(ov);
+    var cv = ov.querySelector("canvas"), ctx = cv.getContext("2d");
+    var nEl = ov.querySelector(".warp-n");
+    var W, H, cx, cy;
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    function size() {
+      W = ov.clientWidth; H = ov.clientHeight;
+      cv.width = W * dpr; cv.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cx = W / 2; cy = H / 2;
+    }
+    size();
+    window.addEventListener("resize", size);
+    var st = [], i;
+    for (i = 0; i < 150; i++) st.push({ a: Math.random() * 6.2832, s: .25 + Math.random() * .85, o: Math.random() * 90 });
+    var t0 = performance.now(), done = false, raf = 0;
+    function jump() {
+      if (done) return;
+      done = true;
+      cancelAnimationFrame(raf);
+      ov.classList.add("flash");
+      setTimeout(function () { location.href = url; }, 260);
+    }
+    function stay() { done = true; cancelAnimationFrame(raf); window.removeEventListener("resize", size); ov.remove(); }
+    ov.querySelector('[data-w="go"]').addEventListener("click", jump);
+    ov.querySelector('[data-w="stay"]').addEventListener("click", stay);
+    function frame(now) {
+      var t = (now - t0) / 1000;
+      if (!done && !RM) {
+        ctx.clearRect(0, 0, W, H);
+        var maxR = Math.hypot(cx, cy) + 40;
+        for (var i2 = 0; i2 < st.length; i2++) {
+          var q = st[i2];
+          var r = ((q.o + t * q.s * 170) % maxR) - 30;
+          if (r < 0) continue;
+          var len = 12 + r * .3 * q.s;
+          var ca = Math.cos(q.a), sa = Math.sin(q.a);
+          var al = Math.min(.9, r / (maxR * .45));
+          ctx.strokeStyle = "rgba(" + (i2 % 4 === 0 ? "245,208,138" : "103,232,249") + "," + al.toFixed(3) + ")";
+          ctx.lineWidth = 1 + (r / maxR) * 1.8;
+          ctx.beginPath();
+          ctx.moveTo(cx + ca * r, cy + sa * r);
+          ctx.lineTo(cx + ca * (r + len), cy + sa * (r + len));
+          ctx.stroke();
+        }
+        var glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 100);
+        glow.addColorStop(0, "rgba(125,235,250,.32)");
+        glow.addColorStop(1, "rgba(125,235,250,0)");
+        ctx.fillStyle = glow;
+        ctx.fillRect(cx - 120, cy - 120, 240, 240);
+      }
+      var n = Math.max(1, 3 - Math.floor(t));
+      if (nEl.textContent !== String(n)) {
+        nEl.textContent = n;
+        nEl.classList.remove("pop"); void nEl.offsetWidth; nEl.classList.add("pop");
+      }
+      if (t > 3) { jump(); return; }
+      if (!done) raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+  }
+  /* 通关后自动跃迁：包装 completeLesson（每次页面加载只触发一次） */
+  (function () {
+    var cl = store.completeLesson, armed = false;
+    store.completeLesson = function (m, idx, stones) {
+      cl(m, idx, stones);
+      if (armed) return;
+      armed = true;
+      var nx = nextTargetOf(m, idx);
+      if (nx) setTimeout(function () { warpTo(nx.url, "通关成功 · 跃迁至 " + nx.label); }, 1100);
+    };
+  })();
+
   window.DM = {
     icon: icon, sfx: sfx, speak: speak, speakPage: speakPage, petals: petals,
+    warpTo: warpTo, nextTargetOf: nextTargetOf,
     pinyin: { toggle: pyToggle },
     pyRun: pyRun, pyHighlight: pyHighlight, taskRunner: taskRunner, practiceRunner: practiceRunner,
     rvAll: rvAll, count: count, ring: ring,
@@ -1759,6 +1867,39 @@
     if (prevBtn) prevBtn.addEventListener("click", function () { go(cur - 1, { sfx: true }); });
     if (nextBtn) nextBtn.addEventListener("click", function () { go(cur + 1, { sfx: true }); });
     if (hint) hint.addEventListener("click", function () { go(cur + 1, { sfx: true }); });
+
+    /* 点击直达：每页底部「下一站」大按钮（不再依赖滚轮/滑动） */
+    for (var ai = 0; ai < n - 1; ai++) {
+      var adv = document.createElement("button");
+      adv.type = "button"; adv.className = "deck-adv";
+      adv.innerHTML = "下一站 · " + (slides[ai + 1].getAttribute("data-name") || "") + " <i></i>";
+      (function (xi) { adv.addEventListener("click", function () { go(xi + 1, { sfx: true }); }); })(ai);
+      slides[ai].appendChild(adv);
+    }
+
+    /* 出发即跃迁：站内课程链接点击 → 科幻跃迁转场 */
+    deck.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a || a.target === "_blank") return;
+      var href = a.getAttribute("href") || "";
+      if (/^(https?:|mailto:|javascript:)/i.test(href) || !/\.html?($|[?#])/i.test(href)) return;
+      e.preventDefault();
+      var file = href.split("/").pop().split("#")[0];
+      var lab = null, cat = window.DM_CATALOG;
+      if (cat && cat.modules) {
+        for (var k in cat.modules) {
+          var mo = cat.modules[k], all = (mo.lessons || []).slice();
+          if (mo.game) all.push(mo.game);
+          if (mo.quiz) all.push({ file: "quiz.html", title: "挑战测验" });
+          for (var j = 0; j < all.length; j++) {
+            if (all[j].file === file) { lab = (mo.name || k) + " · " + all[j].title; break; }
+          }
+          if (lab) break;
+        }
+      }
+      if (window.DM && DM.warpTo) DM.warpTo(href, lab || ("即将跃迁 · " + ((slides[cur] && slides[cur].getAttribute("data-name")) || "下一站")));
+      else location.href = href;
+    });
 
     /* 重播本页 [data-rv] 入场动效（跳动感的灵魂） */
     function replay(slide) {

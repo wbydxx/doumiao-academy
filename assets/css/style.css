@@ -1074,7 +1074,7 @@ body.gated { overflow: hidden; }
    ============================================================ */
 
 /* —— 翻页控制件（默认隐藏，deck-mode 激活） —— */
-.deck-dots, .deck-nav, .deck-counter, .deck-hint { display: none; }
+.deck-dots, .deck-nav, .deck-counter { display: none; }
 
 body.deck-mode {
   overflow: hidden;
@@ -1105,7 +1105,7 @@ body.deck-mode .slide {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  padding: clamp(60px, 8.5vh, 92px) clamp(14px, 3vw, 40px) clamp(36px, 6vh, 56px);
+  padding: clamp(60px, 8.5vh, 92px) clamp(14px, 3vw, 40px) clamp(66px, 9vh, 92px);
   overflow: hidden; /* 零滚动：溢出交给 .slide-fit 等比缩放 */
   opacity: 0; visibility: hidden; pointer-events: none;
   transform: translateX(11%) scale(.975);
@@ -1136,20 +1136,73 @@ body.deck-mode .deck-hero .hero-meta { font-size: 12px; letter-spacing: .18em; }
 body.deck-mode .deck-hero .hero-kicker { font-size: 12.5px; padding: 7px 16px; }
 body.deck-mode .deck-hero .hero-cta { margin: clamp(6px, 1.4vh, 14px) 0 0; }
 
-/* 翻页提示（仅封面，JS 激活点击） */
-body.deck-mode .deck-hint {
-  display: inline-flex; flex-direction: column; align-items: center; gap: 2px;
-  position: absolute; bottom: clamp(8px, 2vh, 18px); left: 50%; translate: -50% 0;
-  background: none; border: 0; cursor: pointer; padding: 6px 14px;
-  color: #7E9CC0; font-size: 11.5px; letter-spacing: .14em;
-  animation: hintFloat 2.6s ease-in-out infinite;
+/* 「下一站」直达按钮（每页底部，点击切换，不依赖滚轮/滑动） */
+body.deck-mode .deck-adv {
+  position: absolute; left: 50%; bottom: clamp(14px, 3.4vh, 32px); translate: -50% 0;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 26px; border-radius: 999px;
+  background: rgba(14, 165, 233, .13);
+  border: 1px solid rgba(34, 211, 238, .5);
+  color: #BFE9F6; font-size: 15px; font-weight: 700; letter-spacing: .06em;
+  cursor: pointer; z-index: 6; font-family: inherit;
+  box-shadow: 0 8px 26px rgba(2, 8, 20, .5);
+  transition: background .25s, border-color .25s, box-shadow .3s, transform .25s cubic-bezier(.34,1.56,.64,1);
+  animation: advPulse 2.6s ease-in-out infinite;
 }
-body.deck-mode .deck-hint:hover { color: #A5F3FC; }
-.deck-hint-arrow {
-  width: 14px; height: 14px; border-top: 2px solid currentColor; border-right: 2px solid currentColor;
-  transform: rotate(45deg); opacity: .8;
+body.deck-mode .deck-adv i {
+  width: 9px; height: 9px; border-top: 2.4px solid currentColor; border-right: 2.4px solid currentColor;
+  transform: rotate(45deg); transition: transform .25s;
 }
-@keyframes hintFloat { 0%, 100% { transform: translateX(0) } 50% { transform: translateX(6px) } }
+body.deck-mode .deck-adv:hover {
+  background: rgba(14, 165, 233, .3); border-color: #67E8F9; color: #EAF9FF;
+  box-shadow: 0 0 26px rgba(34, 211, 238, .45), 0 8px 26px rgba(2, 8, 20, .5);
+  transform: translateY(-2px); animation-play-state: paused;
+}
+body.deck-mode .deck-adv:hover i { transform: rotate(45deg) translate(2px, -2px); }
+@keyframes advPulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(34, 211, 238, 0), 0 8px 26px rgba(2, 8, 20, .5); }
+  50% { box-shadow: 0 0 22px rgba(34, 211, 238, .38), 0 8px 26px rgba(2, 8, 20, .5); }
+}
+
+/* —— 跃迁转场（科幻星光隧道） —— */
+.warp-ov {
+  position: fixed; inset: 0; z-index: 999;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 50% 50%, rgba(10, 20, 40, .88), rgba(2, 6, 14, .97));
+  backdrop-filter: blur(6px);
+  animation: warpIn .3s ease;
+}
+@keyframes warpIn { from { opacity: 0 } }
+.warp-cv { position: absolute; inset: 0; width: 100%; height: 100%; }
+.warp-core {
+  position: relative; text-align: center; color: #EAF6FF; padding: 20px;
+  animation: coreIn .45s cubic-bezier(.34, 1.56, .64, 1);
+}
+@keyframes coreIn { from { opacity: 0; transform: scale(.86) } }
+.warp-k {
+  font-size: 11px; letter-spacing: .34em; color: #7DEBFA;
+  text-shadow: 0 0 12px rgba(34, 211, 238, .6); margin-bottom: 10px;
+}
+.warp-t { font-size: clamp(20px, 3.4vw, 30px); font-weight: 800; text-shadow: 0 0 24px rgba(34, 211, 238, .35); }
+.warp-n {
+  font-size: clamp(54px, 9vw, 92px); font-weight: 800; margin: 10px 0 4px; color: #F5D08A;
+  text-shadow: 0 0 30px rgba(245, 208, 138, .55); font-variant-numeric: tabular-nums;
+}
+.warp-n.pop { animation: nPop .5s cubic-bezier(.34, 1.56, .64, 1); }
+@keyframes nPop { 0% { transform: scale(1.5); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
+.warp-btns { display: flex; gap: 12px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+.warp-btns .btn {
+  background: linear-gradient(135deg, #0EA5E9, #22D3EE); color: #04121F; border: 0;
+  padding: 10px 22px; border-radius: 999px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 0 18px rgba(34, 211, 238, .35); font-family: inherit;
+}
+.warp-btns .btn.ghost {
+  background: rgba(125, 235, 250, .08); color: #BFE9F6;
+  border: 1px solid rgba(125, 235, 250, .4); box-shadow: none;
+}
+.warp-btns .btn:hover { filter: brightness(1.15); }
+.warp-ov.flash { animation: warpFlash .26s ease forwards; }
+@keyframes warpFlash { to { background: #EAF9FF; filter: brightness(2.2); opacity: .92 } }
 
 /* —— 星图页（无边框全幅：航图悬浮于星空底之上） —— */
 body.deck-mode .deck-figwrap {
@@ -1296,8 +1349,8 @@ body.deck-mode .deck-nav {
   body.deck-mode .deck-hero .hero-cta .btn { padding: 10px 18px; font-size: 14px; }
   body.deck-mode .hero-fig { max-height: 52dvh; }
   body.deck-mode .hero-fig svg { max-height: 52dvh; }
-  body.deck-mode .slide { padding: 96px 14px 40px; }
-  body.deck-mode .deck-hint span { font-size: 10.5px; letter-spacing: .1em; }
+  body.deck-mode .slide { padding: 96px 14px 86px; }
+  body.deck-mode .deck-adv { font-size: 13.5px; padding: 10px 20px; }
   /* 旅程页合并：小屏隐藏徽章面板，保留续读横幅 */
   body.deck-mode .deck-journey { display: none; }
 }
