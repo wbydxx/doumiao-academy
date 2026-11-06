@@ -1209,7 +1209,7 @@ body.warp-reveal > main, body.warp-reveal #site-header, body.warp-reveal #site-f
 .warp-toast.on .wt-bar { animation: wtBar 2.05s linear forwards; }
 @keyframes wtBar { from { transform: scaleX(0) } to { transform: scaleX(1) } }
 
-/* —— 关卡分幕（LessonDeck）补充样式 —— */
+/* —— 关卡分幕（LessonDeck）舞台排版 —— */
 /* 面包屑 → 悬浮玻璃徽章（lesson 全屏舞台左上角） */
 .lstage-crumbs {
   position: fixed; top: 64px; left: 16px; z-index: 26;
@@ -1223,12 +1223,75 @@ body.warp-reveal > main, body.warp-reveal #site-header, body.warp-reveal #site-f
 .lstage-crumbs .sep { opacity: .45; }
 .lstage-crumbs svg { width: 13px; height: 13px; }
 @media (max-width: 700px) { .lstage-crumbs { display: none; } }
-/* lesson 幕内容容器：窄栏居中、幕内纵排 */
+
+/* 幕容器：窄栏居中、幕内纵排 */
 body.deck-mode .slide-lesson .slide-fit {
   width: 100%; max-width: 880px;
-  display: grid; gap: 15px; align-content: center;
+  display: grid; gap: 14px; align-content: center;
 }
+
+/* 幕眉标：ACT 胶囊（章节感） */
+.lslide-act {
+  display: inline-flex; align-items: center; gap: 10px; justify-self: start;
+  padding: 6px 16px; border-radius: 999px;
+  background: rgba(34, 211, 238, .08); border: 1px solid rgba(34, 211, 238, .32);
+  color: #7DEBFA; font-size: 11.5px; font-weight: 800; letter-spacing: .2em;
+  text-shadow: 0 0 12px rgba(34, 211, 238, .45);
+}
+.lslide-act i {
+  width: 7px; height: 7px; border-radius: 50%; background: #22D3EE;
+  box-shadow: 0 0 10px rgba(34, 211, 238, .9);
+  animation: actDot 1.8s ease-in-out infinite;
+}
+@keyframes actDot { 50% { opacity: .3 } }
+.lslide-act span {
+  color: #9FC3DB; font-weight: 600; letter-spacing: .1em; text-shadow: none;
+  border-left: 1px solid rgba(125, 235, 250, .25); padding-left: 10px;
+}
+
+/* 讲述/开场幕：开放式排版——去掉卡片框，大字直接站在星空上 */
 body.deck-mode .slide-lesson .panel { margin: 0; }
+body.deck-mode .act-learn > .slide-fit > .panel,
+body.deck-mode .act-open > .slide-fit > .panel {
+  background: transparent; border: 0; box-shadow: none; padding: 4px 8px;
+}
+body.deck-mode .act-learn .panel h2 {
+  font-size: clamp(24px, 3.6vw, 34px); margin: 2px 0 10px; line-height: 1.3;
+  background: linear-gradient(100deg, #EAF9FF, #7DEBFA 62%, #F5D08A);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: none;
+}
+body.deck-mode .act-learn .panel p,
+body.deck-mode .act-open .panel p {
+  font-size: clamp(15px, 1.9vw, 17.5px); line-height: 2.05; color: #C9DFEF;
+}
+body.deck-mode .slide-lesson .panel p strong,
+body.deck-mode .slide-lesson .panel p b { color: #F5D08A; font-weight: 700; }
+body.deck-mode .slide-lesson .panel li { color: #C9DFEF; line-height: 1.95; }
+
+/* 开场幕：标题居中放大 + 场景大图，封面感 */
+body.deck-mode .act-open > .slide-fit { text-align: center; max-width: 980px; }
+body.deck-mode .act-open .lslide-act { justify-self: center; }
+body.deck-mode .act-open .panel h2 {
+  font-size: clamp(28px, 4.6vw, 44px);
+}
+body.deck-mode .act-open .panel .panel-tag { display: inline-flex; }
+body.deck-mode .act-open .scene-panel { min-height: 0; }
+body.deck-mode .act-open .scene-panel svg { width: min(600px, 94%); height: auto; }
+
+/* 尝试幕：交互面板保留容器感，居中微放大 */
+body.deck-mode .act-try > .slide-fit { max-width: 920px; }
+body.deck-mode .act-try .try-panel {
+  background: rgba(10, 20, 38, .55); border: 1px solid rgba(125, 235, 250, .22);
+  border-radius: 18px; box-shadow: 0 18px 50px rgba(2, 8, 20, .45);
+  backdrop-filter: blur(4px);
+}
+body.deck-mode .act-try .panel h2 {
+  font-size: clamp(21px, 2.8vw, 27px);
+  background: linear-gradient(100deg, #EAF9FF, #7DEBFA);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: none;
+}
 
 /* —— 星图页（无边框全幅：航图悬浮于星空底之上） —— */
 body.deck-mode .deck-figwrap {
@@ -1894,3 +1957,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   .btn::after { display: none; }
   .fx-canvas { display: none; }
 }
+
+/* 幕内页底导航（上一课/下一关）居中 */
+body.deck-mode .slide-lesson .pager { justify-content: center; gap: 14px; margin: 4px 0 0; }

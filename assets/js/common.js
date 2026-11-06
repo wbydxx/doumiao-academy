@@ -1836,19 +1836,36 @@
     m.__lsBound = "1";
     document.body.classList.add("lesson-stage");
 
-    /* 分幕：序幕 = 标题 panel（+ 紧随的场景大图 panel），之后每 panel 一幕；
-       顶层的 doudou-bubble 并入最后一幕，面包屑升级为悬浮徽章 */
-    var groups = [];
-    if (panels[1] && /(^|\s)scene-panel(\s|$)/.test(panels[1].className)) {
-      groups.push([panels[0], panels[1]]);
-      for (var i = 2; i < panels.length; i++) groups.push([panels[i]]);
-    } else {
-      for (var j = 0; j < panels.length; j++) groups.push([panels[j]]);
-    }
+    /* 分幕编排（三幕式舞台，每幕内容饱满不空洞）：
+       开场幕 = 标题 + 场景大图；讲述幕 = 中间内容合排（>3 块才拆两幕）；
+       尝试幕 = 交互面板 + 倒逗（无交互面板则并入讲述幕） */
+    var isScene = function (el) { return el && /(^|\s)scene-panel(\s|$)/.test(el.className); };
+    var isTry = function (el) { return el && /(^|\s)try-panel(\s|$)/.test(el.className); };
+    var mid = panels.slice(isScene(panels[1]) ? 2 : 1);
+    var last = mid.length && isTry(mid[mid.length - 1]) ? mid.pop() : null;
+    var groups = [[panels[0]]];
+    if (isScene(panels[1])) groups[0].push(panels[1]);
+    if (mid.length <= 3) groups.push(mid);
+    else { var half = Math.ceil(mid.length / 2); groups.push(mid.slice(0, half)); groups.push(mid.slice(half)); }
+    if (last) groups.push([last]);
     var bubbles = [].filter.call(m.children, function (el) {
       return el.tagName === "SECTION" && /(^|\s)doudou-bubble(\s|$)/.test(el.className);
     });
     if (bubbles.length) groups[groups.length - 1].push(bubbles[0]);
+    groups = groups.filter(function (g) { return g.length; });
+
+    /* 页底导航（div.pager：上一课/下一关）不是 panel，单独收进最后一幕，防止丢失 */
+    var pagers = [].filter.call(m.children, function (el) {
+      return /(^|\s)pager(\s|$)/.test(el.className);
+    });
+
+    /* 幕类型 → 舞台排版（开场 / 讲述 / 尝试），眉标文案随之 */
+    var actMeta = function (gi, grp) {
+      var hasTry = grp.some(isTry);
+      if (gi === 0) return { cls: "act-open", tag: "OPENING · 开场" };
+      if (hasTry) return { cls: "act-try", tag: "TRY IT · 试一试" };
+      return { cls: "act-learn", tag: "LEARN · 学一学" };
+    };
 
     /* 重建 main：#deck + .slide 结构，交给 initDeck 接管全部交互 */
     var crumbs = m.querySelector("nav.crumbs");
@@ -1857,13 +1874,20 @@
     m.className = "deck deck-lesson";
     m.innerHTML = "";
     groups.forEach(function (grp, gi) {
+      if (!grp.length) return;
+      var meta = actMeta(gi, grp);
       var s = document.createElement("section");
-      s.className = "slide slide-lesson";
+      s.className = "slide slide-lesson " + meta.cls;
       var h2 = grp[0].querySelector("h2");
       s.setAttribute("data-name", (h2 ? h2.textContent.trim().slice(0, 14) : "") || ("第 " + (gi + 1) + " 幕"));
       var fit = document.createElement("div");
       fit.className = "slide-fit";
+      var act = document.createElement("div");
+      act.className = "lslide-act";
+      act.innerHTML = "<i></i>" + meta.tag + "<span>第 " + (gi + 1) + " / " + groups.length + " 幕</span>";
+      fit.appendChild(act);
       grp.forEach(function (p) { fit.appendChild(p); });
+      if (gi === groups.length - 1) pagers.forEach(function (pg) { fit.appendChild(pg); });
       s.appendChild(fit);
       m.appendChild(s);
     });
