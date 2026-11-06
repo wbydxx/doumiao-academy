@@ -1460,28 +1460,33 @@
     } catch (e) { /* 静默 */ }
   }
 
-  /* ② Hero 粒子星域：星座连线 + 鼠标轻推 + 星辰闪烁 */
+  /* ② 星域粒子引擎 v2：漂移星尘 + 星座连线 + 指针引力旋涡 + 点击迸发
+     + 翻页粒子流（__fxSweep）+ 低频流星；触屏降密度但保留全部玩法 */
   function initStarfield() {
     var canvas = document.getElementById("fx-canvas");
-    if (!canvas || !canvas.getContext || RM || !FINE) return;
+    if (!canvas || !canvas.getContext || RM) return;
     try {
       var ctx = canvas.getContext("2d");
       var host = canvas.parentElement || canvas;
       var DPR = Math.min(2, window.devicePixelRatio || 1);
-      var W = 0, H = 0, pts = [], raf = 0, running = true;
-      var mouse = { x: -9e3, y: -9e3 };
-      var LINK = 116;
+      var W = 0, H = 0, pts = [], sparks = [], meteors = [];
+      var raf = 0, running = true;
+      var mouse = { x: -9e3, y: -9e3, on: false };
+      var LINK = 106, CLINK = 160;
+      var PALETTE = ["103,232,249", "103,232,249", "103,232,249", "125,235,250", "167,139,250", "245,208,138"];
 
       function seed() {
-        var n = Math.max(26, Math.min(62, Math.round(W * H / 24000)));
+        var density = FINE ? 8200 : 13000;
+        var n = Math.max(60, Math.min(175, Math.round(W * H / density)));
         pts = [];
         for (var i = 0; i < n; i++) {
+          var z = .45 + Math.random(); /* 深度：影响尺寸/速度/亮度 */
           pts.push({
             x: Math.random() * W, y: Math.random() * H,
-            vx: (Math.random() - .5) * .24, vy: (Math.random() - .5) * .24,
-            r: Math.random() * 1.5 + .6,
-            tw: Math.random() * 6.283,
-            c: Math.random() < .18 ? "167,139,250" : "103,232,249"
+            vx: (Math.random() - .5) * .3 * z, vy: (Math.random() - .5) * .3 * z,
+            r: (Math.random() * 1.3 + .5) * z,
+            z: z, tw: Math.random() * 6.283, tws: .014 + Math.random() * .022,
+            c: PALETTE[(Math.random() * PALETTE.length) | 0]
           });
         }
       }
@@ -1493,46 +1498,155 @@
         ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
         seed();
       }
-      function frame() {
+
+      /* 点击迸发：金青火花，带重力阻尼 */
+      function burst(x, y, n) {
+        for (var i = 0; i < (n || 16); i++) {
+          var a = Math.random() * 6.2832, sp = 1.4 + Math.random() * 3.4;
+          sparks.push({
+            x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - .6,
+            life: 1, decay: .012 + Math.random() * .02,
+            r: .8 + Math.random() * 1.8,
+            c: Math.random() < .45 ? "245,208,138" : "103,232,249"
+          });
+        }
+        if (sparks.length > 240) sparks.splice(0, sparks.length - 240);
+      }
+      window.__fxBurst = burst;
+
+      /* 翻页粒子流：一道星流自进入方向涌入 */
+      function sweep(dir) {
+        var n = FINE ? 30 : 18;
+        for (var i = 0; i < n; i++) {
+          sparks.push({
+            x: dir > 0 ? W + 12 : -12, y: Math.random() * H,
+            vx: (dir > 0 ? -1 : 1) * (3.2 + Math.random() * 4.6),
+            vy: (Math.random() - .5) * .9,
+            life: 1, decay: .008 + Math.random() * .014,
+            r: .9 + Math.random() * 2.1,
+            c: Math.random() < .3 ? "245,208,138" : "103,232,249"
+          });
+        }
+      }
+      window.__fxSweep = sweep;
+
+      var meteorT = 0;
+      function maybeMeteor(t) {
+        if (t - meteorT < 3800 + Math.random() * 3600) return;
+        meteorT = t;
+        var fromLeft = Math.random() < .5;
+        meteors.push({
+          x: fromLeft ? -40 : W * (.3 + Math.random() * .7), y: Math.random() * H * .4,
+          vx: (fromLeft ? 1 : -1) * (7 + Math.random() * 5), vy: 2.6 + Math.random() * 2.4,
+          life: 1
+        });
+      }
+
+      function frame(t) {
         if (!running) return;
         ctx.clearRect(0, 0, W, H);
+        maybeMeteor(t || 0);
         var i, j, p, q, dx, dy, d;
-        for (i = 0; i < pts.length; i++) {
-          p = pts[i];
-          p.x += p.vx; p.y += p.vy; p.tw += .022;
-          if (p.x < -10) p.x = W + 10; else if (p.x > W + 10) p.x = -10;
-          if (p.y < -10) p.y = H + 10; else if (p.y > H + 10) p.y = -10;
-          dx = p.x - mouse.x; dy = p.y - mouse.y; d = dx * dx + dy * dy;
-          if (d < 14400 && d > 1) { /* 120px 引力圈：轻推离开 */
-            var f = (14400 - d) / 14400 * .9;
-            p.x += (dx / Math.sqrt(d)) * f;
-            p.y += (dy / Math.sqrt(d)) * f;
+
+        /* 指针引力 + 切向旋涡（粒子绕光标起舞） */
+        if (FINE && mouse.on) {
+          for (i = 0; i < pts.length; i++) {
+            p = pts[i];
+            dx = mouse.x - p.x; dy = mouse.y - p.y; d = dx * dx + dy * dy;
+            if (d < CLINK * CLINK && d > 4) {
+              var dist = Math.sqrt(d), pull = (1 - dist / CLINK) * .16 * p.z;
+              p.vx += (dx / dist) * pull - (dy / dist) * pull * .6;
+              p.vy += (dy / dist) * pull + (dx / dist) * pull * .6;
+            }
           }
         }
+
+        /* 漂移 + 限速 + 环绕 */
+        for (i = 0; i < pts.length; i++) {
+          p = pts[i];
+          p.vx *= .985; p.vy *= .985;
+          var sp2 = p.vx * p.vx + p.vy * p.vy, cap = .5 * p.z;
+          if (sp2 > cap * cap) { var k2 = cap / Math.sqrt(sp2); p.vx *= k2; p.vy *= k2; }
+          if (Math.abs(p.vx) < .04) p.vx += (Math.random() - .5) * .02;
+          if (Math.abs(p.vy) < .04) p.vy += (Math.random() - .5) * .02;
+          p.x += p.vx; p.y += p.vy; p.tw += p.tws;
+          if (p.x < -12) p.x = W + 12; else if (p.x > W + 12) p.x = -12;
+          if (p.y < -12) p.y = H + 12; else if (p.y > H + 12) p.y = -12;
+        }
+
+        /* 星座连线 */
         ctx.lineWidth = 1;
         for (i = 0; i < pts.length; i++) {
           p = pts[i];
           for (j = i + 1; j < pts.length; j++) {
             q = pts[j];
             dx = p.x - q.x; dy = p.y - q.y; d = dx * dx + dy * dy;
-            if (d < LINK * LINK) {
-              ctx.strokeStyle = "rgba(103,232,249," + (.15 * (1 - Math.sqrt(d) / LINK)).toFixed(3) + ")";
+            var lim = LINK * (p.z + q.z) * .5;
+            if (d < lim * lim) {
+              ctx.strokeStyle = "rgba(103,232,249," + (.13 * (1 - Math.sqrt(d) / lim)).toFixed(3) + ")";
               ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
             }
           }
         }
+
+        /* 指针连线（金线牵星） */
+        if (FINE && mouse.on) {
+          for (i = 0; i < pts.length; i++) {
+            p = pts[i];
+            dx = p.x - mouse.x; dy = p.y - mouse.y; d = dx * dx + dy * dy;
+            if (d < CLINK * CLINK) {
+              ctx.strokeStyle = "rgba(245,208,138," + (.45 * (1 - Math.sqrt(d) / CLINK)).toFixed(3) + ")";
+              ctx.beginPath(); ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+            }
+          }
+          ctx.fillStyle = "rgba(245,208,138,.9)";
+          ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 2.2, 0, 6.2832); ctx.fill();
+        }
+
+        /* 星尘本体（闪烁） */
         for (i = 0; i < pts.length; i++) {
           p = pts[i];
-          ctx.fillStyle = "rgba(" + p.c + "," + (.32 + Math.sin(p.tw) * .26).toFixed(3) + ")";
+          ctx.fillStyle = "rgba(" + p.c + "," + ((.3 + Math.sin(p.tw) * .25) * Math.min(1, p.z + .3)).toFixed(3) + ")";
           ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
         }
+
+        /* 流星拖尾 */
+        for (i = meteors.length - 1; i >= 0; i--) {
+          var m = meteors[i];
+          m.x += m.vx; m.y += m.vy; m.life -= .012;
+          var grd = ctx.createLinearGradient(m.x, m.y, m.x - m.vx * 9, m.y - m.vy * 9);
+          grd.addColorStop(0, "rgba(245,244,255," + (.85 * Math.max(0, m.life)).toFixed(3) + ")");
+          grd.addColorStop(1, "rgba(103,232,249,0)");
+          ctx.strokeStyle = grd; ctx.lineWidth = 1.6;
+          ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x - m.vx * 9, m.y - m.vy * 9); ctx.stroke();
+          if (m.life <= 0 || m.x < -80 || m.x > W + 80 || m.y > H + 80) meteors.splice(i, 1);
+        }
+
+        /* 迸发火花 */
+        for (i = sparks.length - 1; i >= 0; i--) {
+          var s = sparks[i];
+          s.x += s.vx; s.y += s.vy; s.vy += .05; s.vx *= .985; s.vy *= .985;
+          s.life -= s.decay;
+          if (s.life <= 0) { sparks.splice(i, 1); continue; }
+          ctx.fillStyle = "rgba(" + s.c + "," + (s.life * .9).toFixed(3) + ")";
+          ctx.beginPath(); ctx.arc(s.x, s.y, s.r * s.life + .3, 0, 6.2832); ctx.fill();
+        }
+
         raf = requestAnimationFrame(frame);
       }
-      host.addEventListener("mousemove", function (e) {
+
+      if (FINE) {
+        host.addEventListener("mousemove", function (e) {
+          var r = canvas.getBoundingClientRect();
+          mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.on = true;
+        }, { passive: true });
+        host.addEventListener("mouseleave", function () { mouse.on = false; });
+      }
+      host.addEventListener("pointerdown", function (e) {
         var r = canvas.getBoundingClientRect();
-        mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+        burst(e.clientX - r.left, e.clientY - r.top, FINE ? 16 : 12);
       }, { passive: true });
-      host.addEventListener("mouseleave", function () { mouse.x = mouse.y = -9e3; });
+
       document.addEventListener("visibilitychange", function () {
         if (document.hidden) { running = false; cancelAnimationFrame(raf); }
         else if (!running) { running = true; raf = requestAnimationFrame(frame); }
@@ -1640,10 +1754,25 @@
 
     function pad(x) { return (x < 10 ? "0" : "") + x; }
 
+    /* 全屏适配：内容超高/超宽一律等比缩小，保证零滚动零裁切 */
+    function fitSlide(slide) {
+      var fit = slide.querySelector(".slide-fit");
+      if (!fit) return;
+      fit.style.transform = "none";
+      var cs = window.getComputedStyle(slide);
+      var availH = slide.clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0);
+      var h = fit.scrollHeight, w = fit.scrollWidth;
+      if (!h || !availH) return;
+      var s = Math.min(1, availH / h, slide.clientWidth / Math.max(1, w));
+      if (s < .999) fit.style.transform = "scale(" + Math.max(.55, s).toFixed(4) + ")";
+    }
+    function fitAll() { for (var i = 0; i < n; i++) fitSlide(slides[i]); }
+
     function go(i, opts) {
       i = Math.max(0, Math.min(n - 1, i));
       if (i === cur) return;
       var first = cur === -1;
+      var dir = first ? 0 : (i > cur ? 1 : -1);
       cur = i;
       for (var k = 0; k < n; k++) {
         slides[k].classList.toggle("is-active", k === i);
@@ -1652,6 +1781,8 @@
         slides[k].setAttribute("aria-hidden", k === i ? "false" : "true");
       }
       if (!first) replay(slides[i]);
+      fitSlide(slides[i]);
+      if (dir && window.__fxSweep) { try { window.__fxSweep(dir); } catch (e) {} }
       if (dots.length) for (var d = 0; d < dots.length; d++) dots[d].classList.toggle("on", d === i);
       if (counter) counter.innerHTML = "<b>" + pad(i + 1) + "</b> / " + pad(n);
       if (bar) bar.style.transform = "scaleX(" + (n > 1 ? (i / (n - 1)).toFixed(4) : 1) + ")";
@@ -1663,24 +1794,18 @@
     var m = (location.hash || "").match(/^#s([1-9])$/);
     go(m ? Math.min(n, +m[1]) - 1 : 0, { silent: true });
     window.__deckGo = go;
+    fitAll();
+    var fitT = 0;
+    window.addEventListener("resize", function () { clearTimeout(fitT); fitT = setTimeout(fitAll, 160); });
+    if (document.fonts && document.fonts.ready) { try { document.fonts.ready.then(function () { fitAll(); }); } catch (e) {} }
+    window.addEventListener("load", fitAll);
 
-    /* 滚轮/触控板横向滑动翻页：取主方向增量；页内可滚动区域滚动到底/顶后才翻页 */
+    /* 滚轮/触控板：任何方向滚动都只触发横向翻页，页面零滚动 */
     var wAcc = 0, wLock = 0, wTimer = 0;
     deck.addEventListener("wheel", function (e) {
-      var d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY; /* 横向优先 */
-      var t = e.target;
-      while (t && t !== deck) {
-        if (t.nodeType === 1 && t.scrollHeight > t.clientHeight + 2) {
-          var oy = (window.getComputedStyle(t) || {}).overflowY;
-          if (oy === "auto" || oy === "scroll") {
-            var canDown = t.scrollTop + t.clientHeight < t.scrollHeight - 2;
-            var canUp = t.scrollTop > 2;
-            if (d > 0 ? canDown : canUp) return; /* 让页内滚动先吃掉 */
-          }
-        }
-        t = t.parentNode;
-      }
       e.preventDefault();
+      var d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (!d) return;
       var now = Date.now();
       if (now < wLock) return;
       clearTimeout(wTimer);

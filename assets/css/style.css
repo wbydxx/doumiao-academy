@@ -1079,6 +1079,7 @@ body.gated { overflow: hidden; }
 body.deck-mode {
   overflow: hidden;
   height: 100dvh;
+  overscroll-behavior: none; /* 触屏上下拉动不产生回弹/刷新 */
 }
 body.deck-mode #site-footer { display: none; }
 
@@ -1093,6 +1094,7 @@ body.deck-mode #deck {
   position: fixed;
   inset: 0;
   z-index: 1;
+  touch-action: pan-x; /* 系统级只放行横向手势，竖向拖动无效 */
 }
 body.deck-mode #site-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 30;
@@ -1104,12 +1106,14 @@ body.deck-mode .slide {
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   padding: clamp(60px, 8.5vh, 92px) clamp(14px, 3vw, 40px) clamp(36px, 6vh, 56px);
-  overflow-y: auto; overflow-x: hidden;
+  overflow: hidden; /* 零滚动：溢出交给 .slide-fit 等比缩放 */
   opacity: 0; visibility: hidden; pointer-events: none;
   transform: translateX(11%) scale(.975);
   transition: transform .62s cubic-bezier(.55,0,.78,.55), opacity .34s ease .2s, visibility 0s linear .6s;
   will-change: transform, opacity;
 }
+body.deck-mode .slide-fit { transform-origin: 50% 50%; will-change: transform; }
+body.deck-mode .deck-path.slide-fit { display: flow-root; } /* 防子元素外边距塌陷，保证高度测量准确 */
 body.deck-mode .slide.is-above { transform: translateX(-11%) scale(.975); }
 body.deck-mode .slide.is-active {
   opacity: 1; visibility: visible; pointer-events: auto;
