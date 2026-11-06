@@ -132,6 +132,7 @@
   function sfx(kind) {
     if (muted) return;
     if (kind === "click") tone(620, 0, 0.08, "triangle");
+    else if (kind === "flip") { tone(500, 0, 0.05, "triangle", 0.05); tone(740, 0.035, 0.07, "triangle", 0.045); }
     else if (kind === "right") { tone(660, 0, 0.12); tone(880, 0.1, 0.16); tone(1100, 0.22, 0.2); }
     else if (kind === "wow") { tone(520, 0, 0.12, "triangle"); tone(660, 0.1, 0.12, "triangle"); tone(780, 0.2, 0.12, "triangle"); tone(1040, 0.3, 0.28, "triangle"); }
     else if (kind === "retry") tone(320, 0, 0.18, "sine", 0.09);
@@ -1499,13 +1500,13 @@
         seed();
       }
 
-      /* 点击迸发：金青火花，带重力阻尼 */
-      function burst(x, y, n) {
+      /* 点击迸发：金青火花，带重力阻尼（slow=彩带模式，寿命更长） */
+      function burst(x, y, n, slow) {
         for (var i = 0; i < (n || 16); i++) {
           var a = Math.random() * 6.2832, sp = 1.4 + Math.random() * 3.4;
           sparks.push({
             x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - .6,
-            life: 1, decay: .012 + Math.random() * .02,
+            life: slow ? 1.2 : 1, decay: slow ? .006 + Math.random() * .009 : .012 + Math.random() * .02,
             r: .8 + Math.random() * 1.8,
             c: Math.random() < .45 ? "245,208,138" : "103,232,249"
           });
@@ -1530,6 +1531,15 @@
       }
       window.__fxSweep = sweep;
 
+      /* 尾页彩带：横贯屏幕的五连迸发（慢速火花，清晰可见） */
+      window.__fxConfetti = function () {
+        for (var k = 0; k < 5; k++) (function (k) {
+          setTimeout(function () {
+            burst(W * (.12 + .19 * k + Math.random() * .06), H * (.2 + Math.random() * .25), 26, true);
+          }, k * 95);
+        })(k);
+      };
+
       var meteorT = 0;
       function maybeMeteor(t) {
         if (t - meteorT < 3800 + Math.random() * 3600) return;
@@ -1549,7 +1559,7 @@
         var i, j, p, q, dx, dy, d;
 
         /* 指针引力 + 切向旋涡（粒子绕光标起舞） */
-        if (FINE && mouse.on) {
+        if (mouse.on) {
           for (i = 0; i < pts.length; i++) {
             p = pts[i];
             dx = mouse.x - p.x; dy = mouse.y - p.y; d = dx * dx + dy * dy;
@@ -1590,7 +1600,7 @@
         }
 
         /* 指针连线（金线牵星） */
-        if (FINE && mouse.on) {
+        if (mouse.on) {
           for (i = 0; i < pts.length; i++) {
             p = pts[i];
             dx = p.x - mouse.x; dy = p.y - mouse.y; d = dx * dx + dy * dy;
@@ -1635,13 +1645,23 @@
         raf = requestAnimationFrame(frame);
       }
 
-      if (FINE) {
-        host.addEventListener("mousemove", function (e) {
-          var r = canvas.getBoundingClientRect();
-          mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.on = true;
-        }, { passive: true });
-        host.addEventListener("mouseleave", function () { mouse.on = false; });
-      }
+      var lastTrail = 0;
+      host.addEventListener("mousemove", function (e) { /* 触屏不会触发 mousemove，天然免疫 */
+        var r = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.on = true;
+        var now = performance.now();
+        if (now - lastTrail > 36) { /* 星尘拖尾：光标划过洒下细碎星屑 */
+          lastTrail = now;
+          sparks.push({
+            x: mouse.x + (Math.random() - .5) * 12, y: mouse.y + (Math.random() - .5) * 12,
+            vx: (Math.random() - .5) * .5, vy: .25 + Math.random() * .4,
+            life: .55, decay: .04 + Math.random() * .03,
+            r: .6 + Math.random() * 1.1,
+            c: Math.random() < .5 ? "245,208,138" : "103,232,249"
+          });
+        }
+      }, { passive: true });
+      host.addEventListener("mouseleave", function () { mouse.on = false; });
       host.addEventListener("pointerdown", function (e) {
         var r = canvas.getBoundingClientRect();
         burst(e.clientX - r.left, e.clientY - r.top, FINE ? 16 : 12);
@@ -1764,7 +1784,8 @@
       var h = fit.scrollHeight, w = fit.scrollWidth;
       if (!h || !availH) return;
       var s = Math.min(1, availH / h, slide.clientWidth / Math.max(1, w));
-      if (s < .999) fit.style.transform = "scale(" + Math.max(.55, s).toFixed(4) + ")";
+      fit.dataset.s = s < .999 ? Math.max(.55, s).toFixed(4) : "1";
+      if (s < .999) fit.style.transform = "scale(" + fit.dataset.s + ")";
     }
     function fitAll() { for (var i = 0; i < n; i++) fitSlide(slides[i]); }
 
@@ -1787,6 +1808,12 @@
       if (counter) counter.innerHTML = "<b>" + pad(i + 1) + "</b> / " + pad(n);
       if (bar) bar.style.transform = "scaleX(" + (n > 1 ? (i / (n - 1)).toFixed(4) : 1) + ")";
       if (opts && opts.sfx && window.DM && DM.sfx) { try { DM.sfx("click"); } catch (e) {} }
+      if (!first && dir) {
+        try { if (window.DM && DM.sfx) DM.sfx("flip"); } catch (e) {}       /* 翻页音效 */
+        if (i === n - 1 && dir > 0 && window.__fxConfetti) {
+          try { window.__fxConfetti(); } catch (e) {}                        /* 尾页彩带 */
+        }
+      }
       try { history.replaceState(null, "", "#s" + (i + 1)); } catch (e) {}
     }
 
@@ -1799,6 +1826,41 @@
     window.addEventListener("resize", function () { clearTimeout(fitT); fitT = setTimeout(fitAll, 160); });
     if (document.fonts && document.fonts.ready) { try { document.fonts.ready.then(function () { fitAll(); }); } catch (e) {} }
     window.addEventListener("load", fitAll);
+
+    /* 指针视差：当前页内容随光标轻移，营造空间深度
+       （首次收到真实 mousemove 才激活，触屏永不触发） */
+    if (!RM) {
+      var pTx = 0, pTy = 0, pX = 0, pY = 0, pRaf = 0, pOn = false;
+      var pLoop = function () {
+        if (!pOn) return;
+        pX += (pTx - pX) * .06; pY += (pTy - pY) * .06;
+        var f = slides[cur] && slides[cur].querySelector(".slide-fit");
+        if (f) f.style.transform = "scale(" + (f.dataset.s || 1) + ") translate3d(" + (pX * 9).toFixed(2) + "px," + (pY * 6).toFixed(2) + "px,0)";
+        pRaf = requestAnimationFrame(pLoop);
+      };
+      deck.addEventListener("mousemove", function (e) {
+        pTx = (e.clientX / window.innerWidth - .5) * 2;
+        pTy = (e.clientY / window.innerHeight - .5) * 2;
+        if (!pOn) { pOn = true; pLoop(); }
+      }, { passive: true });
+      deck.addEventListener("mouseleave", function () { pTx = 0; pTy = 0; });
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) { pOn = false; cancelAnimationFrame(pRaf); }
+        else { pOn = true; pRaf = requestAnimationFrame(pLoop); }
+      });
+    }
+
+    /* 磁性按钮：指针靠近时按钮被轻轻吸向光标（仅响应 mousemove，触屏免疫） */
+    if (!RM) {
+      document.querySelectorAll(".deck-btn, .slide .btn, .deck-dot").forEach(function (el) {
+        el.addEventListener("mousemove", function (e) {
+          var r = el.getBoundingClientRect();
+          var dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+          el.style.transform = "translate(" + (dx * .22).toFixed(1) + "px," + (dy * .22).toFixed(1) + "px)";
+        });
+        el.addEventListener("mouseleave", function () { el.style.transform = ""; });
+      });
+    }
 
     /* 滚轮/触控板：任何方向滚动都只触发横向翻页，页面零滚动 */
     var wAcc = 0, wLock = 0, wTimer = 0;

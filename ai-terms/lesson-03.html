@@ -6,7 +6,7 @@
 <title>数据、幻觉与 AI 安全 · AI 术语解码 — 豆苗学堂</title>
 <link rel="stylesheet" href="../assets/css/tokens.css?v=7">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/style.css?v=16">
+<link rel="stylesheet" href="../assets/css/style.css?v=17">
 <style>
 /* 本课专用：事实 / 幻觉判断卡 */
 .judge-card{border:2.5px solid var(--rule);border-radius:var(--radius-sm);padding:14px 16px;background:var(--surface);transition:border-color .2s, background .2s}
@@ -117,7 +117,7 @@
 <footer id="site-footer"></footer>
 
 <script src="../assets/js/storage.js?v=5"></script><script src="../assets/js/mock-data.js?v=5"></script>
-<script src="../assets/js/pinyin-data.js?v=5"></script><script src="../assets/data/catalog.js?v=2"></script><script src="../assets/js/common.js?v=16"></script>
+<script src="../assets/js/pinyin-data.js?v=5"></script><script src="../assets/data/catalog.js?v=2"></script><script src="../assets/js/common.js?v=17"></script>
 <script>
 DM.boot({ root: "..", module: "terms" });
 (function () {
@@ -137,8 +137,8 @@ DM.boot({ root: "..", module: "terms" });
       why: "正确。教科书级知识，语料中反复出现，模型对它的「把握」很大。" },
     { t: "紫金山天文台发现了一颗小行星，并把它命名为「豆苗星」。", fact: false,
       why: "幻觉！细节越具体越可疑。这颗「豆苗星」并不存在，是模型顺着你的提问风格编出来的。" },
-    { t: "河海大学的校训是「艰苦朴素、实事求是、严格要求、勇于探索」。", fact: true,
-      why: "正确。官方发布、被大量引用的信息，可靠性高。" },
+    { t: "紫金山天文台位于南京东郊，是中国人自己建立的第一个现代天文学研究机构。", fact: true,
+      why: "正确。官方可查证的事实，属于模型能「背」得比较牢的高频知识。" },
     { t: "南京鸭血粉丝汤已有一千年历史，朱元璋每天早朝前都要吃一碗。", fact: false,
       why: "幻觉！「一千年前」和「朱元璋每天都吃」都是编造的时间与细节——把真实食物嫁接了虚构故事，这是最难识别的幻觉类型。" }
   ];

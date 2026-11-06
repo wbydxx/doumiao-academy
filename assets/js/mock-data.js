@@ -26,7 +26,7 @@
   /* ---------- 全量内容目录（优先取 catalog.js 注入的 window.DM_CATALOG，否则回退空壳） ---------- */
   var catalog = (window.DM_CATALOG && window.DM_CATALOG.modules) ? window.DM_CATALOG : {
     site: { name: "豆苗学堂", full: "豆苗逐智 · 童享科技", intro: "少儿 AI 与计算机公益科普",
-      org: "河海大学计算机与软件学院 · 南京", ages: "6-12 岁", privacy: "无需注册 · 不联网收集信息" },
+      org: "豆苗学堂 · 南京", ages: "6-12 岁", privacy: "无需注册 · 不联网收集信息" },
     modules: {},
     badges: [],
     certificate: { title: "结业证书", subtitle: "「豆苗逐智 · 童享科技」少儿科普课程",
