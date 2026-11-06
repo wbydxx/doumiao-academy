@@ -1433,85 +1433,20 @@
     }
     return null;
   }
-  /** 全屏跃迁转场：星光隧道 + 3 秒倒计时，可立即跃迁或留下 */
+  /** 曲速跃迁 v2：点击即走，无弹窗无倒计时。
+      ① 星流隧道在全局粒子画布上展开（__fxWarp）
+      ② 当前页面拉伸 + 模糊 + 变暗（光速加速感）
+      ③ 720ms 后跳转；新页面凭 sessionStorage 标记播放「光速入场」 */
   function warpTo(url, label) {
-    if (document.getElementById("warp-ov")) { location.href = url; return; }
-    sfx("warp");
-    var ov = document.createElement("div");
-    ov.id = "warp-ov"; ov.className = "warp-ov";
-    ov.innerHTML =
-      '<canvas class="warp-cv" aria-hidden="true"></canvas>' +
-      '<div class="warp-core">' +
-        '<div class="warp-k">WARP JUMP · 跃迁通道</div>' +
-        '<div class="warp-t">' + outEsc(label || "下一站") + "</div>" +
-        '<div class="warp-n">3</div>' +
-        '<div class="warp-btns">' +
-          '<button class="btn" type="button" data-w="go">立即跃迁</button>' +
-          '<button class="btn ghost" type="button" data-w="stay">留在这里</button>' +
-        "</div>" +
-      "</div>";
-    document.body.appendChild(ov);
-    var cv = ov.querySelector("canvas"), ctx = cv.getContext("2d");
-    var nEl = ov.querySelector(".warp-n");
-    var W, H, cx, cy;
-    var dpr = Math.min(2, window.devicePixelRatio || 1);
-    function size() {
-      W = ov.clientWidth; H = ov.clientHeight;
-      cv.width = W * dpr; cv.height = H * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cx = W / 2; cy = H / 2;
-    }
-    size();
-    window.addEventListener("resize", size);
-    var st = [], i;
-    for (i = 0; i < 150; i++) st.push({ a: Math.random() * 6.2832, s: .25 + Math.random() * .85, o: Math.random() * 90 });
-    var t0 = performance.now(), done = false, raf = 0;
-    function jump() {
-      if (done) return;
-      done = true;
-      cancelAnimationFrame(raf);
-      ov.classList.add("flash");
-      setTimeout(function () { location.href = url; }, 260);
-    }
-    function stay() { done = true; cancelAnimationFrame(raf); window.removeEventListener("resize", size); ov.remove(); }
-    ov.querySelector('[data-w="go"]').addEventListener("click", jump);
-    ov.querySelector('[data-w="stay"]').addEventListener("click", stay);
-    function frame(now) {
-      var t = (now - t0) / 1000;
-      if (!done && !RM) {
-        ctx.clearRect(0, 0, W, H);
-        var maxR = Math.hypot(cx, cy) + 40;
-        for (var i2 = 0; i2 < st.length; i2++) {
-          var q = st[i2];
-          var r = ((q.o + t * q.s * 170) % maxR) - 30;
-          if (r < 0) continue;
-          var len = 12 + r * .3 * q.s;
-          var ca = Math.cos(q.a), sa = Math.sin(q.a);
-          var al = Math.min(.9, r / (maxR * .45));
-          ctx.strokeStyle = "rgba(" + (i2 % 4 === 0 ? "245,208,138" : "103,232,249") + "," + al.toFixed(3) + ")";
-          ctx.lineWidth = 1 + (r / maxR) * 1.8;
-          ctx.beginPath();
-          ctx.moveTo(cx + ca * r, cy + sa * r);
-          ctx.lineTo(cx + ca * (r + len), cy + sa * (r + len));
-          ctx.stroke();
-        }
-        var glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 100);
-        glow.addColorStop(0, "rgba(125,235,250,.32)");
-        glow.addColorStop(1, "rgba(125,235,250,0)");
-        ctx.fillStyle = glow;
-        ctx.fillRect(cx - 120, cy - 120, 240, 240);
-      }
-      var n = Math.max(1, 3 - Math.floor(t));
-      if (nEl.textContent !== String(n)) {
-        nEl.textContent = n;
-        nEl.classList.remove("pop"); void nEl.offsetWidth; nEl.classList.add("pop");
-      }
-      if (t > 3) { jump(); return; }
-      if (!done) raf = requestAnimationFrame(frame);
-    }
-    raf = requestAnimationFrame(frame);
+    if (document.body.__warping) { location.href = url; return; }
+    document.body.__warping = true;
+    try { sfx("warp"); } catch (e) {}
+    try { if (window.__fxWarp) window.__fxWarp(); } catch (e) {}
+    document.body.classList.add("warping");
+    try { sessionStorage.setItem("dm-warp", outEsc(label || "1")); } catch (e) {}
+    setTimeout(function () { location.href = url; }, 720);
   }
-  /* 通关后自动跃迁：包装 completeLesson（每次页面加载只触发一次） */
+  /* 通关后自动跃迁：非阻断提示条（细进度条 2s 走完自动跃迁，点击可取消） */
   (function () {
     var cl = store.completeLesson, armed = false;
     store.completeLesson = function (m, idx, stones) {
@@ -1519,7 +1454,27 @@
       if (armed) return;
       armed = true;
       var nx = nextTargetOf(m, idx);
-      if (nx) setTimeout(function () { warpTo(nx.url, "通关成功 · 跃迁至 " + nx.label); }, 1100);
+      if (!nx) return;
+      setTimeout(function () {
+        try {
+          var t = document.createElement("div");
+          t.className = "warp-toast";
+          t.setAttribute("role", "status");
+          t.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>' +
+            '<span class="wt-t">通关成功 · 即将跃迁至 <b>' + outEsc(nx.label) + "</b></span>" +
+            '<i class="wt-bar" aria-hidden="true"></i>';
+          document.body.appendChild(t);
+          requestAnimationFrame(function () { t.classList.add("on"); });
+          t.addEventListener("click", function () {
+            if (!t.isConnected) return;
+            t.classList.remove("on"); t.classList.add("off");
+            setTimeout(function () { t.remove(); }, 420);
+          });
+          setTimeout(function () {
+            if (t.isConnected && !t.classList.contains("off")) warpTo(nx.url, "通关成功 · " + nx.label);
+          }, 2050);
+        } catch (e) { warpTo(nx.url, "通关成功 · " + nx.label); }
+      }, 900);
     };
   })();
 
@@ -1646,6 +1601,48 @@
             burst(W * (.12 + .19 * k + Math.random() * .06), H * (.2 + Math.random() * .25), 26, true);
           }, k * 95);
         })(k);
+      };
+
+      /* 曲速隧道（页面跃迁）：星点化作射线向观察者加速扑来，800ms。
+         接管期间主循环暂停；跳转时页面已整体拉伸模糊 */
+      window.__fxWarp = function () {
+        var cx = W / 2, cy = H / 2, maxR = Math.hypot(cx, cy) * .72;
+        var rays = [];
+        for (var i = 0; i < 170; i++) {
+          rays.push({
+            a: Math.random() * 6.2832,
+            r: (Math.random() * .55 + .06) * maxR,
+            z: .5 + Math.random() * .9,
+            c: i % 7 === 0 ? "167,139,250" : (i % 3 === 0 ? "245,208,138" : "103,232,249")
+          });
+        }
+        running = false; cancelAnimationFrame(raf);
+        var t0 = performance.now();
+        (function wf(now) {
+          var t = Math.min(1, (now - t0) / 800);
+          ctx.fillStyle = "rgba(3,7,15," + (t * .72).toFixed(3) + ")";
+          ctx.fillRect(0, 0, W, H);
+          var e = t * t * (3 - 2 * t); /* smoothstep 加速曲线 */
+          for (var i2 = 0; i2 < rays.length; i2++) {
+            var q = rays[i2];
+            var r = q.r * (0.18 + e * 7.2) * (0.45 + q.z * .8);
+            if (r > maxR * 1.15) continue;
+            var len = 4 + r * .5 * q.z;
+            var ca = Math.cos(q.a), sa = Math.sin(q.a);
+            ctx.strokeStyle = "rgba(" + q.c + "," + Math.min(.95, .18 + e * .8).toFixed(3) + ")";
+            ctx.lineWidth = .7 + e * 2.6 * q.z;
+            ctx.beginPath();
+            ctx.moveTo(cx + ca * r, cy + sa * r);
+            ctx.lineTo(cx + ca * (r + len), cy + sa * (r + len));
+            ctx.stroke();
+          }
+          var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 150 * (1 - e * .45));
+          g.addColorStop(0, "rgba(196,246,255," + (.5 * (1 - e * .8)).toFixed(3) + ")");
+          g.addColorStop(1, "rgba(196,246,255,0)");
+          ctx.fillStyle = g;
+          ctx.fillRect(cx - 170, cy - 170, 340, 340);
+          if (t < 1) requestAnimationFrame(wf);
+        })(t0);
       };
 
       var meteorT = 0;
@@ -1816,6 +1813,62 @@
     } catch (e) { /* 静默 */ }
   }
 
+  /* ⑤ 光速入场：跃迁抵达的新页面从模糊拉伸中清晰化（配合 warpTo 的 sessionStorage 标记） */
+  function initWarpReveal() {
+    var tag = null;
+    try { tag = sessionStorage.getItem("dm-warp"); sessionStorage.removeItem("dm-warp"); } catch (e) {}
+    if (!tag || RM) return;
+    document.body.classList.add("warp-reveal");
+    setTimeout(function () { document.body.classList.remove("warp-reveal"); }, 1000);
+  }
+
+  /* ⑥ 关卡分幕（LessonDeck）：lesson/pre 页自动拆成全屏幕，零滚动横滑，
+     完全复用首页 deck 的交互（下一幕按钮 / 圆点 / 方向键 / 滑动 / 曲速跳转） */
+  function initLessons() {
+    var m = document.querySelector("main");
+    if (!m || m.__lsBound) return;
+    var path = (location.pathname.split("/").pop() || "index.html").toLowerCase();
+    if (!/^(lesson-\d+|pre)\.html$/.test(path)) return;
+    var panels = [].filter.call(m.children, function (el) {
+      return el.tagName === "SECTION" && /(^|\s)panel(\s|$)/.test(el.className);
+    });
+    if (!panels.length) return;
+    m.__lsBound = "1";
+    document.body.classList.add("lesson-stage");
+
+    /* 分幕：序幕 = 标题 panel（+ 紧随的场景大图 panel），之后每 panel 一幕；
+       顶层的 doudou-bubble 并入最后一幕，面包屑升级为悬浮徽章 */
+    var groups = [];
+    if (panels[1] && /(^|\s)scene-panel(\s|$)/.test(panels[1].className)) {
+      groups.push([panels[0], panels[1]]);
+      for (var i = 2; i < panels.length; i++) groups.push([panels[i]]);
+    } else {
+      for (var j = 0; j < panels.length; j++) groups.push([panels[j]]);
+    }
+    var bubbles = [].filter.call(m.children, function (el) {
+      return el.tagName === "SECTION" && /(^|\s)doudou-bubble(\s|$)/.test(el.className);
+    });
+    if (bubbles.length) groups[groups.length - 1].push(bubbles[0]);
+
+    /* 重建 main：#deck + .slide 结构，交给 initDeck 接管全部交互 */
+    var crumbs = m.querySelector("nav.crumbs");
+    if (crumbs) { crumbs.classList.add("lstage-crumbs"); document.body.appendChild(crumbs); }
+    m.id = "deck";
+    m.className = "deck deck-lesson";
+    m.innerHTML = "";
+    groups.forEach(function (grp, gi) {
+      var s = document.createElement("section");
+      s.className = "slide slide-lesson";
+      var h2 = grp[0].querySelector("h2");
+      s.setAttribute("data-name", (h2 ? h2.textContent.trim().slice(0, 14) : "") || ("第 " + (gi + 1) + " 幕"));
+      var fit = document.createElement("div");
+      fit.className = "slide-fit";
+      grp.forEach(function (p) { fit.appendChild(p); });
+      s.appendChild(fit);
+      m.appendChild(s);
+    });
+  }
+
   /* ④ PPT 翻页控制器：仅当存在 #deck（首页幻灯化）时启用
      滚轮/方向键/触屏滑动翻页 · 右侧圆点 · 页码 · #s1..#s6 深链
      弹簧回弹转场 + 每页元素动效重播；内容超高时页内滚动优先 */
@@ -1868,11 +1921,12 @@
     if (nextBtn) nextBtn.addEventListener("click", function () { go(cur + 1, { sfx: true }); });
     if (hint) hint.addEventListener("click", function () { go(cur + 1, { sfx: true }); });
 
-    /* 点击直达：每页底部「下一站」大按钮（不再依赖滚轮/滑动） */
+    /* 点击直达：每页底部「下一站/下一幕」大按钮（不再依赖滚轮/滑动） */
+    var advWord = document.body.classList.contains("lesson-stage") ? "下一幕" : "下一站";
     for (var ai = 0; ai < n - 1; ai++) {
       var adv = document.createElement("button");
       adv.type = "button"; adv.className = "deck-adv";
-      adv.innerHTML = "下一站 · " + (slides[ai + 1].getAttribute("data-name") || "") + " <i></i>";
+      adv.innerHTML = advWord + " · " + (slides[ai + 1].getAttribute("data-name") || "") + " <i></i>";
       (function (xi) { adv.addEventListener("click", function () { go(xi + 1, { sfx: true }); }); })(ai);
       slides[ai].appendChild(adv);
     }
@@ -2048,7 +2102,7 @@
     }, { passive: true });
   }
 
-  function initAll() { initProgress(); initStarfield(); initTilt(); initDeck(); }
+  function initAll() { initProgress(); initStarfield(); initTilt(); initLessons(); initDeck(); initWarpReveal(); }
   if (document.readyState === "complete") initAll();
   else window.addEventListener("load", initAll);
 })();

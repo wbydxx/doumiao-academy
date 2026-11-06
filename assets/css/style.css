@@ -1164,45 +1164,71 @@ body.deck-mode .deck-adv:hover i { transform: rotate(45deg) translate(2px, -2px)
   50% { box-shadow: 0 0 22px rgba(34, 211, 238, .38), 0 8px 26px rgba(2, 8, 20, .5); }
 }
 
-/* —— 跃迁转场（科幻星光隧道） —— */
-.warp-ov {
-  position: fixed; inset: 0; z-index: 999;
-  display: flex; align-items: center; justify-content: center;
-  background: radial-gradient(circle at 50% 50%, rgba(10, 20, 40, .88), rgba(2, 6, 14, .97));
-  backdrop-filter: blur(6px);
-  animation: warpIn .3s ease;
+/* —— 曲速跃迁 v2：点击即走，无弹窗 ——
+   离场：当前页拉伸 + 模糊 + 变暗（被吸进光速） */
+body.warping > main, body.warping #site-header, body.warping #site-footer {
+  filter: blur(9px) brightness(.55);
+  transform: scale(1.16);
+  opacity: .16;
+  transform-origin: 50% 50%;
+  transition: filter .62s cubic-bezier(.6,0,.85,.4), transform .62s cubic-bezier(.6,0,.85,.4), opacity .5s ease;
 }
-@keyframes warpIn { from { opacity: 0 } }
-.warp-cv { position: absolute; inset: 0; width: 100%; height: 100%; }
-.warp-core {
-  position: relative; text-align: center; color: #EAF6FF; padding: 20px;
-  animation: coreIn .45s cubic-bezier(.34, 1.56, .64, 1);
+/* 入场：跃迁抵达，从过曝光斑中聚焦成清晰页面 */
+body.warp-reveal > main, body.warp-reveal #site-header, body.warp-reveal #site-footer {
+  animation: warpArrive .9s cubic-bezier(.19, 1, .22, 1) both;
 }
-@keyframes coreIn { from { opacity: 0; transform: scale(.86) } }
-.warp-k {
-  font-size: 11px; letter-spacing: .34em; color: #7DEBFA;
-  text-shadow: 0 0 12px rgba(34, 211, 238, .6); margin-bottom: 10px;
+@keyframes warpArrive {
+  from { opacity: 0; filter: blur(16px) brightness(1.7); transform: scale(.94); }
+  to   { opacity: 1; filter: blur(0) brightness(1); transform: scale(1); }
 }
-.warp-t { font-size: clamp(20px, 3.4vw, 30px); font-weight: 800; text-shadow: 0 0 24px rgba(34, 211, 238, .35); }
-.warp-n {
-  font-size: clamp(54px, 9vw, 92px); font-weight: 800; margin: 10px 0 4px; color: #F5D08A;
-  text-shadow: 0 0 30px rgba(245, 208, 138, .55); font-variant-numeric: tabular-nums;
+@media (prefers-reduced-motion: reduce) {
+  body.warping > main, body.warping #site-header, body.warping #site-footer,
+  body.warp-reveal > main, body.warp-reveal #site-header { animation: none; transition: opacity .2s; }
 }
-.warp-n.pop { animation: nPop .5s cubic-bezier(.34, 1.56, .64, 1); }
-@keyframes nPop { 0% { transform: scale(1.5); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
-.warp-btns { display: flex; gap: 12px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
-.warp-btns .btn {
-  background: linear-gradient(135deg, #0EA5E9, #22D3EE); color: #04121F; border: 0;
-  padding: 10px 22px; border-radius: 999px; font-weight: 700; cursor: pointer;
-  box-shadow: 0 0 18px rgba(34, 211, 238, .35); font-family: inherit;
+
+/* 通关提示条：非阻断，细进度条走完自动跃迁，点击可取消 */
+.warp-toast {
+  position: fixed; top: 16px; left: 50%; transform: translate(-50%, -150%);
+  z-index: 1200; display: flex; align-items: center; gap: 9px;
+  padding: 11px 22px 13px; border-radius: 999px; overflow: hidden;
+  background: rgba(8, 15, 30, .92); border: 1px solid rgba(34, 211, 238, .45);
+  color: #D9F6FF; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 10px 34px rgba(2, 8, 20, .55), 0 0 22px rgba(34, 211, 238, .18);
+  backdrop-filter: blur(8px); white-space: nowrap; max-width: 92vw;
+  transition: transform .5s cubic-bezier(.34, 1.56, .64, 1), opacity .3s;
 }
-.warp-btns .btn.ghost {
-  background: rgba(125, 235, 250, .08); color: #BFE9F6;
-  border: 1px solid rgba(125, 235, 250, .4); box-shadow: none;
+.warp-toast.on { transform: translate(-50%, 0); }
+.warp-toast.off { transform: translate(-50%, -150%); opacity: 0; }
+.warp-toast svg { color: #F5D08A; filter: drop-shadow(0 0 6px rgba(245, 208, 138, .7)); flex: none; }
+.warp-toast b { color: #7DEBFA; font-weight: 800; }
+.warp-toast .wt-bar {
+  position: absolute; left: 0; bottom: 0; height: 2.5px; width: 100%;
+  background: linear-gradient(90deg, #22D3EE, #F5D08A);
+  transform-origin: left; transform: scaleX(0);
 }
-.warp-btns .btn:hover { filter: brightness(1.15); }
-.warp-ov.flash { animation: warpFlash .26s ease forwards; }
-@keyframes warpFlash { to { background: #EAF9FF; filter: brightness(2.2); opacity: .92 } }
+.warp-toast.on .wt-bar { animation: wtBar 2.05s linear forwards; }
+@keyframes wtBar { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+
+/* —— 关卡分幕（LessonDeck）补充样式 —— */
+/* 面包屑 → 悬浮玻璃徽章（lesson 全屏舞台左上角） */
+.lstage-crumbs {
+  position: fixed; top: 64px; left: 16px; z-index: 26;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 13px; border-radius: 999px;
+  background: rgba(8, 15, 30, .55); border: 1px solid rgba(125, 235, 250, .22);
+  font-size: 12px; color: #9FC3DB; backdrop-filter: blur(6px);
+}
+.lstage-crumbs a { color: #BFE9F6; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+.lstage-crumbs a:hover { color: #7DEBFA; }
+.lstage-crumbs .sep { opacity: .45; }
+.lstage-crumbs svg { width: 13px; height: 13px; }
+@media (max-width: 700px) { .lstage-crumbs { display: none; } }
+/* lesson 幕内容容器：窄栏居中、幕内纵排 */
+body.deck-mode .slide-lesson .slide-fit {
+  width: 100%; max-width: 880px;
+  display: grid; gap: 15px; align-content: center;
+}
+body.deck-mode .slide-lesson .panel { margin: 0; }
 
 /* —— 星图页（无边框全幅：航图悬浮于星空底之上） —— */
 body.deck-mode .deck-figwrap {
