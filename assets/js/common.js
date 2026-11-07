@@ -1572,7 +1572,7 @@
     warpTo: warpTo, nextTargetOf: nextTargetOf, quizNextOf: quizNextOf,
     pinyin: { toggle: pyToggle },
     pyRun: pyRun, pyHighlight: pyHighlight, taskRunner: taskRunner, practiceRunner: practiceRunner,
-    rvAll: rvAll, count: count, ring: ring,
+    rvAll: rvAll, count: count, ring: ring, activate: activate,
     store: store, quiz: quiz, boot: boot, storage: window.DMStorage, entryCleared: entryCleared,
     MODULES: MODULES, LESSON_COUNT: LESSON_COUNT, LEVELS: LEVELS, MODULE_META: MODULE_META
   };
@@ -2145,15 +2145,24 @@
       else location.href = href;
     });
 
-    /* 重播本页 [data-rv] 入场动效（跳动感的灵魂） */
+    /* 重播本页 [data-rv] 入场动效（跳动感的灵魂）
+       v38：不再要求元素此前拿到过 .rv-on——首幕之外的活动幕若 IO 从未
+       触发（幕在视口外堆叠时 IntersectionObserver 不可靠），panel 会永远
+       卡在 .rv-ready [data-rv] 的 opacity:0 初始态 = 整幕空白（只有无
+       data-rv 的眉标/豆豆气泡可见）。切幕时对活动幕强制全量播放入场 */
     function replay(slide) {
       if (RM) return;
-      var els = slide.querySelectorAll("[data-rv].rv-on");
+      var els = slide.querySelectorAll("[data-rv]");
       if (!els.length) return;
       for (var i = 0; i < els.length; i++) els[i].classList.remove("rv-on");
       void slide.offsetWidth; /* 强制重排，动画从头再放 */
       requestAnimationFrame(function () {
-        for (var j = 0; j < els.length; j++) els[j].classList.add("rv-on");
+        for (var j = 0; j < els.length; j++) {
+          els[j].classList.add("rv-on");
+          /* activate 在 IIFE-A（common.js 分两段），须经 window.DM 桥接；
+             try 包裹——激活失败只损失 count/ring 动画，绝不能中断 rv-on 循环 */
+          try { if (window.DM && DM.activate) DM.activate(els[j]); } catch (e) {}
+        }
       });
     }
 
@@ -2219,7 +2228,9 @@
       }
       /* v36：切到滚动幕一律回到顶部——保留上次滚动位置会让人以为切幕失败 */
       if (slides[i].classList.contains("slide-scroll")) slides[i].scrollTop = 0;
-      if (!first) replay(slides[i]);
+      /* v38：首幕也强制播放入场——带 #s6/#s7 深链直达时 cur 从 -1 跳到目标幕，
+         旧逻辑 !first 会跳过 replay，整幕 panel 全靠 IO 触发而卡 opacity:0 空白 */
+      replay(slides[i]);
       fitSlide(slides[i]);
       if (dir && window.__fxSweep) { try { window.__fxSweep(dir); } catch (e) {} }
       if (dots.length) for (var d = 0; d < dots.length; d++) dots[d].classList.toggle("on", d === i);
