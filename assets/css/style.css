@@ -1982,3 +1982,21 @@ body.deck-mode .slide-lesson .pager { justify-content: center; gap: 14px; margin
   50% { box-shadow: 0 0 34px rgba(34, 211, 238, .5), 0 14px 40px rgba(2, 8, 20, .55); }
 }
 @media (prefers-reduced-motion: reduce) { .try-cta { animation: none; } }
+
+/* ============ 分幕课程页：清除旧壳布局叠影 ============ */
+/* deck 全屏且无背景，旧壳里的 rail 课程侧栏会从底下透出与幕内容交叠 → 整体隐藏
+   （课间导航已由幕内「下一关」按钮与顶部导航承担） */
+body.lesson-stage .rail { display: none !important; }
+body.lesson-stage .shell { display: block; padding: 0; margin: 0; max-width: none; }
+/* header 强制单行（导航横向滑动），避免折行增高压住幕眉标 */
+body.lesson-stage .site-header .bar { flex-wrap: nowrap; padding: 7px 14px; gap: 8px; }
+body.lesson-stage .logo { font-size: 16px; flex: none; }
+body.lesson-stage .logo .logo-ic { width: 28px; height: 28px; border-radius: 8px; }
+body.lesson-stage .logo .logo-ic svg { width: 18px; height: 18px; }
+body.lesson-stage .bar-tools { margin-left: auto; flex: none; order: 3; }
+body.lesson-stage .bar-tools .icon-btn { min-height: 32px; }
+body.lesson-stage .stone-chip { min-height: 32px; padding: 3px 10px; }
+body.lesson-stage .nav { order: 2; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 50vw; }
+body.lesson-stage .nav::-webkit-scrollbar { display: none; }
+body.lesson-stage .nav a { min-height: 30px; padding: 3px 9px; font-size: 12.5px; gap: 4px; }
+body.lesson-stage .nav a svg { width: 14px; height: 14px; }
