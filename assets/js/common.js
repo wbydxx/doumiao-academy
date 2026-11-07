@@ -1175,6 +1175,10 @@
     var module = opts.module || null;
     var header = document.getElementById("site-header");
     if (header) {
+      /* v34 关键修复：HTML 里 <header id="site-header"> 一直缺 site-header 类，
+         导致 CSS 里全部 .site-header 类选择器（背景/sticky/.bar flex 布局）从未命中——
+         顶栏实际是透明 + logo/导航/工具纵向堆叠（PC 顶部叠字、手机顶部被盖的元凶） */
+      header.className = "site-header";
       var nav = '<a href="' + root + '/index.html" class="' + (!module ? "active" : "") + '">' + icon("home") + "首页</a>";
       NAVS.forEach(function (n) {
         nav += '<a href="' + root + "/" + n.href + '" class="' + (module === n.key ? "active" : "") + '">' + icon(n.ic) + n.t + "</a>";

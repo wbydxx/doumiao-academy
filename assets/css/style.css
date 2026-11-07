@@ -2316,3 +2316,18 @@ body.deck-mode .slide.slide-scroll {
 body.deck-mode .slide.slide-scroll::-webkit-scrollbar { width: 5px; }
 body.deck-mode .slide.slide-scroll::-webkit-scrollbar-thumb { background: rgba(125, 235, 250, .35); border-radius: 4px; }
 body.deck-mode .slide.slide-scroll .slide-fit { transform: none !important; }
+
+/* ============ v33：顶栏布局兜底（任何情况下保持单行 flex，杜绝堆叠叠字） ============ */
+.site-header .bar { display: flex; flex-wrap: nowrap; align-items: center; }
+.site-header .logo { flex: none; white-space: nowrap; }
+.site-header .nav { flex: none; }
+.site-header .bar-tools { flex: none; }
+@media (max-width: 640px) {
+  /* 手机端课页：中间导航收纳（logo 即回首页，课间用页底上一课/下一课） */
+  body.lesson-stage .site-header .nav { display: none !important; }
+  /* 手机端其余页面：导航链接横向滑动，绝不断行堆叠 */
+  .site-header .bar { flex-wrap: nowrap; }
+  .site-header .nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .site-header .nav::-webkit-scrollbar { display: none; }
+  .site-header .nav a { white-space: nowrap; }
+}
