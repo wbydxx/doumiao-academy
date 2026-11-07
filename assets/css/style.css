@@ -2193,3 +2193,32 @@ body.stage .panel .note,
 body.stage .panel .hint {
   color: #A9C7E9;
 }
+
+/* ============ 纸白面板深字化：白底卡不再继承暗幕浅色文字 ============ */
+body.deck-mode .slide-lesson .panel,
+body.deck-mode .slide-lesson .panel h2,
+body.deck-mode .slide-lesson .panel h3,
+body.deck-mode .slide-lesson .panel h4 { color: #16324F; }
+body.deck-mode .slide-lesson .panel p,
+body.deck-mode .slide-lesson .panel li,
+body.deck-mode .slide-lesson .panel small,
+body.deck-mode .slide-lesson .panel dt,
+body.deck-mode .slide-lesson .panel dd { color: #3A5878; }
+body.deck-mode .slide-lesson .panel p b,
+body.deck-mode .slide-lesson .panel p strong,
+body.deck-mode .slide-lesson .panel li b,
+body.deck-mode .slide-lesson .panel li strong,
+body.deck-mode .slide-lesson .learn-text b,
+body.deck-mode .slide-lesson .learn-text strong { color: #0F5CA8; }
+body.deck-mode .slide-lesson .panel .panel-tag {
+  color: #0369A1;
+  background: rgba(14, 165, 233, .1);
+  border: 1px solid rgba(14, 165, 233, .28);
+  padding: 4px 12px; border-radius: 999px;
+}
+body.deck-mode .slide-lesson .panel .panel-tag svg { color: #0369A1; }
+/* 例外：已深空化的面板（豆豆气泡、代码框）维持亮字 */
+body.deck-mode .slide-lesson .doudou-bubble,
+body.deck-mode .slide-lesson .doudou-bubble p { color: #D8F1FF; }
+body.deck-mode .slide-lesson .code-box,
+body.deck-mode .slide-lesson .code-box * { color: #D8F1FF; }
