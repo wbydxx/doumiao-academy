@@ -1099,7 +1099,9 @@ body.deck-mode #deck {
 body.deck-mode #site-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 30;
   border-bottom: 0; box-shadow: none;
-  background: linear-gradient(180deg, rgba(6, 11, 22, .92), rgba(6, 11, 22, .5) 62%, transparent);
+  /* v32：近实底——旧版渐变到全透明，内容从导航下透出造成 PC 端顶部叠字 */
+  background: rgba(6, 11, 22, .97);
+  box-shadow: 0 10px 30px rgba(2, 6, 16, .45);
 }
 body.deck-mode .slide {
   position: absolute; inset: 0;
@@ -2000,6 +2002,12 @@ body.lesson-stage .nav { order: 2; flex-wrap: nowrap; overflow-x: auto; scrollba
 body.lesson-stage .nav::-webkit-scrollbar { display: none; }
 body.lesson-stage .nav a { min-height: 30px; padding: 3px 9px; font-size: 12.5px; gap: 4px; }
 body.lesson-stage .nav a svg { width: 14px; height: 14px; }
+/* v32：手机端课页导航整体收纳——logo 点击即回首页，课间跳转交给页底「上一课/下一课」，
+   避免 6 个模块链接被 max-width 截断造成「顶部显示不全」 */
+@media (max-width: 640px) {
+  body.lesson-stage .site-header .nav { display: none; }
+  body.lesson-stage .site-header .bar { padding: 6px 12px; }
+}
 
 /* ============ 讲述幕图文两栏：每幕都有场景画面的视觉锚点 ============ */
 .lslide-cols {

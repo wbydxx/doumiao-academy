@@ -1946,11 +1946,10 @@
     var last = mid.length && isTry(mid[mid.length - 1]) ? mid.pop() : null;
     var groups = [[panels[0]]];
     if (isScene(panels[1])) groups[0].push(panels[1]);
-    if (!exploded) {
-      if (mid.length <= 3) groups.push(mid);
-      else { var half = Math.ceil(mid.length / 2); groups.push(mid.slice(0, half)); groups.push(mid.slice(half)); }
-    } else {
-      /* 拆分后的长课：try 逐卡独占一幕，普通内容最多两块一幕 */
+    /* v32：统一编排——交互面板独占一幕，普通内容最多两块一幕。
+       旧逻辑「≤3 块全并一幕」会让术语课等长文课挤出一幕放不下，
+       是手机端顶部堆叠、字号忽大忽小的元凶 */
+    (function () {
       var buf = [];
       mid.forEach(function (p) {
         if (isTry(p)) {
@@ -1962,10 +1961,10 @@
         }
       });
       if (buf.length) groups.push(buf);
-    }
+    })();
     if (last) groups.push([last]);
     var bubbles = [].filter.call(m.children, function (el) {
-      return el.tagName === "SECTION" && /(^|\s)doudou-bubble(\s|$)/.test(el.className);
+      return /(^|\s)doudou-bubble(\s|$)/.test(el.className);
     });
     if (bubbles.length) groups[groups.length - 1].push(bubbles[0]);
     groups = groups.filter(function (g) { return g.length; });
