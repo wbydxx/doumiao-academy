@@ -2350,17 +2350,16 @@ body.deck-mode .slide.slide-scroll .slide-fit { transform: none !important; }
 }
 
 /* ============================================================
-   v42：幕内容防撑破（「编码器文字显示不正常」的真正根因）
-   实测实锤：幕内超宽元素（white-space:pre 的长代码行等）把 .panel
-   撑宽，编辑器 .code-run 右边界 609px 超出内容区 575px——整个面板
-   连带文字溢出被裁、错位。链条锁死：fit 直接子元素限宽 + panel
-   超宽时自身横滚 + panel 内 pre/code 限宽自滚，任何元素都无法
-   再把内容区撑破。
+   v43：撤销 v42 的 panel overflow——血泪教训：overflow-x:auto 会把
+   panel 变成滚动容器，触屏上它吃掉竖滑手势却不滚（y 轴 hidden），
+   滚动幕整个滚不下去 = 用户所见「直接显示不全」。防撑破改用无副作用
+   方案：min-width:0 钳住 flex 撑破 + 长代码行折行（不再产生任何
+   滚动容器），编辑器 textarea 是原生滚动控件不受影响。
    ============================================================ */
 body.deck-mode .slide-fit > * { max-width: 100%; min-width: 0; }
-body.deck-mode .panel { min-width: 0; max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+body.deck-mode .panel { min-width: 0; max-width: 100%; }
 body.deck-mode .panel pre,
-body.deck-mode .panel code { max-width: 100%; overflow-x: auto; }
+body.deck-mode .panel code { max-width: 100%; white-space: pre-wrap; word-break: break-word; overflow: visible; }
 
 /* ============================================================
    v37：v36 回归修复 + 误跳转/滚动到底专项
