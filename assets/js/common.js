@@ -2165,6 +2165,19 @@
     function fitSlide(slide) {
       applyScale(slide, measureSlide(slide));
     }
+    /* v36：慢图加载完成后自动重测——首测时 lazy 大图还没加载、高度塌缩，
+       被误判「放得下」；图片加载后内容撑高溢出被裁（空白页/内容缺失的根因） */
+    var refitT = 0;
+    function refitSoon() { clearTimeout(refitT); refitT = setTimeout(fitAll, 90); }
+    for (var wi = 0; wi < n; wi++) {
+      var im = slides[wi].querySelectorAll("img");
+      for (var wj = 0; wj < im.length; wj++) {
+        if (!im[wj].complete) {
+          im[wj].addEventListener("load", refitSoon, { once: true });
+          im[wj].addEventListener("error", refitSoon, { once: true });
+        }
+      }
+    }
 
     function go(i, opts) {
       i = Math.max(0, Math.min(n - 1, i));
@@ -2178,6 +2191,8 @@
         slides[k].classList.toggle("is-below", k > i);
         slides[k].setAttribute("aria-hidden", k === i ? "false" : "true");
       }
+      /* v36：切到滚动幕一律回到顶部——保留上次滚动位置会让人以为切幕失败 */
+      if (slides[i].classList.contains("slide-scroll")) slides[i].scrollTop = 0;
       if (!first) replay(slides[i]);
       fitSlide(slides[i]);
       if (dir && window.__fxSweep) { try { window.__fxSweep(dir); } catch (e) {} }
@@ -2283,15 +2298,23 @@
       else if (k === "f" || k === "F") { toggleFS(); }
     });
 
-    /* 触屏左右滑动翻页 */
+    /* 触屏左右滑动翻页；v36：滚动幕滚到头后继续同向竖滑 → 直接翻页，
+       不必再改成横滑（长内容幕「滑不动/操作复杂」的主因） */
     var tY = 0, tX = 0, tOn = false;
     deck.addEventListener("touchstart", function (e) {
       tY = e.touches[0].clientY; tX = e.touches[0].clientX; tOn = true;
     }, { passive: true });
     deck.addEventListener("touchend", function (e) {
       if (!tOn) return; tOn = false;
-      var dx = tX - e.changedTouches[0].clientX, dy = tY - e.changedTouches[0].clientY;
-      if (Math.abs(dx) > 52 && Math.abs(dx) > Math.abs(dy) * 1.25) go(cur + (dx > 0 ? 1 : -1));
+      var t = e.changedTouches[0];
+      var dx = tX - t.clientX, dy = tY - t.clientY, adx = Math.abs(dx), ady = Math.abs(dy);
+      if (adx > 52 && adx > ady * 1.25) { go(cur + (dx > 0 ? 1 : -1)); return; }
+      var sl = slides[cur];
+      if (sl && sl.classList.contains("slide-scroll") && ady > 72 && ady > adx * 1.6) {
+        var atTop = sl.scrollTop <= 1;
+        var atBot = sl.scrollTop >= sl.scrollHeight - sl.clientHeight - 1;
+        if ((dy > 0 && atBot) || (dy < 0 && atTop)) go(cur + (dy > 0 ? 1 : -1));
+      }
     }, { passive: true });
 
     /* 点击任意空白处前进（丝滑衔接：不用找按钮，点哪里都能翻页）

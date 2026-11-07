@@ -1107,7 +1107,7 @@ body.deck-mode .slide {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  padding: clamp(60px, 8.5vh, 92px) clamp(14px, 3vw, 40px) clamp(66px, 9vh, 92px);
+  padding: clamp(60px, 8.5vh, 92px) clamp(14px, 3vw, 40px) clamp(72px, 9vh, 92px);
   overflow: hidden; /* 零滚动：溢出交给 .slide-fit 等比缩放 */
   opacity: 0; visibility: hidden; pointer-events: none;
   /* v35：切幕只平移不缩放（旧版 scale(.975)+弹簧过冲＝画面忽大忽小） */
@@ -2333,3 +2333,31 @@ body.deck-mode .slide.slide-scroll .slide-fit { transform: none !important; }
   .site-header .nav::-webkit-scrollbar { display: none; }
   .site-header .nav a { white-space: nowrap; }
 }
+
+/* ============================================================
+   v36：代码实验室专项修复
+   ① 全站锁横向溢出——html 之前没锁，超宽元素（宽代码块/棋盘等）
+      会把页面撑出横向滚动，左右拖动暴露大面积空白
+   ============================================================ */
+html { overflow-x: hidden; }
+body { overflow-x: hidden; }
+
+/* ② 滚动幕的「下一站」按钮回归文档流：absolute/sticky 都会浮在正文上
+   （长幕滚到中段时按钮正好卡在正文中间）。static 让按钮跟在内容末尾，
+   类似文章底部「下一篇」，滚到底即见；配合边界竖滑/滚轮翻页，
+   任何滚动位置都不遮挡正文。left/translate 复位（原值配 absolute 居中） */
+body.deck-mode .slide.slide-scroll .deck-adv {
+  position: static; bottom: auto; left: auto; translate: none;
+  margin-top: 16px; flex: none;
+}
+/* 滚动幕解除 fit 的 max-height 钳制：钳制会让超高内容溢出 fit 盒继续下绘，
+   与文档流里的按钮在 z 轴上叠字 */
+body.deck-mode .slide.slide-scroll .slide-fit { max-height: none; }
+
+/* ③ 幕内容防横向撑破：grid 子项默认 min-width:auto 不收缩，
+   宽 pre/编辑器会把面板撑出幕外被硬裁 */
+body.deck-mode .slide-fit > * { min-width: 0; max-width: 100%; }
+body.deck-mode .slide-fit img { max-width: 100%; height: auto; }
+body.deck-mode .slide-fit pre,
+body.deck-mode .slide-fit .code-run textarea { max-width: 100%; }
+body.deck-mode .slide-fit pre { overflow-x: auto; }
