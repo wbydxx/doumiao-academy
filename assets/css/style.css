@@ -2012,10 +2012,9 @@ body.lesson-stage .nav { order: 2; flex-wrap: nowrap; overflow-x: auto; scrollba
 body.lesson-stage .nav::-webkit-scrollbar { display: none; }
 body.lesson-stage .nav a { min-height: 30px; padding: 3px 9px; font-size: 12.5px; gap: 4px; }
 body.lesson-stage .nav a svg { width: 14px; height: 14px; }
-/* v32：手机端课页导航整体收纳——logo 点击即回首页，课间跳转交给页底「上一课/下一课」，
-   避免 6 个模块链接被 max-width 截断造成「顶部显示不全」 */
+/* v40：手机端课页导航不再整体隐藏——统一改为可拖划横滚（用户要求能
+   划动看到成就墙入口），logo 回首页与页底上一课/下一课链接保留 */
 @media (max-width: 640px) {
-  body.lesson-stage .site-header .nav { display: none; }
   body.lesson-stage .site-header .bar { padding: 6px 12px; }
 }
 
@@ -2334,11 +2333,15 @@ body.deck-mode .slide.slide-scroll .slide-fit { transform: none !important; }
 .site-header .nav { flex: none; }
 .site-header .bar-tools { flex: none; }
 @media (max-width: 640px) {
-  /* 手机端课页：中间导航收纳（logo 即回首页，课间用页底上一课/下一课） */
-  body.lesson-stage .site-header .nav { display: none !important; }
-  /* 手机端其余页面：导航链接横向滑动，绝不断行堆叠 */
+  /* v40：全站手机端导航统一「可拖划横滚」——nav 占据 bar 剩余宽度并在
+     内部横向滑动，成就墙等被裁项拖到最右即可见（替换 v33 的课页隐藏方案） */
   .site-header .bar { flex-wrap: nowrap; }
-  .site-header .nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .site-header .nav {
+    flex: 1 1 auto; min-width: 0;
+    flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    touch-action: pan-x;
+  }
   .site-header .nav::-webkit-scrollbar { display: none; }
   .site-header .nav a { white-space: nowrap; }
 }
