@@ -2305,10 +2305,11 @@ body.deck-mode .slide-lesson .code-box * { color: #D8F1FF; }
 @keyframes warpBar { from { transform: scaleX(0) } to { transform: scaleX(1) } }
 
 /* —— v30 · 超高幕兜底：压到缩放下限仍放不下时，幕内竖向滚动（不再裁剪） —— */
+/* v45：删除 touch-action:pan-y——它沿祖先链禁掉了编辑器 textarea 的横向
+   原生滚动（手机上看长代码行滑不动）；html 已锁横向溢出，放开无副作用 */
 body.deck-mode .slide.slide-scroll {
   overflow-y: auto; overflow-x: hidden;
   justify-content: flex-start;
-  touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: rgba(125, 235, 250, .35) transparent;
@@ -2380,6 +2381,12 @@ body.deck-mode .act-open .panel h2 {
   color: #EAF9FF;
   text-shadow: 0 0 22px rgba(125, 235, 250, .28);
 }
+
+/* ============================================================
+   v45：编辑器触摸滚动专属性——textarea 双向原生滚动显式声明
+   （配合 JS 侧手势豁免：编辑器内滑动只滚编辑器，绝不触发翻页）
+   ============================================================ */
+.code-run textarea { touch-action: auto; }
 
 /* ============================================================
    v37：v36 回归修复 + 误跳转/滚动到底专项

@@ -2324,11 +2324,17 @@
        翻页后 800ms 冷却忽略一切手势 */
     var tY = 0, tX = 0, tOn = false;
     var swDir = 0, swT = 0, flipLock = 0;
+    var tInEd = false; /* v45：触摸起点是否在编辑器内（代码画布/输入框/运行结果弹层） */
     deck.addEventListener("touchstart", function (e) {
       tY = e.touches[0].clientY; tX = e.touches[0].clientX; tOn = true;
+      var t = e.target;
+      tInEd = !!(t && t.closest && t.closest(".cr-canvas, .code-run textarea, .py-pop"));
     }, { passive: true });
     deck.addEventListener("touchend", function (e) {
       if (!tOn) return; tOn = false;
+      /* v45：编辑器内的滑动手势完全归原生滚动（textarea 内看代码/上下翻行），
+         绝不参与翻页判定——此前在编辑器里两次横滑看长代码行会被误判成翻页手势 */
+      if (tInEd) { swDir = 0; return; }
       var t = e.changedTouches[0];
       var dx = tX - t.clientX, dy = tY - t.clientY, adx = Math.abs(dx), ady = Math.abs(dy);
       var now = Date.now();
