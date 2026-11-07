@@ -484,7 +484,10 @@ h1, h2, h3 { font-weight: 700; }
   font-family: var(--font-mono); font-size: 13.5px; line-height: 1.75;
   color: #C9B48D; text-align: right; white-space: pre;
 }
-.cr-canvas { position: relative; flex: 1; min-width: 0; }
+/* v41：overflow:hidden 必须放在 canvas 上——高亮层跟随 textarea 滚动是
+   transform 整层平移，自身 overflow:hidden 裁不住平移后的溢出；
+   手机窄屏编辑器一滚，高亮文字就盖到行号栏、溢出容器外（用户截图实锤） */
+.cr-canvas { position: relative; flex: 1; min-width: 0; overflow: hidden; }
 .cr-hl {
   position: absolute; inset: 0; margin: 0; overflow: hidden; pointer-events: none;
   padding: 13px 16px;
