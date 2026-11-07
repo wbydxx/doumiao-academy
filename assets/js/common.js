@@ -1484,7 +1484,24 @@
     try { if (window.__fxWarp) window.__fxWarp(); } catch (e) {}
     document.body.classList.add("warping");
     try { sessionStorage.setItem("dm-warp", outEsc(label || "1")); } catch (e) {}
-    setTimeout(function () { location.href = url; }, 720);
+    /* v37：误触保护——手机上很容易碰错链接，跃迁前给 1.6s 反悔窗，
+       浮条常驻显示去向，期间点击屏幕任意处即取消（自动跃迁定时器一并取消） */
+    var t = setTimeout(function () { location.href = url; }, 1600);
+    try {
+      var tip = document.createElement("div");
+      tip.className = "warp-tip";
+      tip.innerHTML = icon("forward") + "<span>即将跃迁 · " + outEsc(label || "下一站") + "</span><b>点一下取消</b>";
+      document.body.appendChild(tip);
+      var cancel = function () {
+        clearTimeout(t);
+        document.body.__warping = false;
+        document.body.classList.remove("warping");
+        try { sessionStorage.removeItem("dm-warp"); } catch (e2) {}
+        if (tip.parentNode) tip.parentNode.removeChild(tip);
+        document.removeEventListener("click", cancel, true);
+      };
+      setTimeout(function () { document.addEventListener("click", cancel, true); }, 50);
+    } catch (e2) { setTimeout(function () { location.href = url; }, 400); }
   }
   /* 通关后的跳转逻辑（点击优先）：
      · 分幕课程页：尝试幕浮现「跃迁下一站」发光大按钮并自动滑到该幕，点击即曲速出发
@@ -1512,7 +1529,15 @@
               cta.innerHTML = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
                 "<span><b>通关成功</b> · 跃迁至「" + outEsc(nx.label) + "」</span>";
               cta.addEventListener("click", goWarp);
-              fit.appendChild(cta);
+              var lastSlide = slides[slides.length - 1];
+              if (lastSlide.classList.contains("slide-scroll")) {
+                /* v37：滚动尾幕 CTA 不塞内容流末尾——切幕强制回顶后
+                   用户根本不知道要滚到底才能看见。改底部悬浮，切幕即见 */
+                cta.classList.add("try-cta-float");
+                lastSlide.appendChild(cta);
+              } else {
+                fit.appendChild(cta);
+              }
               if (window.__refitSlides) window.__refitSlides();
               if (window.__deckGo) window.__deckGo(slides.length - 1);
               sfx("win");
@@ -2165,17 +2190,18 @@
     function fitSlide(slide) {
       applyScale(slide, measureSlide(slide));
     }
-    /* v36：慢图加载完成后自动重测——首测时 lazy 大图还没加载、高度塌缩，
-       被误判「放得下」；图片加载后内容撑高溢出被裁（空白页/内容缺失的根因） */
+    /* v37：慢图加载完成后自动重测 + 淡入——首测时 lazy 大图还没加载、
+       高度塌缩，被误判「放得下」；图片加载后内容撑高溢出被裁（空白页/
+       内容缺失的根因）。加载中半透明骨架，完成后淡入，不再是突兀空白 */
     var refitT = 0;
     function refitSoon() { clearTimeout(refitT); refitT = setTimeout(fitAll, 90); }
     for (var wi = 0; wi < n; wi++) {
       var im = slides[wi].querySelectorAll("img");
       for (var wj = 0; wj < im.length; wj++) {
-        if (!im[wj].complete) {
-          im[wj].addEventListener("load", refitSoon, { once: true });
-          im[wj].addEventListener("error", refitSoon, { once: true });
-        }
+        if (im[wj].complete) { im[wj].classList.add("img-ready"); continue; }
+        im[wj].classList.add("img-pending");
+        im[wj].addEventListener("load", function () { this.classList.add("img-ready"); refitSoon(); }, { once: true });
+        im[wj].addEventListener("error", function () { this.classList.add("img-ready"); refitSoon(); }, { once: true });
       }
     }
 
@@ -2318,11 +2344,15 @@
     }, { passive: true });
 
     /* 点击任意空白处前进（丝滑衔接：不用找按钮，点哪里都能翻页）
-       交互元素（链接/按钮/输入/练习面板/代码框）不触发；划选文字时不触发 */
+       交互元素（链接/按钮/输入/练习面板/代码框）不触发；划选文字时不触发；
+       v37：滚动幕点空白不翻页——长内容幕阅读中随手一点就跳幕、
+       且切幕回顶丢失阅读位置，是「误跳转」的主要来源 */
     deck.addEventListener("click", function (e) {
       if (e.target.closest("a,button,input,textarea,select,label,.try-panel,.pz-box,.code-box,.py-pop,.deck-adv,.deck-dots,.deck-nav,.doudou-bubble")) return;
       var sel = window.getSelection && String(window.getSelection());
       if (sel && sel.length) return;
+      var actS = slides[cur];
+      if (actS && actS.classList.contains("slide-scroll")) return;
       if (cur < n - 1) {
         go(cur + 1, { sfx: true });
         var th = document.querySelector(".stage-taphint");

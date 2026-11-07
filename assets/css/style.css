@@ -2335,12 +2335,14 @@ body.deck-mode .slide.slide-scroll .slide-fit { transform: none !important; }
 }
 
 /* ============================================================
-   v36：代码实验室专项修复
-   ① 全站锁横向溢出——html 之前没锁，超宽元素（宽代码块/棋盘等）
-      会把页面撑出横向滚动，左右拖动暴露大面积空白
+   v37：v36 回归修复 + 误跳转/滚动到底专项
+   ① 只锁 html 的横向溢出——v36 同时给 body 设 overflow-x:hidden，
+      按 CSS 规范 body 会变成滚动容器（一轴 hidden、另一轴 visible
+      被计算为 auto），非 deck 页的顶栏 sticky 从此以「从不滚动的
+      body」为参照——吸顶失效、顶栏跟着内容滚走（顶层托不住的根因）。
+      html 锁定即可裁掉横向溢出；body 保持 visible，sticky 正常。
    ============================================================ */
 html { overflow-x: hidden; }
-body { overflow-x: hidden; }
 
 /* ② 滚动幕的「下一站」按钮回归文档流：absolute/sticky 都会浮在正文上
    （长幕滚到中段时按钮正好卡在正文中间）。static 让按钮跟在内容末尾，
@@ -2361,3 +2363,33 @@ body.deck-mode .slide-fit img { max-width: 100%; height: auto; }
 body.deck-mode .slide-fit pre,
 body.deck-mode .slide-fit .code-run textarea { max-width: 100%; }
 body.deck-mode .slide-fit pre { overflow-x: auto; }
+
+/* ============================================================
+   v37：误跳转保护 + 滚动尾幕 CTA 可达 + 慢图淡入
+   ============================================================ */
+/* ① 跃迁确认浮条：warpTo 跃迁前 1.6s 反悔窗，点击屏幕任意处取消 */
+.warp-tip {
+  position: fixed; left: 50%; bottom: 11vh; translate: -50% 0;
+  z-index: 999; display: flex; align-items: center; gap: 10px;
+  padding: 12px 18px; border-radius: 999px;
+  background: rgba(6, 14, 28, .93); color: #DFF3FF;
+  border: 1px solid rgba(94, 234, 255, .42);
+  box-shadow: 0 18px 50px rgba(2, 8, 20, .6);
+  font-size: 14.5px; font-weight: 700; backdrop-filter: blur(8px);
+  animation: warpTipIn .28s ease both; pointer-events: none;
+}
+.warp-tip svg { width: 18px; height: 18px; color: #5EEAFF; }
+.warp-tip b { color: #FFD98A; font-weight: 800; }
+@keyframes warpTipIn { from { opacity: 0; transform: translateY(14px); } }
+
+/* ② 通关 CTA 在滚动尾幕改为底部悬浮：塞内容流末尾的话，
+      切幕强制回顶部，用户不知道要滚到底才能看见（「找不到
+      成就墙/跃迁按钮」的根因）。悬浮在内容区下缘，切幕即见 */
+body.deck-mode .slide .try-cta.try-cta-float {
+  position: absolute; left: 50%; translate: -50% 0; bottom: 88px;
+  z-index: 7; margin-top: 0; justify-self: auto;
+}
+
+/* ③ 慢图淡入：加载中半透明骨架（不是整块空白），完成后淡入 */
+body.deck-mode .slide-fit img.img-pending { opacity: .32; }
+body.deck-mode .slide-fit img { transition: opacity .5s ease; }
