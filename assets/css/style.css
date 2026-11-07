@@ -2346,7 +2346,10 @@ body.deck-mode .slide.slide-scroll .slide-fit { transform: none !important; }
    ============================================================ */
 body.deck-mode .slide-fit > * { max-width: 100%; min-width: 0; }
 body.deck-mode .panel { min-width: 0; max-width: 100%; }
-body.deck-mode .panel pre,
+/* v46：排除 .cr-hl——v43 折行规则曾把它一起折行，而 textarea 保持不折行，
+   两层文字错位（光标与显示文字对不上，手机端编辑器「改不了内容」的直接
+   元凶）；overflow:visible 也冲掉了 v41 的穿模裁剪，一并排除 */
+body.deck-mode .panel pre:not(.cr-hl),
 body.deck-mode .panel code { max-width: 100%; white-space: pre-wrap; word-break: break-word; overflow: visible; }
 
 /* ============================================================
