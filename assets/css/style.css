@@ -752,7 +752,7 @@ body.adv::before {
     radial-gradient(880px 460px at 86% -6%, rgba(63,182,216,.13), transparent 62%),
     radial-gradient(700px 420px at -4% 106%, rgba(53,97,158,.22), transparent 60%);
 }
-body.adv .site-header { background: rgba(10,28,48,.82); border-bottom-color: rgba(63,182,216,.18); }
+body.adv .site-header { background: rgba(10, 28, 48, .97); border-bottom-color: rgba(63,182,216,.18); }
 body.adv .logo { color: #E8F3FC; }
 body.adv .nav a { color: #9FC2E2; }
 body.adv .nav a:hover { background: rgba(63,182,216,.12); color: #CFE9F7; }
@@ -1509,7 +1509,7 @@ body::after {
 
 /* ---------- 顶部导航：太空舱玻璃 + 霓虹 ---------- */
 .site-header {
-  background: rgba(7, 13, 26, .74);
+  background: rgba(7, 13, 26, .97); /* v31：近实底，滚动内容不再从导航下透出叠字 */
   -webkit-backdrop-filter: blur(18px) saturate(1.5);
   backdrop-filter: blur(18px) saturate(1.5);
   border-bottom: 1px solid var(--starline);
@@ -1888,7 +1888,7 @@ body.adv {
     linear-gradient(180deg, #081020 0%, #070D1A 50%, #060A14 100%);
   background-attachment: fixed;
 }
-body.adv .site-header { background: rgba(7, 13, 26, .74); }
+body.adv .site-header { background: rgba(7, 13, 26, .97); }
 body.adv .nav a.active {
   background: linear-gradient(180deg, rgba(167,139,250,.18), rgba(139,92,246,.08));
   color: #D6C7FC; border-color: rgba(167, 139, 250, .5);

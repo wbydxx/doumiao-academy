@@ -2131,28 +2131,56 @@
 
     function pad(x) { return (x < 10 ? "0" : "") + x; }
 
-    /* 全屏适配：内容超高/超宽一律等比缩小，保证零滚动零裁切 */
-    function fitSlide(slide) {
+    /* 全屏适配：内容超高/超宽一律等比缩小，保证零滚动零裁切。
+       v31：整页统一缩放系数——各幕独立缩放会让字号忽大忽小，
+       现在取「所有放得下的幕的最小可用比例」作为本页统一比例；
+       个别仍放不下的幕回退幕内竖向滚动 */
+    function measureSlide(slide) {
       var fit = slide.querySelector(".slide-fit");
-      if (!fit) return;
+      if (!fit) return null;
       fit.style.transform = "none";
+      fit.style.zoom = ""; // zoom 影响布局，必须先清掉再测量
       slide.classList.remove("slide-scroll");
       var cs = window.getComputedStyle(slide);
       var availH = slide.clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0);
       var h = fit.scrollHeight, w = fit.scrollWidth;
-      if (!h || !availH) return;
-      var s = Math.min(1, availH / h, slide.clientWidth / Math.max(1, w));
-      var minS = window.innerWidth <= 640 ? .72 : .55; // 手机端重排后允许更高下限，避免字过小
-      if (s < minS - .005) {
-        /* 压到下限仍放不下：不再硬缩裁剪，改为幕内竖向滚动 */
-        fit.dataset.s = "1";
+      if (!h || !availH) return null;
+      return Math.min(1, availH / h, slide.clientWidth / Math.max(1, w));
+    }
+    function minScale() { return window.innerWidth <= 640 ? .72 : .55; } // 手机端下限更高，避免字过小
+    function applyScale(slide, raw) {
+      var fit = slide.querySelector(".slide-fit");
+      if (!fit) return;
+      var minS = minScale();
+      if (raw !== null && raw < Math.max(minS, uniS) - .005) {
+        /* 放不下：按全页统一比例 zoom（参与布局，滚动度量正确），幕内竖向滚动。
+           字号与其他幕完全一致，只是内容多需滚动 */
+        fit.dataset.s = String(uniS);
+        fit.style.transform = "none";
+        fit.style.zoom = uniS < .999 ? String(uniS) : "";
         slide.classList.add("slide-scroll");
         return;
       }
-      fit.dataset.s = s < .999 ? Math.max(minS, s).toFixed(4) : "1";
-      if (s < .999) fit.style.transform = "scale(" + fit.dataset.s + ")";
+      fit.dataset.s = String(uniS);
+      fit.style.zoom = "";
+      if (uniS < .999) fit.style.transform = "scale(" + uniS + ")";
+      else fit.style.transform = "none";
     }
-    function fitAll() { for (var i = 0; i < n; i++) fitSlide(slides[i]); }
+    var uniS = 1;
+    function fitAll() {
+      var minS = minScale(), raws = [];
+      uniS = 1;
+      for (var i = 0; i < n; i++) {
+        raws[i] = measureSlide(slides[i]);
+        if (raws[i] !== null && raws[i] >= minS - .005 && raws[i] < uniS) uniS = raws[i];
+      }
+      if (uniS < .999) uniS = Math.max(minS, uniS);
+      for (var j = 0; j < n; j++) applyScale(slides[j], raws[j]);
+    }
+    function fitSlide(slide) {
+      var raw = measureSlide(slide);
+      applyScale(slide, raw);
+    }
 
     function go(i, opts) {
       i = Math.max(0, Math.min(n - 1, i));
@@ -2199,8 +2227,13 @@
       var pLoop = function () {
         if (!pOn) return;
         pX += (pTx - pX) * .06; pY += (pTy - pY) * .06;
-        var f = slides[cur] && slides[cur].querySelector(".slide-fit");
-        if (f) f.style.transform = "scale(" + (f.dataset.s || 1) + ") translate3d(" + (pX * 9).toFixed(2) + "px," + (pY * 6).toFixed(2) + "px,0)";
+        var sl = slides[cur], f = sl && sl.querySelector(".slide-fit");
+        if (f) {
+          /* 滚动兜底幕已用 zoom 缩放，不能再叠 transform，否则双重缩小 */
+          f.style.transform = sl.classList.contains("slide-scroll")
+            ? ""
+            : "scale(" + (f.dataset.s || 1) + ") translate3d(" + (pX * 9).toFixed(2) + "px," + (pY * 6).toFixed(2) + "px,0)";
+        }
         pRaf = requestAnimationFrame(pLoop);
       };
       deck.addEventListener("mousemove", function (e) {
@@ -2305,6 +2338,14 @@
   }
 
   function initAll() { initProgress(); initStarfield(); initTilt(); initLessons(); initDeck(); initWarpReveal(); }
-  if (document.readyState === "complete") initAll();
-  else window.addEventListener("load", initAll);
+  /* v31：分幕引擎改在 DOMContentLoaded 启动，不再等 window.load——
+     课页里的大图（每张 0.5~1.3MB）在国内网络下会拖住 load 事件几秒甚至卡死，
+     旧逻辑会让分幕迟迟不启动，页面退化成滚动长页、吸顶导航压住正文 */
+  var __allStarted = false;
+  function startAll() { if (__allStarted) return; __allStarted = true; initAll(); }
+  if (document.readyState === "complete" || document.readyState === "interactive") startAll();
+  else {
+    document.addEventListener("DOMContentLoaded", startAll);
+    setTimeout(startAll, 900); /* 兜底：个别资源卡死也能准时进入分幕 */
+  }
 })();
