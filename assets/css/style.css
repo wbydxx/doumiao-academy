@@ -2079,3 +2079,64 @@ body.deck-mode .slide-lesson .doudou-bubble {
   background: rgba(13, 26, 46, .86); border: 1px solid rgba(125, 235, 250, .35);
   color: #D8F1FF; box-shadow: none;
 }
+
+/* ============ 暗幕白底组件可读性兜底 ============ */
+/* 凡在暗色星幕上保持白底的组件：纸感浅底 + 内部文字强制深色，杜绝白底浅字 */
+body.deck-mode .slide-lesson .judge-card,
+body.deck-mode .slide-lesson .opt,
+body.deck-mode .slide-lesson .pq-opt,
+body.deck-mode .slide-lesson table,
+body.deck-mode .slide-lesson th,
+body.deck-mode .slide-lesson td,
+body.deck-mode .slide-lesson .mini-card,
+body.deck-mode .slide-lesson .tip-box,
+body.deck-mode .slide-lesson .fact-card,
+body.deck-mode .slide-lesson .fun-card {
+  background: linear-gradient(180deg, #F7FBFF, #EAF4FC);
+  border-color: rgba(34, 211, 238, .32);
+  color: #16324F;
+}
+body.deck-mode .slide-lesson .judge-card *,
+body.deck-mode .slide-lesson .opt *,
+body.deck-mode .slide-lesson .pq-opt *,
+body.deck-mode .slide-lesson table *,
+body.deck-mode .slide-lesson .mini-card *,
+body.deck-mode .slide-lesson .tip-box *,
+body.deck-mode .slide-lesson .fact-card *,
+body.deck-mode .slide-lesson .fun-card * { color: inherit; }
+/* 语义色保留：成功绿 / 警示红 / 键位徽章蓝 */
+body.deck-mode .slide-lesson .judge-card.ok,
+body.deck-mode .slide-lesson .judge-card.ok * { color: #177A57; }
+body.deck-mode .slide-lesson .judge-card.bad-try,
+body.deck-mode .slide-lesson .judge-card.bad-try * { color: #B23B37; }
+body.deck-mode .slide-lesson .opt .opt-k,
+body.deck-mode .slide-lesson .pq-opt .opt-k { color: #0369A1; background: #fff; }
+/* 选项正确/错误状态色（若组件在暗幕给出） */
+body.deck-mode .slide-lesson .opt.right,
+body.deck-mode .slide-lesson .opt.right *,
+body.deck-mode .slide-lesson .pq-opt.right,
+body.deck-mode .slide-lesson .pq-opt.right * { color: #177A57; }
+body.deck-mode .slide-lesson .opt.wrong,
+body.deck-mode .slide-lesson .opt.wrong *,
+body.deck-mode .slide-lesson .pq-opt.wrong,
+body.deck-mode .slide-lesson .pq-opt.wrong * { color: #B23B37; }
+
+/* 字母/按键芯片家族（cmd-chip 等）：纸感底 + 深字（原白底浅蓝字对比不足） */
+body.deck-mode .slide-lesson .cmd-chip,
+body.deck-mode .slide-lesson .chip,
+body.deck-mode .slide-lesson .key-cap,
+body.deck-mode .slide-lesson .lamp-chip {
+  background: linear-gradient(180deg, #F7FBFF, #E7F2FB);
+  border-color: rgba(34, 211, 238, .35);
+  color: #0B4A73;
+  text-shadow: none;
+}
+body.deck-mode .slide-lesson .cmd-chip *,
+body.deck-mode .slide-lesson .chip *,
+body.deck-mode .slide-lesson .key-cap *,
+body.deck-mode .slide-lesson .lamp-chip * { color: inherit; }
+body.deck-mode .slide-lesson .cmd-chip:hover,
+body.deck-mode .slide-lesson .chip:hover {
+  border-color: #67E8F9; color: #04121F;
+  box-shadow: 0 0 18px rgba(34, 211, 238, .35);
+}
