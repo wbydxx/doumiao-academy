@@ -2000,3 +2000,30 @@ body.lesson-stage .nav { order: 2; flex-wrap: nowrap; overflow-x: auto; scrollba
 body.lesson-stage .nav::-webkit-scrollbar { display: none; }
 body.lesson-stage .nav a { min-height: 30px; padding: 3px 9px; font-size: 12.5px; gap: 4px; }
 body.lesson-stage .nav a svg { width: 14px; height: 14px; }
+
+/* ============ 讲述幕图文两栏：每幕都有场景画面的视觉锚点 ============ */
+.lslide-cols {
+  display: grid; grid-template-columns: minmax(190px, 38%) minmax(0, 1fr);
+  gap: clamp(16px, 3.2vw, 42px); align-items: center; width: 100%;
+}
+.lslide-cols .scene-panel {
+  margin: 0; padding: 0; background: none; border: 0;
+  box-shadow: none; border-radius: 0;
+}
+.lslide-cols .scene-panel .scene-svg { max-height: 48vh; margin: 0 auto; }
+body.deck-mode .lslide-cols .scene-panel svg {
+  animation: sceneFloat 5.6s ease-in-out infinite;
+  filter: drop-shadow(0 18px 44px rgba(0, 0, 0, .5));
+}
+@keyframes sceneFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-9px) rotate(.4deg); }
+}
+@media (prefers-reduced-motion: reduce) { body.deck-mode .lslide-cols .scene-panel svg { animation: none; } }
+@media (max-width: 760px) {
+  .lslide-cols { grid-template-columns: 1fr; gap: 10px; }
+  .lslide-cols .scene-panel .scene-svg { max-height: 30vh; }
+}
+
+/* 分幕课程页：浮动面包屑徽章与页头重叠，且信息与幕眉标重复 → 隐藏 */
+body.lesson-stage .lstage-crumbs { display: none !important; }

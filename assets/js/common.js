@@ -1910,7 +1910,29 @@
       act.className = "lslide-act";
       act.innerHTML = "<i></i>" + meta.tag + "<span>第 " + (gi + 1) + " / " + groups.length + " 幕</span>";
       fit.appendChild(act);
-      grp.forEach(function (p) { fit.appendChild(p); });
+      if (meta.cls === "act-learn") {
+        /* 讲述幕：左图右文——场景插图是每幕的视觉锚点；
+           本组没有场景图时克隆开场幕的场景图，保证幕幕有画面 */
+        var scn = grp.filter(isScene)[0];
+        if (!scn && groups[0].length && isScene(groups[0][groups[0].length - 1])) {
+          scn = groups[0][groups[0].length - 1].cloneNode(true);
+        }
+        var textPanels = grp.filter(function (p) { return !isScene(p); });
+        if (scn && textPanels.length) {
+          var cols = document.createElement("div");
+          cols.className = "lslide-cols";
+          cols.appendChild(scn);
+          var txt = document.createElement("div");
+          txt.className = "lslide-text";
+          textPanels.forEach(function (p) { txt.appendChild(p); });
+          cols.appendChild(txt);
+          fit.appendChild(cols);
+        } else {
+          grp.forEach(function (p) { fit.appendChild(p); });
+        }
+      } else {
+        grp.forEach(function (p) { fit.appendChild(p); });
+      }
       if (gi === groups.length - 1) pagers.forEach(function (pg) { fit.appendChild(pg); });
       s.appendChild(fit);
       m.appendChild(s);
