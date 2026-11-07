@@ -2171,6 +2171,28 @@
       if (Math.abs(dx) > 52 && Math.abs(dx) > Math.abs(dy) * 1.25) go(cur + (dx > 0 ? 1 : -1));
     }, { passive: true });
 
+    /* 点击任意空白处前进（丝滑衔接：不用找按钮，点哪里都能翻页）
+       交互元素（链接/按钮/输入/练习面板/代码框）不触发；划选文字时不触发 */
+    deck.addEventListener("click", function (e) {
+      if (e.target.closest("a,button,input,textarea,select,label,.try-panel,.pz-box,.code-box,.py-pop,.deck-adv,.deck-dots,.deck-nav,.doudou-bubble")) return;
+      var sel = window.getSelection && String(window.getSelection());
+      if (sel && sel.length) return;
+      if (cur < n - 1) {
+        go(cur + 1, { sfx: true });
+        var th = document.querySelector(".stage-taphint");
+        if (th) { th.classList.remove("show"); th.classList.add("hide"); }
+      }
+    });
+    /* 首次引导浮标：告诉访客「点哪里都行」 */
+    try {
+      var th = document.createElement("div");
+      th.className = "stage-taphint";
+      th.textContent = document.body.classList.contains("lesson-stage") ? "点击任意空白处，继续下一幕" : "点击任意空白处，前往下一页";
+      document.body.appendChild(th);
+      setTimeout(function () { th.classList.add("show"); }, 1400);
+      setTimeout(function () { th.classList.remove("show"); th.classList.add("hide"); }, 7200);
+    } catch (e) {}
+
     /* 供通关 CTA 使用：重新适配内容高度 / 定位到指定幕 */
     window.__deckGo = function (i) { go(Math.max(0, Math.min(n - 1, i))); };
     window.__refitSlides = fitAll;

@@ -2027,3 +2027,55 @@ body.deck-mode .lslide-cols .scene-panel svg {
 
 /* 分幕课程页：浮动面包屑徽章与页头重叠，且信息与幕眉标重复 → 隐藏 */
 body.lesson-stage .lstage-crumbs { display: none !important; }
+
+/* ============ 点击任意处前进：引导浮标 + 手势光标 ============ */
+.stage-taphint {
+  position: fixed; right: clamp(14px, 3vw, 34px); bottom: clamp(16px, 4.2vh, 40px);
+  z-index: 40; pointer-events: none;
+  padding: 9px 18px; border-radius: 999px;
+  background: rgba(10, 22, 40, .74); border: 1px solid rgba(34, 211, 238, .42);
+  color: #9BE8F7; font-size: 12.5px; letter-spacing: .08em;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 26px rgba(2, 8, 20, .45);
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.stage-taphint::after {
+  content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 8px;
+  border-top: 2px solid currentColor; border-right: 2px solid currentColor;
+  transform: rotate(45deg); vertical-align: 1px;
+  animation: tapNudge 1.4s ease-in-out infinite;
+}
+@keyframes tapNudge {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: .55; }
+  50% { transform: rotate(45deg) translate(3px, -3px); opacity: 1; }
+}
+.stage-taphint.show { opacity: 1; transform: translateY(0); }
+.stage-taphint.hide { opacity: 0; transform: translateY(6px); }
+body.deck-mode .slide { cursor: pointer; }
+body.deck-mode .slide a,
+body.deck-mode .slide button,
+body.deck-mode .slide input,
+body.deck-mode .slide textarea,
+body.deck-mode .slide select { cursor: auto; }
+body.deck-mode .slide .deck-adv { cursor: pointer; }
+
+/* ============ 暗幕配色协调：按钮与气泡深空化 ============ */
+body.deck-mode .slide-lesson .btn {
+  background: rgba(14, 165, 233, .16); border: 1px solid rgba(34, 211, 238, .45);
+  color: #BFE9F6; box-shadow: none;
+}
+body.deck-mode .slide-lesson .btn:hover {
+  background: rgba(14, 165, 233, .3); border-color: #67E8F9; color: #EAF9FF;
+}
+body.deck-mode .slide-lesson .btn.blue {
+  background: linear-gradient(135deg, #0891B2, #22D3EE);
+  border-color: transparent; color: #04121F; font-weight: 700;
+  box-shadow: 0 6px 22px rgba(8, 145, 178, .35);
+}
+body.deck-mode .slide-lesson .btn.blue:hover { filter: brightness(1.14); color: #04121F; }
+body.deck-mode .slide-lesson .btn.ghost { background: rgba(125, 235, 250, .07); }
+body.deck-mode .slide-lesson .doudou-bubble {
+  background: rgba(13, 26, 46, .86); border: 1px solid rgba(125, 235, 250, .35);
+  color: #D8F1FF; box-shadow: none;
+}
