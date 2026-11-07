@@ -2140,3 +2140,56 @@ body.deck-mode .slide-lesson .chip:hover {
   border-color: #67E8F9; color: #04121F;
   box-shadow: 0 0 18px rgba(34, 211, 238, .35);
 }
+
+/* ============ 暗底小字可读性：muted 令牌提亮 + 字重兜底 ============ */
+/* 暗色星幕/深空面板上：灰蓝 muted（原对比 ~2.9:1）提亮为高对比雾蓝 */
+body.deck-mode #deck,
+body.deck-mode .slide-lesson,
+body.stage,
+body.stage .panel {
+  --muted: #A9C7E9;          /* 雾蓝 on 深底 ≈ 7.9:1 */
+  --gold: #E2C285;           /* 金色同步提亮（暗底金色 5.4→7:1） */
+}
+/* 例外：白底组件内部 muted 恢复深色（白底必须深字） */
+body.deck-mode .slide-lesson .judge-card,
+body.deck-mode .slide-lesson .opt,
+body.deck-mode .slide-lesson .pq-opt,
+body.deck-mode .slide-lesson table,
+body.deck-mode .slide-lesson th,
+body.deck-mode .slide-lesson td,
+body.deck-mode .slide-lesson .mini-card,
+body.deck-mode .slide-lesson .tip-box,
+body.deck-mode .slide-lesson .fact-card,
+body.deck-mode .slide-lesson .fun-card,
+body.deck-mode .slide-lesson .cmd-chip,
+body.deck-mode .slide-lesson .chip,
+body.deck-mode .slide-lesson .key-cap,
+body.stage .pq-opt,
+body.stage .opt,
+body.stage .judge-card,
+body.stage table,
+body.stage th,
+body.stage td {
+  --muted: #4E7099;          /* 白/纸底上的深雾蓝 ≈ 5.6:1 */
+}
+/* 暗幕正文与说明：最低常规字重，小字不再用细体发虚 */
+body.deck-mode #deck p,
+body.deck-mode .slide-lesson p,
+body.deck-mode .slide-lesson li,
+body.deck-mode .slide-lesson small,
+body.stage p,
+body.stage li,
+body.stage small {
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+/* 暗幕中明确偏灰的次要说明（直接引用令牌之外的写法）统一提亮 */
+body.deck-mode .slide-lesson .panel small,
+body.deck-mode .slide-lesson .panel .note,
+body.deck-mode .slide-lesson .panel .hint,
+body.stage .panel small,
+body.stage .panel .note,
+body.stage .panel .hint {
+  color: #A9C7E9;
+}
