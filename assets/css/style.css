@@ -2350,6 +2350,19 @@ body.deck-mode .slide.slide-scroll .slide-fit { transform: none !important; }
 }
 
 /* ============================================================
+   v42：幕内容防撑破（「编码器文字显示不正常」的真正根因）
+   实测实锤：幕内超宽元素（white-space:pre 的长代码行等）把 .panel
+   撑宽，编辑器 .code-run 右边界 609px 超出内容区 575px——整个面板
+   连带文字溢出被裁、错位。链条锁死：fit 直接子元素限宽 + panel
+   超宽时自身横滚 + panel 内 pre/code 限宽自滚，任何元素都无法
+   再把内容区撑破。
+   ============================================================ */
+body.deck-mode .slide-fit > * { max-width: 100%; min-width: 0; }
+body.deck-mode .panel { min-width: 0; max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+body.deck-mode .panel pre,
+body.deck-mode .panel code { max-width: 100%; overflow-x: auto; }
+
+/* ============================================================
    v37：v36 回归修复 + 误跳转/滚动到底专项
    ① 只锁 html 的横向溢出——v36 同时给 body 设 overflow-x:hidden，
       按 CSS 规范 body 会变成滚动容器（一轴 hidden、另一轴 visible
