@@ -2222,3 +2222,57 @@ body.deck-mode .slide-lesson .doudou-bubble,
 body.deck-mode .slide-lesson .doudou-bubble p { color: #D8F1FF; }
 body.deck-mode .slide-lesson .code-box,
 body.deck-mode .slide-lesson .code-box * { color: #D8F1FF; }
+
+/* ============ 手机端适配（≤640px）：流式重排，弃用桌面等比缩放 ============ */
+@media (max-width: 640px) {
+  /* 幕容器：收窄留白，内容原生流式 */
+  body.deck-mode .slide { padding: 62px 14px 78px; }
+  body.deck-mode .slide-fit { transform-origin: 50% 0; max-height: 100%; }
+  /* 顶栏：更紧凑 */
+  .bar { padding: 8px 12px; }
+  .bar .logo { font-size: 15px; }
+  .bar .nav a { padding: 6px 9px; font-size: 12.5px; }
+  .bar-tools { gap: 6px; }
+  .stone-chip { display: none; }
+  /* 标题体系 */
+  .hero-title { font-size: clamp(26px, 8.4vw, 36px); }
+  .hero-sub { font-size: 13.5px; }
+  body.deck-mode .slide-lesson .panel h2 { font-size: 19px; }
+  body.deck-mode .slide-lesson .panel p,
+  body.deck-mode .slide-lesson .panel li { font-size: 14.5px; line-height: 1.72; }
+  /* 面板瘦身 */
+  body.deck-mode .slide-lesson .panel { padding: 13px 13px; border-radius: 14px; }
+  .lslide-cols { grid-template-columns: 1fr; gap: 10px; }
+  .lslide-cols .scene-panel .scene-svg { max-height: 22vh; }
+  .scene-panel .scene-svg { max-height: 30vh; }
+  /* 卡片网格：星图/航线/进阶 两列紧凑，窄屏单列 */
+  body.deck-mode .path-grid, body.deck-mode .path-grid-2 { gap: 9px; }
+  body.deck-mode .path-grid .path-card { grid-column: span 6; padding: 12px 11px; }
+  .path-card h3 { font-size: 15px; }
+  .path-card p { font-size: 12px; line-height: 1.55; }
+  .trio, .cards3, .route-cards { grid-template-columns: 1fr 1fr; gap: 9px; }
+  /* 星图与路线图限高 */
+  .route-map svg, .route-svg { max-height: 30vh; }
+  /* 交互件：花灯/字母芯片换行排布 */
+  .lantern-row { flex-wrap: wrap; gap: 8px; }
+  .cmd-chip, .chip { min-width: 42px; height: 42px; font-size: 15px; }
+  .try-panel .btn { font-size: 13px; padding: 9px 14px; }
+  /* 底部导航簇 */
+  .deck-adv { padding: 10px 20px; font-size: 13.5px; bottom: 46px; max-width: 86vw; }
+  .deck-nav { right: 10px; bottom: 10px; gap: 8px; }
+  .deck-btn { width: 36px; height: 36px; }
+  .deck-counter { display: none; }
+  .stage-taphint { font-size: 11px; padding: 7px 13px; bottom: 96px; right: 10px; }
+  .pager { gap: 8px; }
+  .pager button { padding: 9px 13px; font-size: 12.5px; }
+  .judge-actions { gap: 8px; }
+  /* 豆豆气泡 */
+  .doudou-bubble { padding: 12px 14px; }
+  .doudou-bubble p { font-size: 14px; }
+  /* 成就/旅程条目紧凑 */
+  .jr-item, .ach-item { padding: 10px 12px; }
+}
+@media (max-width: 380px) {
+  body.deck-mode .path-grid .path-card { grid-column: auto; }
+  .trio, .cards3, .route-cards { grid-template-columns: 1fr; }
+}

@@ -2049,7 +2049,8 @@
       var h = fit.scrollHeight, w = fit.scrollWidth;
       if (!h || !availH) return;
       var s = Math.min(1, availH / h, slide.clientWidth / Math.max(1, w));
-      fit.dataset.s = s < .999 ? Math.max(.55, s).toFixed(4) : "1";
+      var minS = window.innerWidth <= 640 ? .72 : .55; // 手机端重排后允许更高下限，避免字过小
+      fit.dataset.s = s < .999 ? Math.max(minS, s).toFixed(4) : "1";
       if (s < .999) fit.style.transform = "scale(" + fit.dataset.s + ")";
     }
     function fitAll() { for (var i = 0; i < n; i++) fitSlide(slides[i]); }
