@@ -2134,10 +2134,10 @@
 
     function pad(x) { return (x < 10 ? "0" : "") + x; }
 
-    /* 全屏适配：内容超高/超宽一律等比缩小，保证零滚动零裁切。
-       v31：整页统一缩放系数——各幕独立缩放会让字号忽大忽小，
-       现在取「所有放得下的幕的最小可用比例」作为本页统一比例；
-       个别仍放不下的幕回退幕内竖向滚动 */
+    /* 全屏适配 v35：全站统一 1:1 基准——彻底放弃自适应缩小。
+       旧版每页按内容算 uniS（0.55~1 不等），跨页字号忽大忽小；
+       现在 100% 原生字号是唯一基准，放不下的幕改为幕内竖向滚动，
+       字号在任何页面、任何一幕都绝对一致 */
     function measureSlide(slide) {
       var fit = slide.querySelector(".slide-fit");
       if (!fit) return null;
@@ -2150,39 +2150,20 @@
       if (!h || !availH) return null;
       return Math.min(1, availH / h, slide.clientWidth / Math.max(1, w));
     }
-    function minScale() { return window.innerWidth <= 640 ? .72 : .55; } // 手机端下限更高，避免字过小
     function applyScale(slide, raw) {
       var fit = slide.querySelector(".slide-fit");
       if (!fit) return;
-      var minS = minScale();
-      if (raw !== null && raw < Math.max(minS, uniS) - .005) {
-        /* 放不下：按全页统一比例 zoom（参与布局，滚动度量正确），幕内竖向滚动。
-           字号与其他幕完全一致，只是内容多需滚动 */
-        fit.dataset.s = String(uniS);
-        fit.style.transform = "none";
-        fit.style.zoom = uniS < .999 ? String(uniS) : "";
-        slide.classList.add("slide-scroll");
-        return;
-      }
-      fit.dataset.s = String(uniS);
+      fit.style.transform = "none";
       fit.style.zoom = "";
-      if (uniS < .999) fit.style.transform = "scale(" + uniS + ")";
-      else fit.style.transform = "none";
+      if (raw !== null && raw < .995) slide.classList.add("slide-scroll");
+      else slide.classList.remove("slide-scroll");
     }
-    var uniS = 1;
+    var uniS = 1; /* v35：恒为 1，保留变量兼容视差等旧引用 */
     function fitAll() {
-      var minS = minScale(), raws = [];
-      uniS = 1;
-      for (var i = 0; i < n; i++) {
-        raws[i] = measureSlide(slides[i]);
-        if (raws[i] !== null && raws[i] >= minS - .005 && raws[i] < uniS) uniS = raws[i];
-      }
-      if (uniS < .999) uniS = Math.max(minS, uniS);
-      for (var j = 0; j < n; j++) applyScale(slides[j], raws[j]);
+      for (var i = 0; i < n; i++) applyScale(slides[i], measureSlide(slides[i]));
     }
     function fitSlide(slide) {
-      var raw = measureSlide(slide);
-      applyScale(slide, raw);
+      applyScale(slide, measureSlide(slide));
     }
 
     function go(i, opts) {

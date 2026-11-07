@@ -1110,18 +1110,19 @@ body.deck-mode .slide {
   padding: clamp(60px, 8.5vh, 92px) clamp(14px, 3vw, 40px) clamp(66px, 9vh, 92px);
   overflow: hidden; /* 零滚动：溢出交给 .slide-fit 等比缩放 */
   opacity: 0; visibility: hidden; pointer-events: none;
-  transform: translateX(11%) scale(.975);
-  transition: transform .62s cubic-bezier(.55,0,.78,.55), opacity .34s ease .2s, visibility 0s linear .6s;
+  /* v35：切幕只平移不缩放（旧版 scale(.975)+弹簧过冲＝画面忽大忽小） */
+  transform: translateX(11%);
+  transition: transform .5s cubic-bezier(.4,0,.2,1), opacity .3s ease .14s, visibility 0s linear .48s;
   will-change: transform, opacity;
 }
 body.deck-mode .slide-fit { transform-origin: 50% 50%; will-change: transform; }
 body.deck-mode .deck-path.slide-fit { display: flow-root; } /* 防子元素外边距塌陷，保证高度测量准确 */
-body.deck-mode .slide.is-above { transform: translateX(-11%) scale(.975); }
+body.deck-mode .slide.is-above { transform: translateX(-11%); }
 body.deck-mode .slide.is-active {
   opacity: 1; visibility: visible; pointer-events: auto;
   transform: none; z-index: 2;
-  /* 入场回弹＝跳动转场（弹簧过冲） */
-  transition: transform .82s cubic-bezier(.24,1.4,.32,1), opacity .42s ease .05s, visibility 0s;
+  /* v35：入场改标准缓动，去掉弹簧过冲（内容不再回弹变大小） */
+  transition: transform .5s cubic-bezier(.4,0,.2,1), opacity .38s ease .04s, visibility 0s;
 }
 body.deck-mode .slide > * { flex-shrink: 0; }
 
@@ -2233,8 +2234,9 @@ body.deck-mode .slide-lesson .code-box * { color: #D8F1FF; }
 
 /* ============ 手机端适配（≤640px）：流式重排，弃用桌面等比缩放 ============ */
 @media (max-width: 640px) {
-  /* 幕容器：收窄留白，内容原生流式 */
-  body.deck-mode .slide { padding: 62px 14px 78px; }
+  /* 幕容器：收窄留白，内容原生流式。
+     v35：顶部 62→80px——顶栏 fixed 高 50px，旧值只剩 12px 余量，部分页面首行被遮 */
+  body.deck-mode .slide { padding: 80px 14px 86px; }
   body.deck-mode .slide-fit { transform-origin: 50% 0; max-height: 100%; }
   /* 顶栏：更紧凑 */
   .bar { padding: 8px 12px; }
