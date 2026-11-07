@@ -847,9 +847,18 @@ body.adv .rail:not(.rail-adv) .rail-name { color: #E8F3FC; }
   .lantern .lv { font-size: 10.5px; }
   .animal-card { width: 156px; height: 156px; }
   .animal-card svg { width: 100px; height: 100px; }
-  .code-run textarea, .cr-hl, .cr-gutter { font-size: 15.5px; }  /* 防 iOS 聚焦缩放 */
+  .code-run textarea, .cr-hl, .cr-gutter { font-size: 16px; }  /* ≥16px 才能真正防 iOS 聚焦自动放大 */
   .cr-stage { height: 200px; }
-  .cr-gutter { width: 40px; padding-right: 7px; }
+  .cr-gutter { width: 32px; padding-right: 6px; padding-left: 0; }
+  /* v39：编译器手机适配——收紧内距省宽度，运行按钮全宽易点 */
+  .code-run { border-radius: 14px; margin: 10px 0; }
+  .code-run .cr-bar { padding: 8px 12px; gap: 7px; }
+  .code-run .cr-bar .cr-lang { font-size: 10.5px; padding: 3px 9px; }
+  .code-run textarea, .cr-hl { padding: 12px; }
+  .cr-gutter { padding-top: 12px; padding-bottom: 12px; }
+  .code-run .run-row { margin: 12px; padding-top: 12px; gap: 8px; }
+  .code-run .run-row .btn { flex: 1 1 auto; justify-content: center; }
+  .code-run .cr-out { margin: 2px 12px 12px; }
   .cert-form input { width: 100% !important; }
   .doudou-bubble { margin: 12px 0; }
   .stone-row svg { width: 34px; height: 34px; }
@@ -2365,24 +2374,9 @@ body.deck-mode .slide-fit .code-run textarea { max-width: 100%; }
 body.deck-mode .slide-fit pre { overflow-x: auto; }
 
 /* ============================================================
-   v37：误跳转保护 + 滚动尾幕 CTA 可达 + 慢图淡入
+   v39：编译器手机适配在手机断点内；warp-tip 确认浮条已按用户要求移除
    ============================================================ */
-/* ① 跃迁确认浮条：warpTo 跃迁前 1.6s 反悔窗，点击屏幕任意处取消 */
-.warp-tip {
-  position: fixed; left: 50%; bottom: 11vh; translate: -50% 0;
-  z-index: 999; display: flex; align-items: center; gap: 10px;
-  padding: 12px 18px; border-radius: 999px;
-  background: rgba(6, 14, 28, .93); color: #DFF3FF;
-  border: 1px solid rgba(94, 234, 255, .42);
-  box-shadow: 0 18px 50px rgba(2, 8, 20, .6);
-  font-size: 14.5px; font-weight: 700; backdrop-filter: blur(8px);
-  animation: warpTipIn .28s ease both; pointer-events: none;
-}
-.warp-tip svg { width: 18px; height: 18px; color: #5EEAFF; }
-.warp-tip b { color: #FFD98A; font-weight: 800; }
-@keyframes warpTipIn { from { opacity: 0; transform: translateY(14px); } }
-
-/* ② 通关 CTA 在滚动尾幕改为底部悬浮：塞内容流末尾的话，
+/* 通关 CTA 在滚动尾幕改为底部悬浮：塞内容流末尾的话，
       切幕强制回顶部，用户不知道要滚到底才能看见（「找不到
       成就墙/跃迁按钮」的根因）。悬浮在内容区下缘，切幕即见 */
 body.deck-mode .slide .try-cta.try-cta-float {

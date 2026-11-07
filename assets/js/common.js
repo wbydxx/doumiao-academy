@@ -1473,7 +1473,8 @@
     }
     return { url: "../achievements/index.html", short: "成就墙", label: "成就墙" };
   }
-  /** 曲速跃迁 v2：点击即走，无弹窗无倒计时。
+  /** 曲速跃迁：点击即走，无弹窗无倒计时（v39：按用户要求删除确认浮条，
+      关卡间跃迁直接出发——防误触只保留幕内翻页手势的确认机制）
       ① 星流隧道在全局粒子画布上展开（__fxWarp）
       ② 当前页面拉伸 + 模糊 + 变暗（光速加速感）
       ③ 720ms 后跳转；新页面凭 sessionStorage 标记播放「光速入场」 */
@@ -1484,24 +1485,7 @@
     try { if (window.__fxWarp) window.__fxWarp(); } catch (e) {}
     document.body.classList.add("warping");
     try { sessionStorage.setItem("dm-warp", outEsc(label || "1")); } catch (e) {}
-    /* v37：误触保护——手机上很容易碰错链接，跃迁前给 1.6s 反悔窗，
-       浮条常驻显示去向，期间点击屏幕任意处即取消（自动跃迁定时器一并取消） */
-    var t = setTimeout(function () { location.href = url; }, 1600);
-    try {
-      var tip = document.createElement("div");
-      tip.className = "warp-tip";
-      tip.innerHTML = icon("forward") + "<span>即将跃迁 · " + outEsc(label || "下一站") + "</span><b>点一下取消</b>";
-      document.body.appendChild(tip);
-      var cancel = function () {
-        clearTimeout(t);
-        document.body.__warping = false;
-        document.body.classList.remove("warping");
-        try { sessionStorage.removeItem("dm-warp"); } catch (e2) {}
-        if (tip.parentNode) tip.parentNode.removeChild(tip);
-        document.removeEventListener("click", cancel, true);
-      };
-      setTimeout(function () { document.addEventListener("click", cancel, true); }, 50);
-    } catch (e2) { setTimeout(function () { location.href = url; }, 400); }
+    setTimeout(function () { location.href = url; }, 720);
   }
   /* 通关后的跳转逻辑（点击优先）：
      · 分幕课程页：尝试幕浮现「跃迁下一站」发光大按钮并自动滑到该幕，点击即曲速出发
@@ -2335,9 +2319,11 @@
       else if (k === "f" || k === "F") { toggleFS(); }
     });
 
-    /* 触屏左右滑动翻页；v36：滚动幕滚到头后继续同向竖滑 → 直接翻页，
-       不必再改成横滑（长内容幕「滑不动/操作复杂」的主因） */
+    /* 触屏滑动翻页 v39：同向滑动需两次确认（900ms 内再滑同向才真正翻页），
+       滚动幕滚到头后同样两次竖滑确认——杜绝单次误滑/快速惯性连跳；
+       翻页后 800ms 冷却忽略一切手势 */
     var tY = 0, tX = 0, tOn = false;
+    var swDir = 0, swT = 0, flipLock = 0;
     deck.addEventListener("touchstart", function (e) {
       tY = e.touches[0].clientY; tX = e.touches[0].clientX; tOn = true;
     }, { passive: true });
@@ -2345,19 +2331,31 @@
       if (!tOn) return; tOn = false;
       var t = e.changedTouches[0];
       var dx = tX - t.clientX, dy = tY - t.clientY, adx = Math.abs(dx), ady = Math.abs(dy);
-      if (adx > 52 && adx > ady * 1.25) { go(cur + (dx > 0 ? 1 : -1)); return; }
+      var now = Date.now();
+      if (now < flipLock) return;
+      /* 横滑：两次同向确认 */
+      if (adx > 52 && adx > ady * 1.25) {
+        var hdir = dx > 0 ? 1 : -1;
+        if (swDir === hdir && now - swT < 900) { swDir = 0; flipLock = now + 800; go(cur + hdir); }
+        else { swDir = hdir; swT = now; }
+        return;
+      }
+      /* 滚动幕边界竖滑：同样两次同向确认 */
       var sl = slides[cur];
       if (sl && sl.classList.contains("slide-scroll") && ady > 72 && ady > adx * 1.6) {
         var atTop = sl.scrollTop <= 1;
         var atBot = sl.scrollTop >= sl.scrollHeight - sl.clientHeight - 1;
-        if ((dy > 0 && atBot) || (dy < 0 && atTop)) go(cur + (dy > 0 ? 1 : -1));
+        if ((dy > 0 && !atBot) || (dy < 0 && !atTop)) { swDir = 0; return; } /* 幕内还在滚，不算翻页手势 */
+        var vdir = dy > 0 ? 1 : -1;
+        if (swDir === vdir && now - swT < 900) { swDir = 0; flipLock = now + 800; go(cur + vdir); }
+        else { swDir = vdir; swT = now; }
       }
     }, { passive: true });
 
-    /* 点击任意空白处前进（丝滑衔接：不用找按钮，点哪里都能翻页）
-       交互元素（链接/按钮/输入/练习面板/代码框）不触发；划选文字时不触发；
-       v37：滚动幕点空白不翻页——长内容幕阅读中随手一点就跳幕、
-       且切幕回顶丢失阅读位置，是「误跳转」的主要来源 */
+    /* 点击空白处前进 v39：双击确认（550ms 内两击）才翻页——
+       单击不翻，杜绝阅读中随手一点就跳幕；滚动幕仍完全不响应点空白；
+       交互元素（链接/按钮/输入/练习面板/代码框）不触发；划选文字时不触发 */
+    var lastTapT = 0;
     deck.addEventListener("click", function (e) {
       if (e.target.closest("a,button,input,textarea,select,label,.try-panel,.pz-box,.code-box,.py-pop,.deck-adv,.deck-dots,.deck-nav,.doudou-bubble")) return;
       var sel = window.getSelection && String(window.getSelection());
@@ -2365,16 +2363,20 @@
       var actS = slides[cur];
       if (actS && actS.classList.contains("slide-scroll")) return;
       if (cur < n - 1) {
+        var now = Date.now();
+        if (now < flipLock) return;
+        if (now - lastTapT > 550) { lastTapT = now; return; } /* 第一次点击：仅记录 */
+        lastTapT = 0; flipLock = now + 800;                    /* 双击确认 → 翻页 + 冷却 */
         go(cur + 1, { sfx: true });
         var th = document.querySelector(".stage-taphint");
         if (th) { th.classList.remove("show"); th.classList.add("hide"); }
       }
     });
-    /* 首次引导浮标：告诉访客「点哪里都行」 */
+    /* 首次引导浮标：告诉访客操作方式 */
     try {
       var th = document.createElement("div");
       th.className = "stage-taphint";
-      th.textContent = document.body.classList.contains("lesson-stage") ? "点击任意空白处，继续下一幕" : "点击任意空白处，前往下一页";
+      th.textContent = document.body.classList.contains("lesson-stage") ? "双击空白处，继续下一幕" : "双击空白处，前往下一页";
       document.body.appendChild(th);
       setTimeout(function () { th.classList.add("show"); }, 1400);
       setTimeout(function () { th.classList.remove("show"); th.classList.add("hide"); }, 7200);
