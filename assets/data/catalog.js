@@ -1,4 +1,4 @@
-﻿/* 由 catalog.json 生成，请勿手改；改 catalog.json 后用 build-catalog.ps1 重新生成 */
+/* 由 catalog.json 生成，请勿手改；改 catalog.json 后用 build-catalog.ps1 重新生成 */
 window.DM_CATALOG = {
   "site": {
     "name": "豆苗学堂",
