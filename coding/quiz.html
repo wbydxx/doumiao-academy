@@ -6,7 +6,7 @@
 <title>挑战测验 · 编程初体验 — 豆苗学堂</title>
 <link rel="stylesheet" href="../assets/css/tokens.css?v=7">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/style.css?v=29">
+<link rel="stylesheet" href="../assets/css/style.css?v=30">
 <style>
   [data-ic] { display: inline-flex; align-items: center; }
   .h-ic { display: inline-flex; vertical-align: -4px; margin-right: 8px; color: var(--green); }
@@ -51,13 +51,15 @@
     <a class="btn ghost sm" href="game-maze.html" data-sfx><span data-ic="arrowLeft"></span>上一关：航线闯关</a>
     <span class="grow"></span>
     <button class="btn ghost sm read-btn" id="read-btn"><span data-ic="speaker"></span>朗读这一页</button>
+    <span class="grow"></span>
+    <a class="btn blue sm" href="../safety/lesson-01.html" onclick="DM.sfx('click')">下一大关 · 城墙小卫士<span data-ic="wall"></span></a>
   </div>
 </main>
 
 <footer id="site-footer"></footer>
 
 <script src="../assets/js/storage.js?v=5"></script><script src="../assets/js/mock-data.js?v=5"></script>
-<script src="../assets/js/pinyin-data.js?v=5"></script><script src="../assets/data/catalog.js?v=2"></script><script src="../assets/js/common.js?v=29"></script>
+<script src="../assets/js/pinyin-data.js?v=5"></script><script src="../assets/data/catalog.js?v=2"></script><script src="../assets/js/common.js?v=30"></script>
 <script>
 (function () {
   var DM = window.DM;
@@ -79,7 +81,6 @@
   DM.quiz({
     el: "#quiz",
     module: "coding",
-    nextHref: "../achievements/index.html",
     data: [
       {
         q: "为什么计算机“一点都不会变通”？",

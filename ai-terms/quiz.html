@@ -6,7 +6,7 @@
 <title>挑战测验 · AI 术语解码 — 豆苗学堂</title>
 <link rel="stylesheet" href="../assets/css/tokens.css?v=7">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/style.css?v=29">
+<link rel="stylesheet" href="../assets/css/style.css?v=30">
 </head>
 <body>
 <header id="site-header"></header>
@@ -49,14 +49,14 @@
     <span class="grow"></span>
     <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
     <span class="grow"></span>
-    <a class="btn blue sm" href="../achievements/index.html" onclick="DM.sfx('click')">下一站 · 成就墙<span data-ic="trophy"></span></a>
+    <a class="btn blue sm" href="../code-lab/lesson-01.html" onclick="DM.sfx('click')">下一大关 · 代码实验室<span data-ic="code"></span></a>
   </div>
 </main>
 
 <footer id="site-footer"></footer>
 
 <script src="../assets/js/storage.js?v=5"></script><script src="../assets/js/mock-data.js?v=5"></script>
-<script src="../assets/js/pinyin-data.js?v=5"></script><script src="../assets/data/catalog.js?v=2"></script><script src="../assets/js/common.js?v=29"></script>
+<script src="../assets/js/pinyin-data.js?v=5"></script><script src="../assets/data/catalog.js?v=2"></script><script src="../assets/js/common.js?v=30"></script>
 <script>
 DM.boot({ root: "..", module: "terms" });
 (function () {
@@ -69,7 +69,6 @@ DM.boot({ root: "..", module: "terms" });
   DM.quiz({
     el: "#quiz",
     module: "terms",
-    nextHref: "../achievements/index.html",
     data: [
       {
         q: "训练一个「判断邮件是不是垃圾邮件」的模型，每封邮件都由人工标注过「垃圾 / 正常」。这属于哪种学习范式？",

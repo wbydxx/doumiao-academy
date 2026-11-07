@@ -1404,14 +1404,39 @@
       store.completeQuiz(cfg.module, stones);
       var row = "";
       for (var i = 0; i < 3; i++) row += icon("stone");
+      var nx = quizNextOf(cfg.module);
+      var toWall = nx.url.indexOf("achievements") > -1;
+      var cheer = store.moduleDone(cfg.module)
+        ? '<p class="quiz-cheer">' + icon("award") + "「" + outEsc((MODULE_META[cfg.module] || {}).name || "") + "」大关全部通关！新徽章到手" + (toWall ? "，去成就墙看看吧～" : "，继续下一段航道～") + "</p>"
+        : "";
+      var warpBtn = toWall
+        ? '<a class="btn blue" href="' + nx.url + '">' + icon("trophy") + "看看成就墙</a>"
+        : '<button class="btn blue" id="quiz-warp" type="button">' + icon("forward") + "跃迁 · " + outEsc(nx.short) + '<i class="warp-bar" aria-hidden="true"></i></button>';
       el.innerHTML = '<div class="panel quiz-done">' +
         '<div class="e-ic" style="width:80px;margin:0 auto 8px;color:var(--accent)">' + icon("doudou") + "</div>" +
         '<div class="big">挑战完成！</div><p style="color:var(--muted)">你答对了所有题目，这是你的雨花石奖励</p>' +
-        '<div class="stone-row">' + row + "</div>" +
+        '<div class="stone-row">' + row + "</div>" + cheer +
+        '<div class="quiz-cta">' + warpBtn + "</div>" +
         '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
         '<a class="btn sm" href="../index.html">' + icon("arrowLeft") + "回到首页</a>" +
-        '<a class="btn blue sm" href="' + (cfg.nextHref || "../achievements/index.html") + '">' + icon("trophy") + "看看成就墙</a></div></div>";
+        (toWall ? "" : '<a class="btn sm" href="../achievements/index.html">' + icon("trophy") + "成就墙</a>") + "</div></div>";
       sfx("wow");
+      if (!toWall) {
+        var wb = document.getElementById("quiz-warp");
+        var qpanel = wb.closest(".quiz-done");
+        var goNx = function () { warpTo(nx.url, "挑战完成 · " + nx.short); };
+        var timer = setTimeout(function () {
+          if (!document.body.__warping) goNx();
+        }, 4200);
+        wb.addEventListener("click", function () { clearTimeout(timer); goNx(); });
+        /* 点击完成屏其他位置 = 取消自动跃迁，慢慢看奖励 */
+        qpanel.addEventListener("click", function (ev) {
+          if (wb.contains(ev.target)) return;
+          clearTimeout(timer);
+          var bar = qpanel.querySelector(".warp-bar");
+          if (bar) bar.remove();
+        }, true);
+      }
     }
     render();
   }
@@ -1432,6 +1457,17 @@
       if (fl) return { url: "../" + nm.dir + "/" + fl.file, label: nm.name + " · " + fl.title };
     }
     return null;
+  }
+  /** 测验通关后的「下一大关」：下一模块第一课；全部通关则回成就墙 */
+  function quizNextOf(m) {
+    var cat = window.DM_CATALOG;
+    var keys = cat && cat.modules ? Object.keys(cat.modules) : [];
+    var ki = keys.indexOf(m);
+    for (var j = ki + 1; j < keys.length; j++) {
+      var nm = cat.modules[keys[j]], fl = nm && nm.lessons && nm.lessons[0];
+      if (nm && fl) return { url: "../" + nm.dir + "/" + fl.file, short: nm.name, label: nm.name + " · " + fl.title };
+    }
+    return { url: "../achievements/index.html", short: "成就墙", label: "成就墙" };
   }
   /** 曲速跃迁 v2：点击即走，无弹窗无倒计时。
       ① 星流隧道在全局粒子画布上展开（__fxWarp）
@@ -1504,7 +1540,7 @@
 
   window.DM = {
     icon: icon, sfx: sfx, speak: speak, speakPage: speakPage, petals: petals,
-    warpTo: warpTo, nextTargetOf: nextTargetOf,
+    warpTo: warpTo, nextTargetOf: nextTargetOf, quizNextOf: quizNextOf,
     pinyin: { toggle: pyToggle },
     pyRun: pyRun, pyHighlight: pyHighlight, taskRunner: taskRunner, practiceRunner: practiceRunner,
     rvAll: rvAll, count: count, ring: ring,
@@ -1862,15 +1898,71 @@
 
     /* 分幕编排（三幕式舞台，每幕内容饱满不空洞）：
        开场幕 = 标题 + 场景大图；讲述幕 = 中间内容合排（>3 块才拆两幕）；
-       尝试幕 = 交互面板 + 倒逗（无交互面板则并入讲述幕） */
+       尝试幕 = 交互面板 + 倒逗（无交互面板则并入讲述幕）。
+       v30：超重面板先拆幕——多任务卡 try 面板逐卡一幕、多练习块面板两块一幕，
+       内容超高的课页在手机端不再被裁剪 */
     var isScene = function (el) { return el && /(^|\s)scene-panel(\s|$)/.test(el.className); };
     var isTry = function (el) { return el && /(^|\s)try-panel(\s|$)/.test(el.className); };
+    var isCard = function (el) { return el && /(^|\s)task-card(\s|$)/.test(el.className); };
+    var isPq = function (el) { return el && /(^|\s)pq(\s|$)/.test(el.className); };
+    /* —— 超重面板拆分 —— */
+    var exploded = false;
+    (function () {
+      var out = [];
+      panels.forEach(function (p) {
+        var cards = [].filter.call(p.children, isCard);
+        if (isTry(p) && cards.length > 1) {
+          exploded = true;
+          cards.forEach(function (card, ci) {
+            var sec = document.createElement("section");
+            sec.className = p.className;
+            if (ci === 0) {
+              [].filter.call(p.children, function (c) { return !isCard(c); })
+                .forEach(function (c) { sec.appendChild(c); });
+            }
+            sec.appendChild(card);
+            out.push(sec);
+          });
+          return;
+        }
+        var pqs = [].filter.call(p.children, isPq);
+        if (pqs.length >= 3) {
+          exploded = true;
+          var head = p.cloneNode(false);
+          [].filter.call(p.children, function (c) { return !isPq(c); })
+            .forEach(function (c) { head.appendChild(c); });
+          for (var i = 0; i < pqs.length; i += 2) {
+            var sec2 = head.cloneNode(false);
+            pqs.slice(i, i + 2).forEach(function (q) { sec2.appendChild(q); });
+            out.push(sec2);
+          }
+          return;
+        }
+        out.push(p);
+      });
+      panels = out;
+    })();
     var mid = panels.slice(isScene(panels[1]) ? 2 : 1);
     var last = mid.length && isTry(mid[mid.length - 1]) ? mid.pop() : null;
     var groups = [[panels[0]]];
     if (isScene(panels[1])) groups[0].push(panels[1]);
-    if (mid.length <= 3) groups.push(mid);
-    else { var half = Math.ceil(mid.length / 2); groups.push(mid.slice(0, half)); groups.push(mid.slice(half)); }
+    if (!exploded) {
+      if (mid.length <= 3) groups.push(mid);
+      else { var half = Math.ceil(mid.length / 2); groups.push(mid.slice(0, half)); groups.push(mid.slice(half)); }
+    } else {
+      /* 拆分后的长课：try 逐卡独占一幕，普通内容最多两块一幕 */
+      var buf = [];
+      mid.forEach(function (p) {
+        if (isTry(p)) {
+          if (buf.length) { groups.push(buf); buf = []; }
+          groups.push([p]);
+        } else {
+          buf.push(p);
+          if (buf.length >= 2) { groups.push(buf); buf = []; }
+        }
+      });
+      if (buf.length) groups.push(buf);
+    }
     if (last) groups.push([last]);
     var bubbles = [].filter.call(m.children, function (el) {
       return el.tagName === "SECTION" && /(^|\s)doudou-bubble(\s|$)/.test(el.className);
@@ -2044,12 +2136,19 @@
       var fit = slide.querySelector(".slide-fit");
       if (!fit) return;
       fit.style.transform = "none";
+      slide.classList.remove("slide-scroll");
       var cs = window.getComputedStyle(slide);
       var availH = slide.clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0);
       var h = fit.scrollHeight, w = fit.scrollWidth;
       if (!h || !availH) return;
       var s = Math.min(1, availH / h, slide.clientWidth / Math.max(1, w));
       var minS = window.innerWidth <= 640 ? .72 : .55; // 手机端重排后允许更高下限，避免字过小
+      if (s < minS - .005) {
+        /* 压到下限仍放不下：不再硬缩裁剪，改为幕内竖向滚动 */
+        fit.dataset.s = "1";
+        slide.classList.add("slide-scroll");
+        return;
+      }
       fit.dataset.s = s < .999 ? Math.max(minS, s).toFixed(4) : "1";
       if (s < .999) fit.style.transform = "scale(" + fit.dataset.s + ")";
     }
@@ -2128,9 +2227,15 @@
       });
     }
 
-    /* 滚轮/触控板：任何方向滚动都只触发横向翻页，页面零滚动 */
+    /* 滚轮/触控板：任何方向滚动都只触发横向翻页，页面零滚动
+       （当前幕内容超高需幕内滚动时，滚轮先滚内容，滚到头再翻页） */
     var wAcc = 0, wLock = 0, wTimer = 0;
     deck.addEventListener("wheel", function (e) {
+      var act = slides[cur];
+      if (act && act.classList.contains("slide-scroll")) {
+        var maxTop = act.scrollHeight - act.clientHeight;
+        if ((e.deltaY > 0 && act.scrollTop < maxTop - 1) || (e.deltaY < 0 && act.scrollTop > 1)) return;
+      }
       e.preventDefault();
       var d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       if (!d) return;

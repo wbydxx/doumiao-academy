@@ -6,7 +6,7 @@
 <title>挑战测验 · 代码实验室 — 豆苗学堂</title>
 <link rel="stylesheet" href="../assets/css/tokens.css?v=7">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/style.css?v=29">
+<link rel="stylesheet" href="../assets/css/style.css?v=30">
 </head>
 <body>
 <header id="site-header"></header>
@@ -23,7 +23,7 @@
   <section class="panel">
     <span class="panel-tag"><span data-ic="quiz"></span>代码实验室 · 挑战测验</span>
     <h2>进阶测验</h2>
-    <p style="color:var(--muted)">变量、条件、循环、函数、列表、字典——八道概念题，检验全部七课的功底。</p>
+    <p style="color:var(--muted)">变量、条件、循环、函数、列表、字典——九道概念题，检验全部七课的功底。</p>
   </section>
 
   <section class="panel scene-panel scene-center">
@@ -68,14 +68,14 @@
     <span class="grow"></span>
     <button class="btn ghost sm read-btn" type="button" onclick="DM.speakPage(this)"><span data-ic="speaker"></span>朗读这一页</button>
     <span class="grow"></span>
-    <a class="btn blue sm" href="../achievements/index.html" onclick="DM.sfx('click')">下一站 · 成就墙<span data-ic="trophy"></span></a>
+    <a class="btn blue sm" href="../achievements/index.html" onclick="DM.sfx('click')">全部通关 · 成就墙<span data-ic="trophy"></span></a>
   </div>
 </main>
 
 <footer id="site-footer"></footer>
 
 <script src="../assets/js/storage.js?v=5"></script><script src="../assets/js/mock-data.js?v=5"></script>
-<script src="../assets/js/pinyin-data.js?v=5"></script><script src="../assets/data/catalog.js?v=2"></script><script src="../assets/js/common.js?v=29"></script>
+<script src="../assets/js/pinyin-data.js?v=5"></script><script src="../assets/data/catalog.js?v=2"></script><script src="../assets/js/common.js?v=30"></script>
 <script>
 DM.boot({ root: "..", module: "lab" });
 (function () {
@@ -88,7 +88,6 @@ DM.boot({ root: "..", module: "lab" });
   DM.quiz({
     el: "#quiz",
     module: "lab",
-    nextHref: "../achievements/index.html",
     data: [
       {
         q: "Python 里给变量赋值，正确的是？",

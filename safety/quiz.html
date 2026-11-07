@@ -6,7 +6,7 @@
 <title>挑战测验 · 城墙小卫士 — 豆苗学堂</title>
 <link rel="stylesheet" href="../assets/css/tokens.css?v=7">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/style.css?v=29">
+<link rel="stylesheet" href="../assets/css/style.css?v=30">
 <style>
   [data-icon] { display: inline-flex; align-items: center; }
   .quiz-done .e-ic { width: 80px; height: 80px; margin: 0 auto 8px; color: var(--accent); }
@@ -71,14 +71,14 @@
     <a class="btn ghost sm" href="game-shield.html"><span data-icon="arrowLeft"></span>上一关</a>
     <span class="grow"></span>
     <button class="btn ghost sm read-btn" data-speak><span data-icon="speaker"></span>朗读这一页</button>
-    <a class="btn blue sm" href="../achievements/index.html">去成就墙<span data-icon="arrowRight"></span></a>
+    <a class="btn blue sm" href="../ai-terms/lesson-01.html">下一大关 · AI 术语解码<span data-icon="brain"></span></a>
   </nav>
 </main>
 
 <footer id="site-footer"></footer>
 
 <script src="../assets/js/storage.js?v=5"></script><script src="../assets/js/mock-data.js?v=5"></script>
-<script src="../assets/js/pinyin-data.js?v=5"></script><script src="../assets/data/catalog.js?v=2"></script><script src="../assets/js/common.js?v=29"></script>
+<script src="../assets/js/pinyin-data.js?v=5"></script><script src="../assets/data/catalog.js?v=2"></script><script src="../assets/js/common.js?v=30"></script>
 <script>
 (function () {
   var DM = window.DM;
@@ -94,7 +94,6 @@
   DM.quiz({
     el: "#quiz",
     module: "safety",
-    nextHref: "../achievements/index.html",
     data: [
       { q: "网上有人要送你限定皮肤，只想知道你家住哪个小区。你会怎么做？",
         opts: ["告诉他大概位置，反正不说门牌号", "不告诉他，个人信息要保密，并告诉爸妈", "给他发一张小区的照片也没关系"],

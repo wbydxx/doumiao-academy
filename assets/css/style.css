@@ -2276,3 +2276,35 @@ body.deck-mode .slide-lesson .code-box * { color: #D8F1FF; }
   body.deck-mode .path-grid .path-card { grid-column: auto; }
   .trio, .cards3, .route-cards { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   v30 · 测验通关自动衔接（quiz → 下一大关跃迁）
+   ============================================================ */
+.quiz-cheer {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  margin: 2px auto 4px; font-weight: 700; color: var(--gold);
+  font-size: 15.5px;
+}
+.quiz-cheer svg { width: 19px; height: 19px; flex: none; }
+.quiz-cta { display: flex; justify-content: center; margin: 6px 0 14px; }
+.quiz-cta .btn { position: relative; overflow: hidden; font-size: 16px; padding: 13px 30px; box-shadow: 0 6px 22px rgba(34, 211, 238, .28); }
+.quiz-cta .warp-bar {
+  position: absolute; left: 0; bottom: 0; height: 3px; width: 100%;
+  background: rgba(255, 255, 255, .85);
+  transform-origin: left; transform: scaleX(0);
+  animation: warpBar 4.2s linear forwards;
+}
+@keyframes warpBar { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+
+/* —— v30 · 超高幕兜底：压到缩放下限仍放不下时，幕内竖向滚动（不再裁剪） —— */
+body.deck-mode .slide.slide-scroll {
+  overflow-y: auto; overflow-x: hidden;
+  justify-content: flex-start;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(125, 235, 250, .35) transparent;
+}
+body.deck-mode .slide.slide-scroll::-webkit-scrollbar { width: 5px; }
+body.deck-mode .slide.slide-scroll::-webkit-scrollbar-thumb { background: rgba(125, 235, 250, .35); border-radius: 4px; }
+body.deck-mode .slide.slide-scroll .slide-fit { transform: none !important; }
