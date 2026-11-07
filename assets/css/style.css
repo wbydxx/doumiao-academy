@@ -1960,3 +1960,25 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 
 /* 幕内页底导航（上一课/下一关）居中 */
 body.deck-mode .slide-lesson .pager { justify-content: center; gap: 14px; margin: 4px 0 0; }
+
+/* 通关 CTA：尝试幕浮现的「跃迁下一站」大按钮（点击即出发，无自动带跳） */
+.try-cta {
+  justify-self: center; display: inline-flex; align-items: center; gap: 12px;
+  margin-top: 6px; padding: 15px 34px; border-radius: 999px; border: 0; cursor: pointer;
+  background: linear-gradient(135deg, #0EA5E9, #22D3EE 55%, #F5D08A);
+  color: #04121F; font-size: 16.5px; font-weight: 800; letter-spacing: .04em;
+  font-family: inherit; text-align: left;
+  box-shadow: 0 14px 40px rgba(2, 8, 20, .55);
+  animation: ctaPop .55s cubic-bezier(.34, 1.56, .64, 1) both, ctaGlow 2.2s ease-in-out .55s infinite;
+  transition: transform .25s cubic-bezier(.34, 1.56, .64, 1), filter .25s;
+}
+.try-cta svg { flex: none; }
+.try-cta b { text-decoration: underline; text-decoration-color: rgba(4, 18, 31, .4); text-underline-offset: 3px; }
+.try-cta:hover { transform: translateY(-3px) scale(1.03); filter: brightness(1.12); }
+.try-cta:active { transform: translateY(0) scale(.98); }
+@keyframes ctaPop { from { opacity: 0; transform: scale(.7) translateY(14px); } }
+@keyframes ctaGlow {
+  0%, 100% { box-shadow: 0 0 0 rgba(34, 211, 238, 0), 0 14px 40px rgba(2, 8, 20, .55); }
+  50% { box-shadow: 0 0 34px rgba(34, 211, 238, .5), 0 14px 40px rgba(2, 8, 20, .55); }
+}
+@media (prefers-reduced-motion: reduce) { .try-cta { animation: none; } }

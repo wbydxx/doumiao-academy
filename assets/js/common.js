@@ -1446,7 +1446,9 @@
     try { sessionStorage.setItem("dm-warp", outEsc(label || "1")); } catch (e) {}
     setTimeout(function () { location.href = url; }, 720);
   }
-  /* 通关后自动跃迁：非阻断提示条（细进度条 2s 走完自动跃迁，点击可取消） */
+  /* 通关后的跳转逻辑（点击优先）：
+     · 分幕课程页：尝试幕浮现「跃迁下一站」发光大按钮并自动滑到该幕，点击即曲速出发
+     · 其他页（游戏/测验等）：保留顶部提示条，2s 进度走完自动跃迁，点提示可留下 */
   (function () {
     var cl = store.completeLesson, armed = false;
     store.completeLesson = function (m, idx, stones) {
@@ -1455,25 +1457,47 @@
       armed = true;
       var nx = nextTargetOf(m, idx);
       if (!nx) return;
+      var goWarp = function () { warpTo(nx.url, "通关成功 · " + nx.label); };
       setTimeout(function () {
-        try {
-          var t = document.createElement("div");
-          t.className = "warp-toast";
-          t.setAttribute("role", "status");
-          t.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>' +
-            '<span class="wt-t">通关成功 · 即将跃迁至 <b>' + outEsc(nx.label) + "</b></span>" +
-            '<i class="wt-bar" aria-hidden="true"></i>';
-          document.body.appendChild(t);
-          requestAnimationFrame(function () { t.classList.add("on"); });
-          t.addEventListener("click", function () {
-            if (!t.isConnected) return;
-            t.classList.remove("on"); t.classList.add("off");
-            setTimeout(function () { t.remove(); }, 420);
-          });
-          setTimeout(function () {
-            if (t.isConnected && !t.classList.contains("off")) warpTo(nx.url, "通关成功 · " + nx.label);
-          }, 2050);
-        } catch (e) { warpTo(nx.url, "通关成功 · " + nx.label); }
+        var isStage = false;
+        try { isStage = document.body.classList.contains("lesson-stage"); } catch (e) {}
+        if (isStage) {
+          try {
+            var slides = document.querySelectorAll("#deck .slide");
+            var last = slides.length ? slides[slides.length - 1] : null;
+            var fit = last ? last.querySelector(".slide-fit") : null;
+            if (fit) {
+              var cta = document.createElement("button");
+              cta.type = "button"; cta.className = "try-cta";
+              cta.innerHTML = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
+                "<span><b>通关成功</b> · 跃迁至「" + outEsc(nx.label) + "」</span>";
+              cta.addEventListener("click", goWarp);
+              fit.appendChild(cta);
+              if (window.__refitSlides) window.__refitSlides();
+              if (window.__deckGo) window.__deckGo(slides.length - 1);
+              sfx("win");
+            } else goWarp();
+          } catch (e) { goWarp(); }
+        } else {
+          try {
+            var t = document.createElement("div");
+            t.className = "warp-toast";
+            t.setAttribute("role", "status");
+            t.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>' +
+              '<span class="wt-t">通关成功 · 即将跃迁至 <b>' + outEsc(nx.label) + "</b></span>" +
+              '<i class="wt-bar" aria-hidden="true"></i>';
+            document.body.appendChild(t);
+            requestAnimationFrame(function () { t.classList.add("on"); });
+            t.addEventListener("click", function () {
+              if (!t.isConnected) return;
+              t.classList.remove("on"); t.classList.add("off");
+              setTimeout(function () { t.remove(); }, 420);
+            });
+            setTimeout(function () {
+              if (t.isConnected && !t.classList.contains("off") && !document.body.__warping) goWarp();
+            }, 2050);
+          } catch (e) { goWarp(); }
+        }
       }, 900);
     };
   })();
@@ -2124,6 +2148,10 @@
       var dx = tX - e.changedTouches[0].clientX, dy = tY - e.changedTouches[0].clientY;
       if (Math.abs(dx) > 52 && Math.abs(dx) > Math.abs(dy) * 1.25) go(cur + (dx > 0 ? 1 : -1));
     }, { passive: true });
+
+    /* 供通关 CTA 使用：重新适配内容高度 / 定位到指定幕 */
+    window.__deckGo = function (i) { go(Math.max(0, Math.min(n - 1, i))); };
+    window.__refitSlides = fitAll;
   }
 
   function initAll() { initProgress(); initStarfield(); initTilt(); initLessons(); initDeck(); initWarpReveal(); }
