@@ -46,13 +46,13 @@ ax.plot([x_test, x_test], [y, yb], color=GOLD, lw=1.6, solid_capstyle="round")
 ax.plot([x_prac, x_test], [yb, yb], color=GOLD, lw=1.6, solid_capstyle="round")
 ax.add_patch(FancyArrowPatch((x_prac, yb), (x_prac, y - 0.04),
                              arrowstyle="-|>", mutation_scale=13, linewidth=1.6, color=GOLD))
-ax.text((x_prac + x_test) / 2, yb - 0.16, "未全对：回到练 / 闯，随时重试（进度只增不减）",
+ax.text((x_prac + x_test) / 2, yb - 0.16, "答错可继续作答，也可回到练 / 闯复习（进度只增不减）",
         fontproperties=FONT, fontsize=9, color=GOLD, ha="center")
 
 bar = FancyBboxPatch((0.42, 0.34), 10.36, 0.62, boxstyle="round,pad=0.02,rounding_size=0.08",
                      linewidth=0, facecolor="#E9F5FA", zorder=1)
 ax.add_patch(bar)
-ax.text(5.60, 0.66, "点亮本关徽章  →  自动跃迁下一关  →  六关全通解锁「我的学习证书」",
+ax.text(5.60, 0.66, "完成本关  →  一键跃迁下一关  →  六关全通解锁「我的学习证书」",
         fontproperties=FONT_B, fontsize=10.5, color=NAVY, ha="center", va="center")
 
 plt.tight_layout(pad=0.15)
