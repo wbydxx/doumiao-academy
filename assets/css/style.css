@@ -1998,9 +1998,9 @@ body.lesson-stage .logo .logo-ic svg { width: 18px; height: 18px; }
 body.lesson-stage .bar-tools { margin-left: auto; flex: none; order: 3; }
 body.lesson-stage .bar-tools .icon-btn { min-height: 32px; }
 body.lesson-stage .stone-chip { min-height: 32px; padding: 3px 10px; }
-body.lesson-stage .nav { order: 2; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 50vw; }
+body.lesson-stage .nav { order: 2; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 54vw; }
 body.lesson-stage .nav::-webkit-scrollbar { display: none; }
-body.lesson-stage .nav a { min-height: 30px; padding: 3px 9px; font-size: 12.5px; gap: 4px; }
+body.lesson-stage .nav a { min-height: 30px; padding: 3px 9px; font-size: 12.5px; gap: 4px; white-space: nowrap; flex: none; }
 body.lesson-stage .nav a svg { width: 14px; height: 14px; }
 /* v40：手机端课页导航不再整体隐藏——统一改为可拖划横滚（用户要求能
    划动看到成就墙入口），logo 回首页与页底上一课/下一课链接保留 */
