@@ -2323,6 +2323,9 @@ body.deck-mode .slide.slide-scroll .slide-fit { transform: none !important; }
 .site-header .logo { flex: none; white-space: nowrap; }
 .site-header .nav { flex: none; }
 .site-header .bar-tools { flex: none; }
+/* 全站统一顶栏顺序：品牌 → 导航 → 工具（与课页一致） */
+.site-header .nav { order: 2; }
+.site-header .bar-tools { order: 3; margin-left: auto; }
 @media (max-width: 640px) {
   /* v40：全站手机端导航统一「可拖划横滚」——nav 占据 bar 剩余宽度并在
      内部横向滑动，成就墙等被裁项拖到最右即可见（替换 v33 的课页隐藏方案） */

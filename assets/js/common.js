@@ -1213,7 +1213,7 @@
         '<a href="' + root + '/index.html">首页</a>' +
         '<a href="' + root + '/achievements/index.html">我的成就</a>' +
         "</div>" +
-        "豆苗逐智 · 童享科技 — 少儿 AI 与计算机公益科普 · 公益免费 · 家长指引：本页无需注册、不联网收集信息</div></div>";
+        "河海大学网页设计大赛 · 静态网页组参赛作品　|　豆苗逐智 · 童享科技 — 少儿 AI 与计算机公益科普 · 公益免费 · 家长指引：本页无需注册、不联网收集信息</div></div>";
     }
     injectEyecare();
     startEyecareTimer();
